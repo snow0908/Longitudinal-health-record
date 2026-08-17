@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>健康摘要</title>
+    <style>
+        /* ============================================================
+           样式参照《检验报告AI分析.html》及 C 端 UED 交互与视觉设计规范
+           基准宽度：375px
+           ============================================================ */
+
+        /* ---------- Reset & Base ---------- */
+        * {
+            box-sizing: border-box;
+            flex-shrink: 0;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+            background-color: #F3F5F7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+        }
+        .justify-between {
+            display: flex;
+            justify-content: space-between;
+        }
+        .align-center {
+            display: flex;
+            align-items: center;
+        }
+        .align-start {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        /* ---------- Page ---------- */
+        .page {
+            background-color: #F3F5F7;
+            position: relative;
+            width: 375px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-bottom: 16px;
+        }
+
+        /* ============================================================
+           导航栏
+           ============================================================ */
+        .group_1 {
+            background-color: rgba(255, 255, 255, 1);
+            padding: 14px 16px 7px 16px;
+        }
+        .box_1 {
+            margin: 0 10px 0 24px;
+        }
+        .text_1 {
+            overflow-wrap: break-word;
+            color: rgba(0, 0, 0, 1);
+            font-size: 16px;
+            letter-spacing: 1.100000023841858px;
+            font-family: PingFangSC-Semibold;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            line-height: 22px;
+        }
+        .thumbnail_1 {
+            width: 19px;
+            height: 12px;
+            margin: 5px 0 5px 191px;
+        }
+        .text_2 {
+            overflow-wrap: break-word;
+            color: rgba(0, 0, 0, 1);
+            font-size: 12px;
+            letter-spacing: 0.925000011920929px;
+            font-family: PingFangSC-Semibold;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            line-height: 17px;
+            margin: 3px 0 0 6px;
+        }
+        .image_1 {
+            width: 25px;
+            height: 13px;
+            margin: 5px 0 4px 6px;
+        }
+        .box_2 {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .label_1 {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .text_3 {
+            flex: 1;
+            overflow-wrap: break-word;
+            color: rgba(51, 51, 51, 1);
+            font-size: 16px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: center;
+            white-space: nowrap;
+            line-height: 22px;
+            margin: 4px 0 0 34px;
+        }
+        .image_2 {
+            width: 78px;
+            height: 30px;
+            flex-shrink: 0;
+        }
+
+        /* ============================================================
+           白色内容卡片
+           ============================================================ */
+        .card {
+            background-color: #FFFFFF;
+            margin-bottom: 16px;
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        /* ---------- Divider ---------- */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #E5E5E5;
+        }
+        .divider--mt12 {
+            margin-top: 12px;
+        }
+        .divider--mt16 {
+            margin-top: 16px;
+        }
+
+        /* ============================================================
+           头部横幅
+           ============================================================ */
+        .hero-card {
+            background: linear-gradient(135deg, #E6F4FF 0%, #F0F7FF 100%);
+            margin: 10px 0 10px;
+            padding: 24px 20px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-title {
+            color: #333333;
+            font-size: 22px;
+            font-family: PingFangSC-Semibold;
+            font-weight: 600;
+            text-align: left;
+            line-height: 30px;
+        }
+        .hero-subtitle {
+            color: #666666;
+            font-size: 13px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            line-height: 18px;
+            margin-top: 6px;
+            word-break: break-word;
+        }
+        .hero-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 64px;
+            height: 64px;
+        }
+
+        /* ============================================================
+           分区标题
+           ============================================================ */
+        .section-header {
+            display: flex;
+            align-items: center;
+        }
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .section-title {
+            color: #333333;
+            font-size: 16px;
+            font-family: PingFangSC-Semibold;
+            font-weight: 600;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 22px;
+            margin-left: 8px;
+        }
+        .section-subtitle {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: left;
+            line-height: 20px;
+            margin-top: 12px;
+            word-break: break-word;
+        }
+
+        /* ============================================================
+           病史条目列表
+           ============================================================ */
+        .history-list {
+            margin-top: 10px;
+        }
+        .history-item {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 8px;
+            line-height: 22px;
+        }
+        .history-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin: 8px 8px 0 0;
+            flex-shrink: 0;
+            background-color: #999999;
+        }
+        .history-dot--warn {
+            background-color: #FA9D3B;
+        }
+        .history-text {
+            flex: 1;
+            min-width: 0;
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            word-break: break-word;
+            line-height: 22px;
+        }
+        .history-tag {
+            font-size: 12px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: center;
+            line-height: 17px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            flex-shrink: 0;
+            color: #FA9D3B;
+            background-color: #FFF5E8;
+        }
+
+        /* ============================================================
+           检查指标子项
+           ============================================================ */
+        .check-subsection {
+            margin-top: 10px;
+        }
+        .check-subtitle {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: left;
+            line-height: 20px;
+            margin-top: 6px;
+        }
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-top: 6px;
+            line-height: 22px;
+        }
+        .check-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin: 8px 8px 0 0;
+            flex-shrink: 0;
+            background-color: #C0C0C0;
+        }
+        .check-text {
+            flex: 1;
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            word-break: break-word;
+        }
+
+        /* ============================================================
+           风险条目
+           ============================================================ */
+        .risk-list {
+            margin-top: 12px;
+        }
+        .risk-item {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 10px;
+            line-height: 22px;
+        }
+        .risk-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin: 8px 8px 0 0;
+            flex-shrink: 0;
+            background-color: #FA9D3B;
+        }
+        .risk-text {
+            flex: 1;
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            line-height: 22px;
+            word-break: break-word;
+        }
+
+        /* ============================================================
+           建议条目
+           ============================================================ */
+        .suggestion-list {
+            margin-top: 12px;
+        }
+        .suggestion-item {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 10px;
+            line-height: 22px;
+        }
+        .suggestion-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin: 8px 8px 0 0;
+            flex-shrink: 0;
+            background-color: #2A7AE8;
+        }
+        .suggestion-text {
+            flex: 1;
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            line-height: 22px;
+            word-break: break-word;
+        }
+
+        /* ============================================================
+           健康教育条目
+           ============================================================ */
+        .edu-list {
+            margin-top: 12px;
+        }
+        .edu-item {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 10px;
+            line-height: 22px;
+        }
+        .edu-label {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: left;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .edu-text {
+            flex: 1;
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            line-height: 22px;
+            margin-left: 6px;
+            word-break: break-word;
+        }
+
+        /* ============================================================
+           底部脚注
+           ============================================================ */
+        .footer-note {
+            padding: 16px 16px 0 16px;
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <div class="page flex-col">
+
+        <!-- ==================== 导航栏 ==================== -->
+        <div class="group_1 flex-col">
+            <div class="box_1 flex-row">
+                <span class="text_1">10:19</span>
+                <img class="thumbnail_1" referrerpolicy="no-referrer" src="./img/信号.png" />
+                <span class="text_2">5G</span>
+                <img class="image_1" referrerpolicy="no-referrer" src="./img/电量.png" />
+            </div>
+            <div class="box_2 flex-row">
+                <img class="label_1" referrerpolicy="no-referrer" src="./img/返回.png" />
+                <span class="text_3">健康摘要</span>
+                <img class="image_2" referrerpolicy="no-referrer" src="./img/设置.png" />
+            </div>
+        </div>
+
+        <!-- ==================== 居民健康报告头部 ==================== -->
+        <div class="hero-card">
+            <div class="hero-title">居民健康报告</div>
+            <div class="hero-subtitle">基于个人健康档案，AI 自动生成综合分析报告</div>
+            <img class="hero-icon" src="./img/AI分析.png" referrerpolicy="no-referrer" />
+        </div>
+
+        <!-- ==================== 一、主要健康问题 ==================== -->
+        <div class="card flex-col">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="12" fill="#FFF0F0"/>
+                    <path d="M12 6V14M12 16V18" stroke="#F25C5C" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span class="section-title">一、主要健康问题</span>
+            </div>
+
+            <!-- （一）既往病史 -->
+            <div class="section-subtitle">（一）既往病史</div>
+            <div class="history-list">
+                <div class="history-item">
+                    <span class="history-dot history-dot--warn"></span>
+                    <span class="history-text">颈椎病</span>
+                    <span class="history-tag">管理中</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot history-dot--warn"></span>
+                    <span class="history-text">腰痛</span>
+                    <span class="history-tag">管理中</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot history-dot--warn"></span>
+                    <span class="history-text">痛痹</span>
+                    <span class="history-tag">管理中</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot history-dot--warn"></span>
+                    <span class="history-text">寒凝血瘀证</span>
+                    <span class="history-tag">管理中</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot"></span>
+                    <span class="history-text">肩周炎：既往病史。</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot"></span>
+                    <span class="history-text">皮肤感染：既往病史。</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot"></span>
+                    <span class="history-text">关节炎：既往病史。</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot history-dot--warn"></span>
+                    <span class="history-text">高血压</span>
+                    <span class="history-tag">长期用药</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot history-dot--warn"></span>
+                    <span class="history-text">高脂血症</span>
+                    <span class="history-tag">长期用药</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot history-dot--warn"></span>
+                    <span class="history-text">糖尿病</span>
+                    <span class="history-tag">长期用药</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot history-dot--warn"></span>
+                    <span class="history-text">结核病：长期抗结核治疗中。</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot history-dot--warn"></span>
+                    <span class="history-text">精神障碍相关风险：长期服用精神类及镇静催眠药物。</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-dot history-dot--warn"></span>
+                    <span class="history-text">胃食管反流或消化性溃疡风险：长期服用抗酸及护胃用药。</span>
+                </div>
+            </div>
+
+            <div class="divider divider--mt16"></div>
+
+            <!-- （二）异常检查指标 -->
+            <div class="section-subtitle">（二）异常检查指标</div>
+            <div class="text-content" style="color:#999999;font-size:12px;line-height:17px;margin-top:4px;">综合近期检验、检查、影像等结果，保留重要异常如下：</div>
+
+            <div class="check-subsection">
+                <div class="check-subtitle">血常规</div>
+                <div class="check-item">
+                    <span class="check-dot"></span>
+                    <span class="check-text">红细胞分布宽度：2026-01-19，12.80%，提示红细胞大小不均。</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-dot"></span>
+                    <span class="check-text">平均血红蛋白浓度：2026-01-19，316.00 g/L，提示偏低。</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-dot"></span>
+                    <span class="check-text">红细胞计数：2026-01-19，5.65×10^12/L，提示偏高。</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-dot"></span>
+                    <span class="check-text">中性粒细胞百分率：2026-01-19，42.9%，提示偏低。</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-dot"></span>
+                    <span class="check-text">淋巴细胞百分率：2026-01-19，48.1%，提示偏高。</span>
+                </div>
+            </div>
+
+            <div class="check-subsection">
+                <div class="check-subtitle">影像学检查</div>
+                <div class="check-item">
+                    <span class="check-dot"></span>
+                    <span class="check-text">腹部彩超：2026-01-19，肝脏右前叶见低回声范围约 11×7mm，实质回声密集细小增强伴声衰减。提示脂肪肝，肝内占位待查。</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-dot"></span>
+                    <span class="check-text">胸部X线：2026-01-19，两肺纹理稍增多。提示肺纹理改变。</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 二、潜在疾病风险 ==================== -->
+        <div class="card flex-col">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="12" fill="#FFF5E8"/>
+                    <path d="M12 6L14.5 11.5H20.5L15.5 15.5L17.5 21.5L12 17.5L6.5 21.5L8.5 15.5L3.5 11.5H9.5L12 6Z" fill="#FA9D3B"/>
+                </svg>
+                <span class="section-title">二、潜在疾病风险</span>
+            </div>
+            <div class="risk-list">
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-text">肝脏发现低回声结节伴脂肪肝，需警惕肝内占位性病变或进一步代谢异常风险。</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-text">长期服用抗凝、抗血小板及多种药物，存在药物相互作用或出血风险。</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-text">长期服用精神类药物及镇静催眠药，需关注药物依赖或认知功能影响风险。</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-text">肺部纹理增多结合长期用药史，需关注潜在肺部感染或慢性炎症风险。</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 三、建议处理 ==================== -->
+        <div class="card flex-col">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="12" fill="#E8F3FF"/>
+                    <path d="M12 6C12 6 8 10 8 13C8 15.2091 9.79086 17 12 17C14.2091 17 16 15.2091 16 13C16 10 12 6 12 6Z" fill="#2A7AE8"/>
+                    <circle cx="12" cy="13" r="2" fill="white"/>
+                </svg>
+                <span class="section-title">三、建议处理</span>
+            </div>
+            <div class="suggestion-list">
+                <div class="suggestion-item">
+                    <span class="suggestion-dot"></span>
+                    <span class="suggestion-text">建议肝胆外科或消化内科进一步评估肝脏低回声结节性质，完善增强CT或MRI检查。</span>
+                </div>
+                <div class="suggestion-item">
+                    <span class="suggestion-dot"></span>
+                    <span class="suggestion-text">建议内分泌科评估血糖、血脂控制情况，优化降糖及调脂方案。</span>
+                </div>
+                <div class="suggestion-item">
+                    <span class="suggestion-dot"></span>
+                    <span class="suggestion-text">建议骨科或疼痛科针对腰痛、颈痛及肩周炎进行持续康复管理。</span>
+                </div>
+                <div class="suggestion-item">
+                    <span class="suggestion-dot"></span>
+                    <span class="suggestion-text">建议感染科或呼吸科评估抗结核治疗方案及肺部纹理改变情况。</span>
+                </div>
+                <div class="suggestion-item">
+                    <span class="suggestion-dot"></span>
+                    <span class="suggestion-text">建议监测血常规变化，关注红细胞及中性粒细胞比例异常原因。</span>
+                </div>
+                <div class="suggestion-item">
+                    <span class="suggestion-dot"></span>
+                    <span class="suggestion-text">建议精神科评估精神类药物使用必要性及副作用。</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 四、健康教育 ==================== -->
+        <div class="card flex-col">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="12" fill="#EAF9F1"/>
+                    <path d="M4 4H10L12 6H20C20.5523 6 21 6.44772 21 7V19C21 19.5523 20.5523 20 20 20H4C3.44772 20 3 19.5523 3 19V5C3 4.44772 3.44772 4 4 4Z" fill="#3CC483"/>
+                    <path d="M8 13H16" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span class="section-title">四、健康教育</span>
+            </div>
+            <div class="edu-list">
+                <div class="edu-item">
+                    <span class="edu-label">饮食管理：</span>
+                    <span class="edu-text">严格低盐低脂饮食，控制糖分摄入，减轻肝脏负担。</span>
+                </div>
+                <div class="edu-item">
+                    <span class="edu-label">运动指导：</span>
+                    <span class="edu-text">避免颈部及腰部剧烈扭转，进行适度温和的康复锻炼。</span>
+                </div>
+                <div class="edu-item">
+                    <span class="edu-label">用药安全：</span>
+                    <span class="edu-text">严格遵医嘱服药，不随意增减剂量或停药，注意观察药物副作用。</span>
+                </div>
+                <div class="edu-item">
+                    <span class="edu-label">定期随访：</span>
+                    <span class="edu-text">按医嘱定期复查肝功、血常规、血糖及影像检查。</span>
+                </div>
+                <div class="edu-item">
+                    <span class="edu-label">中医调护：</span>
+                    <span class="edu-text">注意保暖避寒，配合针灸、拔罐等中医特色治疗缓解寒凝血瘀症状。</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 底部脚注 ==================== -->
+        <div class="footer-note">
+            温馨提示：本报告由AI根据患者当前健康信息自动分析生成，仅供参考，具体诊疗请咨询专业医生。
+        </div>
+
+    </div>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = 'index.html';
+  });
+</script>
+
+</body>
+</html>

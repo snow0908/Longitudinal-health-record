@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI对比分析摘要</title>
+    <script src="./flexible.js"></script>
+    <link rel="stylesheet" type="text/css" href="./common.css" />
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+    <style>
+      /* ===== AI 对比分析摘要页样式（沿用项目原UI风格） ===== */
+
+      /* --- 对比元信息卡片（白底） --- */
+      .compare-meta-card {
+        background-color: rgba(255, 255, 255, 1);
+        margin: 10px 16px 0 16px;
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+      }
+      .compare-meta-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 0;
+      }
+      .compare-meta-tag {
+        font-size: 12px;
+        color: rgba(153, 153, 153, 1);
+        font-family: PingFangSC-Regular;
+        line-height: 17px;
+        padding: 2px 8px;
+        background-color: rgba(243, 245, 247, 1);
+        border-radius: 4px;
+        margin-bottom: 8px;
+      }
+      .compare-meta-tag.cur {
+        color: rgba(9, 106, 255, 1);
+        background-color: rgba(234, 245, 255, 1);
+      }
+      .compare-meta-date {
+        font-size: 16px;
+        color: rgba(51, 51, 51, 1);
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        line-height: 22px;
+      }
+      .compare-meta-vs {
+        font-size: 14px;
+        color: rgba(9, 106, 255, 1);
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        padding: 0 12px;
+        flex-shrink: 0;
+      }
+
+      /* --- AI 卡片（白底 8px 圆角） --- */
+      .ai-card {
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 8px;
+        margin: 16px 16px 0 16px;
+        padding: 16px;
+      }
+      .ai-card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .ai-card-title {
+        font-size: 16px;
+        color: rgba(51, 51, 51, 1);
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        line-height: 22px;
+      }
+      .ai-card-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .ai-card-item {
+        position: relative;
+        padding-left: 12px;
+        font-size: 14px;
+        color: rgba(51, 51, 51, 1);
+        font-family: PingFangSC-Regular;
+        line-height: 20px;
+        margin-top: 8px;
+      }
+      .ai-card-item:first-child { margin-top: 0; }
+      .ai-card-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: rgba(9, 106, 255, 1);
+      }
+      .ai-card-item .hl-warn {
+        color: rgba(234, 88, 12, 1);
+        font-weight: 500;
+      }
+      .ai-card-item .hl-danger {
+        color: rgba(245, 63, 63, 1);
+        font-weight: 500;
+      }
+      .ai-suggest-item {
+        font-size: 14px;
+        color: rgba(51, 51, 51, 1);
+        font-family: PingFangSC-Regular;
+        line-height: 20px;
+        margin-top: 8px;
+      }
+      .ai-suggest-item:first-child { margin-top: 0; }
+      .ai-suggest-item .num {
+        color: rgba(9, 106, 255, 1);
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        margin-right: 4px;
+      }
+
+      .bottom-spacer { height: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="page flex-col">
+      <!-- 状态栏 + 标题栏 -->
+      <div class="section_1 flex-col">
+        <div class="block_1 flex-row">
+          <span class="text_1">10:19</span>
+          <img
+            class="thumbnail_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng704147f8b978587e16053c0aff2e7a89010fce4b1451e830bc244c0f5237adc5.png"
+          />
+          <span class="text_2">5G</span>
+          <img
+            class="image_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPngb44e7965ccfb0dcdb8b19278c26b84b1f1e92d5ae3c4c02730dc831e2478c8ee.png"
+          />
+        </div>
+        <div class="block_2 flex-row">
+          <img
+            class="label_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng1f264f6d2d7519387132cd8cedd70f26e20a37499e604d10ad41e07e06c00a98.png"
+            onclick="window.location.href='./AI报告分析-选择报告.html'"
+            style="cursor:pointer;"
+          />
+          <span class="text_3">AI对比分析摘要</span>
+        </div>
+      </div>
+
+      <!-- 对比元信息 -->
+      <div class="compare-meta-card">
+        <div class="compare-meta-item">
+          <span class="compare-meta-tag">对比报告</span>
+          <span class="compare-meta-date">2023-06-15</span>
+        </div>
+        <span class="compare-meta-vs">VS</span>
+        <div class="compare-meta-item">
+          <span class="compare-meta-tag cur">当前报告</span>
+          <span class="compare-meta-date">2023-11-24</span>
+        </div>
+      </div>
+
+      <!-- AI 关键变化 -->
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <span class="ai-card-title">AI关键变化</span>
+        </div>
+        <ul class="ai-card-list">
+          <li class="ai-card-item"><span class="hl-danger">谷丙转氨酶由32升至257.80（升高约8倍）</span>，肝功能较前显著恶化</li>
+          <li class="ai-card-item"><span class="hl-danger">谷草转氨酶由28升至192.80（升高约7倍）</span>，提示活动性肝细胞损伤</li>
+          <li class="ai-card-item"><span class="hl-warn">葡萄糖由5.2降至3.88</span>，新发低血糖倾向</li>
+          <li class="ai-card-item"><span class="hl-warn">肾小球滤过率由95降至84.30</span>，肾功能较前有所下降，虽仍在正常范围但需密切随访</li>
+        </ul>
+      </div>
+
+      <!-- 风险预警 -->
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <span class="ai-card-title">风险预警</span>
+        </div>
+        <ul class="ai-card-list">
+          <li class="ai-card-item"><span class="hl-danger">转氨酶急剧升高提示急性肝损伤或活动性肝病，需紧急就医明确病因</span></li>
+          <li class="ai-card-item"><span class="hl-warn">肾功能呈下降趋势，虽仍在正常范围但需密切随访，警惕进一步恶化</span></li>
+        </ul>
+      </div>
+
+      <!-- 临床建议 -->
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <span class="ai-card-title">临床建议</span>
+        </div>
+        <ul class="ai-card-list">
+          <li class="ai-suggest-item"><span class="num">1.</span>尽快至消化内科/肝病科就诊，完善肝炎病毒筛查、自身免疫性肝病抗体、肝脏超声等检查，明确转氨酶急剧升高的病因</li>
+          <li class="ai-suggest-item"><span class="num">2.</span>排查低血糖原因，必要时行糖耐量试验评估糖代谢状态</li>
+          <li class="ai-suggest-item"><span class="num">3.</span>4-6周后复查肝肾功能，监测转氨酶和肾小球滤过率变化趋势</li>
+        </ul>
+      </div>
+
+      <div class="bottom-spacer"></div>
+    </div>
+  </body>
+</html>

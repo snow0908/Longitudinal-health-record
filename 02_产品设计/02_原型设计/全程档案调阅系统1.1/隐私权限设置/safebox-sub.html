@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>选择屏蔽数据</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 时间筛选面板（内联展开/收起） */
+        .time-filter-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s var(--ease), margin 0.3s var(--ease), padding 0.3s var(--ease);
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            margin: 0 16px;
+        }
+        .time-filter-panel.expanded {
+            max-height: 420px;
+            margin-bottom: 12px;
+        }
+        .time-filter-panel-inner {
+            padding: 4px 16px 16px;
+        }
+
+        /* 时间筛选入口条 — 展开时箭头旋转 */
+        .time-filter-entry .filter-arrow-icon {
+            transition: transform 0.3s var(--ease);
+        }
+        .time-filter-entry.expanded .filter-arrow-icon {
+            transform: rotate(180deg);
+        }
+
+        /* 快捷筛选按钮 — 覆盖 common.css */
+        .quick-filter-btn {
+            padding: 5px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            text-align: center;
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+            background: var(--card-bg);
+        }
+        .quick-filter-btn:active {
+            opacity: 0.7;
+        }
+        .quick-filter-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 状态栏 -->
+<div class="status-bar">
+    <span>9:41</span>
+    <div class="status-bar-icons">
+        <div class="signal-bars">
+            <span></span><span></span><span></span><span></span>
+        </div>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000000">
+            <path d="M8 2.5C10.5 2.5 12.8 3.5 14.5 5.2L13.5 6.2C12.1 4.9 10.1 4 8 4C5.9 4 3.9 4.9 2.5 6.2L1.5 5.2C3.2 3.5 5.5 2.5 8 2.5Z" fill="currentColor"/>
+            <path d="M8 6C9.4 6 10.7 6.5 11.7 7.5L10.7 8.5C10 7.8 9 7.5 8 7.5C7 7.5 6 7.8 5.3 8.5L4.3 7.5C5.3 6.5 6.6 6 8 6Z" fill="currentColor"/>
+            <circle cx="8" cy="10" r="1.5" fill="currentColor"/>
+        </svg>
+        <div class="battery">
+            <div class="battery-fill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<div class="nav-bar">
+    <div class="nav-back" onclick="goBack()">
+        <img src="../img/返回.png" alt="返回" style="width:24px;height:24px">
+    </div>
+    <span class="nav-title">选择屏蔽数据</span>
+    <div class="nav-action" onclick="openSettings()">
+        <img src="../img/设置.png" alt="设置" style="width: 62px;height:24px">
+    </div>
+</div>
+
+<!-- 子项页面头部 -->
+<div class="sub-page-header" id="subPageHeader"></div>
+
+<!-- 时间筛选入口条（点击展开/收起筛选面板） -->
+<div class="time-filter-entry" id="timeFilterEntry" onclick="toggleTimeFilter()" style="margin:12px 16px;width:auto">
+    <div class="filter-entry-left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>时间筛选</span>
+    </div>
+    <div class="filter-entry-right">
+        <span id="filterEntryText">全部</span>
+        <svg class="filter-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </div>
+</div>
+
+<!-- 时间筛选面板（内联展开/收起） -->
+<div class="time-filter-panel" id="timeFilterPanel">
+    <div class="time-filter-panel-inner">
+        <!-- 快捷选项 -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px;" id="quickFilterGrid">
+            <div class="quick-filter-btn active" onclick="quickSelect('6m')">近半年</div>
+            <div class="quick-filter-btn" onclick="quickSelect('1y')">近一年</div>
+            <div class="quick-filter-btn" onclick="quickSelect('3y')">近三年</div>
+            <div class="quick-filter-btn" onclick="quickSelect('custom')">自定义</div>
+        </div>
+
+        <!-- 自定义日期区域（仅选择"自定义"时显示） -->
+        <div id="customDateSection" style="display:none;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div class="ref-date-input" id="refStartDateBox">
+                    <input type="date" id="refStartDate" onchange="onRefDateChange()" placeholder="开始日期">
+                </div>
+                <span style="font-size: 14px; color: var(--text-secondary); flex-shrink: 0;">至</span>
+                <div class="ref-date-input" id="refEndDateBox">
+                    <input type="date" id="refEndDate" onchange="onRefDateChange()" placeholder="结束日期">
+                </div>
+            </div>
+
+            <!-- 校验提示 -->
+            <div class="date-range-hint" id="refDateHint" style="margin-bottom: 10px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>结束日期不能早于开始日期</span>
+            </div>
+        </div>
+
+        <!-- 确定按钮 -->
+        <button class="ref-confirm-btn" id="refConfirmBtn" onclick="confirmTimeFilter()">确定</button>
+    </div>
+</div>
+
+<!-- 全选条 -->
+<div class="select-all-bar" id="selectAllBar" style="margin:0 16px">
+    <div class="select-all-btn" onclick="toggleSelectAllFiltered()">
+        <div class="org-checkbox" id="selectAllCheckbox" style="width:20px;height:20px;border-radius:6px;border-width:1.5px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <span>全选当前筛选结果</span>
+    </div>
+    <div class="filter-count" id="filterCount"></div>
+</div>
+
+<div style="padding:0 16px">
+    <div class="sub-item-page-list" id="subItemList"></div>
+</div>
+
+<div class="bottom-bar">
+    <button class="btn btn-primary" onclick="saveSubItems()">确认屏蔽</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const APP_STATE_KEY = 'privacy_app_state';
+
+const ICONS = {
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+    successCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+    warningCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    emptySearch: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'
+};
+
+// 模块SVG图标映射
+function getModuleSvgIcon(moduleId) {
+    const icons = {
+        maternity: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+        hypertension: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+        diabetes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7l5.7 5.6a8 8 0 1 1-11.3 0z"/></svg>',
+        children: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="5"/><path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2"/></svg>',
+        elderly: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M12 11v8"/><path d="M8 14l-3 7h4l3-4 3 4h4l-3-7"/></svg>',
+        mental: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v1a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M9 10h6M10 14h4"/><path d="M12 10v8"/><path d="M8 18c0-2 2-4 4-4s4 2 4 4"/></svg>'
+    };
+    return icons[moduleId] || '';
+}
+
+// 业务模块数据
+const moduleData = [
+    {
+        id: 'maternity', name: '孕产妇管理', icon: '🤰', color: '#FFF0F0', iconColor: '#FF6B6B',
+        subItems: [
+            { id: 'm1', name: '首次产检随访', date: '2024-10-15', doctor: '王丽华', type: 'followup', typeName: '随访' },
+            { id: 'm2', name: '孕中期随访', date: '2024-12-20', doctor: '王丽华', type: 'followup', typeName: '随访' },
+            { id: 'm3', name: '孕晚期随访', date: '2025-01-10', doctor: '张芳', type: 'followup', typeName: '随访' },
+            { id: 'm4', name: '产后访视', date: '2025-01-20', doctor: '张芳', type: 'followup', typeName: '随访' },
+            { id: 'm5', name: '产后42天健康检查', date: '2025-02-05', doctor: '王丽华', type: 'checkup', typeName: '体检' },
+        ]
+    },
+    {
+        id: 'hypertension', name: '高血压患者管理', icon: '🩺', color: '#FDEDEE', iconColor: '#E84855',
+        subItems: [
+            { id: 'h1', name: '随访记录（2025-01）', date: '2025-01-05', doctor: '李明', type: 'followup', typeName: '随访' },
+            { id: 'h2', name: '随访记录（2024-12）', date: '2024-12-05', doctor: '李明', type: 'followup', typeName: '随访' },
+            { id: 'h3', name: '随访记录（2024-11）', date: '2024-11-05', doctor: '陈强', type: 'followup', typeName: '随访' },
+            { id: 'h4', name: '年度健康评估', date: '2024-12-30', doctor: '李明', type: 'checkup', typeName: '评估' },
+        ]
+    },
+    {
+        id: 'diabetes', name: '糖尿病患者管理', icon: '💉', color: '#EDFAF9', iconColor: '#4ECDC4',
+        subItems: [
+            { id: 'd1', name: '随访记录（2025-01）', date: '2025-01-08', doctor: '赵伟', type: 'followup', typeName: '随访' },
+            { id: 'd2', name: '随访记录（2024-12）', date: '2024-12-08', doctor: '赵伟', type: 'followup', typeName: '随访' },
+            { id: 'd3', name: '糖化血红蛋白检测', date: '2025-01-08', doctor: '赵伟', type: 'test', typeName: '检验' },
+        ]
+    },
+    {
+        id: 'children', name: '0-6岁儿童管理', icon: '👶', color: '#EDF7FA', iconColor: '#45B7D1',
+        subItems: [
+            { id: 'c1', name: '新生儿访视', date: '2024-06-10', doctor: '孙颖', type: 'followup', typeName: '访视' },
+            { id: 'c2', name: '1岁健康检查', date: '2024-09-15', doctor: '孙颖', type: 'checkup', typeName: '体检' },
+            { id: 'c3', name: '疫苗接种记录', date: '2024-12-20', doctor: '周婷', type: 'other', typeName: '接种' },
+            { id: 'c4', name: '视力筛查', date: '2025-01-05', doctor: '孙颖', type: 'test', typeName: '筛查' },
+        ]
+    },
+    {
+        id: 'elderly', name: '老年人健康管理', icon: '👴', color: '#FEF7E6', iconColor: '#F9A825',
+        subItems: [
+            { id: 'e1', name: '年度体检报告', date: '2024-11-20', doctor: '刘洋', type: 'checkup', typeName: '体检' },
+            { id: 'e2', name: '生活方式指导', date: '2024-12-15', doctor: '刘洋', type: 'other', typeName: '指导' },
+            { id: 'e3', name: '随访记录（2025-01）', date: '2025-01-12', doctor: '刘洋', type: 'followup', typeName: '随访' },
+        ]
+    },
+    {
+        id: 'mental', name: '严重精神障碍患者管理', icon: '🧠', color: '#F2EEFE', iconColor: '#7C5CFC',
+        subItems: [
+            { id: 'p1', name: '随访记录（2025-01）', date: '2025-01-03', doctor: '马俊', type: 'followup', typeName: '随访' },
+            { id: 'p2', name: '用药指导', date: '2025-01-03', doctor: '马俊', type: 'other', typeName: '指导' },
+            { id: 'p3', name: '康复评估', date: '2024-12-20', doctor: '马俊', type: 'checkup', typeName: '评估' },
+        ]
+    }
+];
+
+function loadState() {
+    try {
+        const raw = localStorage.getItem(APP_STATE_KEY);
+        if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    const modules = {};
+    moduleData.forEach(m => { modules[m.id] = { mode: 'none', blockedItems: [] }; });
+    return { blockedOrgs: [], modules: modules, lockEnabled: false, lockPassword: '', imEnabled: false };
+}
+
+function saveState(state) {
+    localStorage.setItem(APP_STATE_KEY, JSON.stringify(state));
+}
+
+let currentSubPageModuleId = null;
+let subPageTimeFilter = '1y';
+let customDateStart = '';
+let customDateEnd = '';
+let timeFilterExpanded = false;   // 筛选面板默认收起
+
+function init() {
+    currentSubPageModuleId = sessionStorage.getItem('safebox_sub_module');
+    if (!currentSubPageModuleId) {
+        window.location.href = 'safebox.html';
+        return;
+    }
+
+    // 恢复时间筛选状态（默认近一年）
+    subPageTimeFilter = sessionStorage.getItem('safebox_time_filter') || '1y';
+    customDateStart = sessionStorage.getItem('safebox_custom_start') || '';
+    customDateEnd = sessionStorage.getItem('safebox_custom_end') || '';
+
+    // 进入时默认隐藏时间筛选面板
+    timeFilterExpanded = false;
+
+    renderSubPage();
+    initTimeFilterUI();
+    collapseTimeFilter();
+}
+
+function renderSubPage() {
+    if (!currentSubPageModuleId) return;
+    const moduleDef = moduleData.find(x => x.id === currentSubPageModuleId);
+    const state = loadState();
+    const state_m = state.modules[currentSubPageModuleId] || { mode: 'none', blockedItems: [] };
+    const blockedItems = Array.isArray(state_m.blockedItems) ? state_m.blockedItems : [];
+
+    document.getElementById('subPageHeader').innerHTML = `
+        <div class="module-mini-icon" style="background:${moduleDef.color}; color:${moduleDef.iconColor}">${getModuleSvgIcon(moduleDef.id)}</div>
+        <div class="module-mini-name">
+            <div class="name">${moduleDef.name}</div>
+            <div class="desc">共 ${moduleDef.subItems.length} 条记录</div>
+        </div>
+        <div class="selected-count">已选 ${blockedItems.length} 项</div>
+    `;
+    updateFilterEntryText();
+    renderSubItemList();
+}
+
+// ====== 时间筛选面板展开/收起 ======
+function toggleTimeFilter() {
+    if (timeFilterExpanded) {
+        collapseTimeFilter();
+    } else {
+        expandTimeFilter();
+    }
+}
+
+function expandTimeFilter() {
+    timeFilterExpanded = true;
+    document.getElementById('timeFilterPanel').classList.add('expanded');
+    document.getElementById('timeFilterEntry').classList.add('expanded');
+    initTimeFilterUI();
+    updateRefConfirmBtn();
+}
+
+function collapseTimeFilter() {
+    timeFilterExpanded = false;
+    document.getElementById('timeFilterPanel').classList.remove('expanded');
+    document.getElementById('timeFilterEntry').classList.remove('expanded');
+}
+
+function initTimeFilterUI() {
+    const grid = document.getElementById('quickFilterGrid');
+    for (let i = 0; i < 4; i++) grid.children[i].classList.remove('active');
+    grid.children[0].classList.toggle('active', subPageTimeFilter === '6m');
+    grid.children[1].classList.toggle('active', subPageTimeFilter === '1y');
+    grid.children[2].classList.toggle('active', subPageTimeFilter === '3y');
+    grid.children[3].classList.toggle('active', subPageTimeFilter === 'custom');
+
+    // 仅自定义模式显示日期选择框
+    const customSection = document.getElementById('customDateSection');
+    customSection.style.display = subPageTimeFilter === 'custom' ? 'block' : 'none';
+
+    document.getElementById('refStartDate').value = customDateStart || '';
+    document.getElementById('refEndDate').value = customDateEnd || '';
+    updateRefDateBoxes();
+}
+
+function updateFilterEntryText() {
+    const entryText = document.getElementById('filterEntryText');
+    if (!entryText) return;
+    const now = new Date('2025-02-15');
+    if (subPageTimeFilter === 'all') {
+        entryText.textContent = '全部';
+    } else if (subPageTimeFilter === '6m') {
+        const c = new Date(now); c.setDate(c.getDate() - 183);
+        entryText.textContent = `${formatDate(c)}~${formatDate(now)}`;
+    } else if (subPageTimeFilter === '1y') {
+        const c = new Date(now); c.setDate(c.getDate() - 365);
+        entryText.textContent = `${formatDate(c)}~${formatDate(now)}`;
+    } else if (subPageTimeFilter === '3y') {
+        const c = new Date(now); c.setDate(c.getDate() - 1095);
+        entryText.textContent = `${formatDate(c)}~${formatDate(now)}`;
+    } else if (subPageTimeFilter === 'custom') {
+        const s = customDateStart || '____-__-__';
+        const e = customDateEnd || '____-__-__';
+        entryText.textContent = `${s}~${e}`;
+    }
+}
+
+function quickSelect(key) {
+    subPageTimeFilter = key;
+    const grid = document.getElementById('quickFilterGrid');
+    for (let i = 0; i < 4; i++) grid.children[i].classList.remove('active');
+    grid.children[0].classList.toggle('active', key === '6m');
+    grid.children[1].classList.toggle('active', key === '1y');
+    grid.children[2].classList.toggle('active', key === '3y');
+    grid.children[3].classList.toggle('active', key === 'custom');
+
+    // 仅自定义模式显示日期选择框
+    const customSection = document.getElementById('customDateSection');
+    if (key === 'custom') {
+        customSection.style.display = 'block';
+    } else {
+        customSection.style.display = 'none';
+        customDateStart = '';
+        customDateEnd = '';
+        document.getElementById('refStartDate').value = '';
+        document.getElementById('refEndDate').value = '';
+        updateRefDateBoxes();
+        document.getElementById('refDateHint').classList.remove('show');
+        document.getElementById('refEndDateBox').classList.remove('error');
+    }
+    updateRefConfirmBtn();
+}
+
+function onRefDateChange() {
+    updateRefDateBoxes();
+    const startVal = document.getElementById('refStartDate').value;
+    const endVal = document.getElementById('refEndDate').value;
+    const hint = document.getElementById('refDateHint');
+    const endBox = document.getElementById('refEndDateBox');
+    if (startVal && endVal) {
+        if (new Date(endVal) < new Date(startVal)) {
+            hint.classList.add('show');
+            endBox.classList.add('error');
+        } else {
+            hint.classList.remove('show');
+            endBox.classList.remove('error');
+        }
+    } else {
+        hint.classList.remove('show');
+        endBox.classList.remove('error');
+    }
+    // 日期变更时自动切到自定义模式
+    subPageTimeFilter = 'custom';
+    const grid = document.getElementById('quickFilterGrid');
+    for (let i = 0; i < 4; i++) grid.children[i].classList.remove('active');
+    grid.children[3].classList.add('active');
+    updateRefConfirmBtn();
+}
+
+function updateRefDateBoxes() {
+    const s = document.getElementById('refStartDate').value;
+    const e = document.getElementById('refEndDate').value;
+    document.getElementById('refStartDateBox').classList.toggle('filled', !!s);
+    document.getElementById('refEndDateBox').classList.toggle('filled', !!e);
+    document.getElementById('refStartDateBox').classList.remove('error');
+    document.getElementById('refEndDateBox').classList.remove('error');
+}
+
+function updateRefConfirmBtn() {
+    const btn = document.getElementById('refConfirmBtn');
+    if (subPageTimeFilter === 'custom') {
+        const s = document.getElementById('refStartDate').value;
+        const e = document.getElementById('refEndDate').value;
+        btn.disabled = !(s && e && new Date(e) >= new Date(s));
+    } else {
+        btn.disabled = false;
+    }
+}
+
+// 点击"确定"——收起时间筛选面板，应用筛选
+function confirmTimeFilter() {
+    if (subPageTimeFilter === 'custom') {
+        const s = document.getElementById('refStartDate').value;
+        const e = document.getElementById('refEndDate').value;
+        if (!s || !e) { showToast('请选择开始和结束日期', 'warning'); return; }
+        if (new Date(e) < new Date(s)) { showToast('结束日期不能早于开始日期', 'warning'); return; }
+        customDateStart = s;
+        customDateEnd = e;
+    }
+
+    // 标记筛选已确认
+    sessionStorage.setItem('safebox_filter_confirmed', 'true');
+    // 持久化到 session（供 safebox.html 等读取）
+    sessionStorage.setItem('safebox_time_filter', subPageTimeFilter);
+    sessionStorage.setItem('safebox_custom_start', customDateStart);
+    sessionStorage.setItem('safebox_custom_end', customDateEnd);
+
+    updateFilterEntryText();
+    renderSubItemList();
+
+    // 收起面板
+    collapseTimeFilter();
+
+    const fi = getFilteredItems();
+    showToast(`筛选完成，共 ${fi.length} 条记录`);
+}
+
+// ====== 数据筛选 ======
+function getFilteredItems() {
+    if (!currentSubPageModuleId) return [];
+    const md = moduleData.find(x => x.id === currentSubPageModuleId);
+    if (subPageTimeFilter === 'all') return md.subItems;
+    if (subPageTimeFilter === 'custom') {
+        if (!customDateStart || !customDateEnd) return md.subItems;
+        const s = new Date(customDateStart);
+        const e = new Date(customDateEnd);
+        e.setHours(23, 59, 59);
+        return md.subItems.filter(item => {
+            const d = new Date(item.date);
+            return d >= s && d <= e;
+        });
+    }
+    const now = new Date('2025-02-15');
+    const ranges = { '6m': 183, '1y': 365, '3y': 1095 };
+    const days = ranges[subPageTimeFilter];
+    if (!days) return md.subItems;
+    const cutoff = new Date(now);
+    cutoff.setDate(cutoff.getDate() - days);
+    return md.subItems.filter(item => new Date(item.date) >= cutoff);
+}
+
+function formatDate(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${dd}`;
+}
+
+// ====== 子项列表渲染与操作 ======
+function renderSubItemList() {
+    if (!currentSubPageModuleId) return;
+    const state = loadState();
+    const sm = state.modules[currentSubPageModuleId] || { mode: 'none', blockedItems: [] };
+    const blockedItems = Array.isArray(sm.blockedItems) ? sm.blockedItems : [];
+    const fi = getFilteredItems();
+
+    document.getElementById('filterCount').textContent = `筛选出 ${fi.length} 条`;
+    const ac = fi.length > 0 && fi.every(item => blockedItems.includes(item.id));
+    document.getElementById('selectAllCheckbox').classList.toggle('checked', ac);
+
+    if (fi.length === 0) {
+        document.getElementById('subItemList').innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">${ICONS.emptySearch}</div>
+                <div>该时间范围内无记录</div>
+            </div>`;
+        return;
+    }
+
+    document.getElementById('subItemList').innerHTML = fi.map(item => {
+        const checked = blockedItems.includes(item.id);
+        const tc = item.type || 'other';
+        const tn = item.typeName || '记录';
+        return `
+            <div class="sub-item-page-item" onclick="toggleSubItemPage('${item.id}')">
+                <div class="sub-item-checkbox ${checked ? 'checked' : ''}" id="sub-page-check-${item.id}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <div class="sub-item-content">
+                    <div class="sub-item-title">${item.name}</div>
+                    <div class="sub-item-meta">
+                        <span class="sub-item-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            ${item.date}
+                        </span>
+                        <span class="sub-item-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            ${item.doctor}
+                        </span>
+                        <span class="sub-item-tag ${tc}">${tn}</span>
+                    </div>
+                </div>
+            </div>`;
+    }).join('');
+}
+
+function toggleSubItemPage(itemId) {
+    if (!currentSubPageModuleId) return;
+    const state = loadState();
+    const m = state.modules[currentSubPageModuleId];
+    if (!Array.isArray(m.blockedItems)) m.blockedItems = [];
+
+    if (m.blockedItems.includes(itemId)) {
+        m.blockedItems = m.blockedItems.filter(x => x !== itemId);
+    } else {
+        m.blockedItems.push(itemId);
+    }
+
+    const md = moduleData.find(x => x.id === currentSubPageModuleId);
+    if (m.blockedItems.length === 0) m.mode = 'none';
+    else if (m.blockedItems.length === md.subItems.length) m.mode = 'all';
+    else m.mode = 'partial';
+
+    saveState(state);
+
+    const subCheck = document.getElementById('sub-page-check-' + itemId);
+    if (subCheck) subCheck.classList.toggle('checked');
+
+    const selCount = document.querySelector('.selected-count');
+    if (selCount) selCount.textContent = `已选 ${m.blockedItems.length} 项`;
+
+    const fi = getFilteredItems();
+    const ac = fi.length > 0 && fi.every(item => m.blockedItems.includes(item.id));
+    document.getElementById('selectAllCheckbox').classList.toggle('checked', ac);
+}
+
+function toggleSelectAllFiltered() {
+    if (!currentSubPageModuleId) return;
+    const state = loadState();
+    const m = state.modules[currentSubPageModuleId];
+    if (!Array.isArray(m.blockedItems)) m.blockedItems = [];
+
+    const fi = getFilteredItems();
+    if (fi.length === 0) return;
+    const ac = fi.every(item => m.blockedItems.includes(item.id));
+
+    if (ac) {
+        fi.forEach(item => {
+            m.blockedItems = m.blockedItems.filter(x => x !== item.id);
+        });
+    } else {
+        fi.forEach(item => {
+            if (!m.blockedItems.includes(item.id)) m.blockedItems.push(item.id);
+        });
+    }
+
+    const md = moduleData.find(x => x.id === currentSubPageModuleId);
+    if (m.blockedItems.length === 0) m.mode = 'none';
+    else if (m.blockedItems.length === md.subItems.length) m.mode = 'all';
+    else m.mode = 'partial';
+
+    saveState(state);
+    renderSubItemList();
+
+    const selCount = document.querySelector('.selected-count');
+    if (selCount) selCount.textContent = `已选 ${m.blockedItems.length} 项`;
+}
+
+function saveSubItems() {
+    const state = loadState();
+    const m = state.modules[currentSubPageModuleId];
+    if (!Array.isArray(m.blockedItems)) m.blockedItems = [];
+    showToast(`已屏蔽 ${m.blockedItems.length} 项数据`);
+    // 清理临时状态
+    sessionStorage.removeItem('safebox_sub_module');
+    sessionStorage.removeItem('safebox_time_filter');
+    sessionStorage.removeItem('safebox_custom_start');
+    sessionStorage.removeItem('safebox_custom_end');
+    sessionStorage.removeItem('safebox_filter_confirmed');
+    setTimeout(() => { window.location.href = 'safebox.html'; }, 1000);
+}
+
+function goBack() {
+    sessionStorage.removeItem('safebox_sub_module');
+    sessionStorage.removeItem('safebox_time_filter');
+    sessionStorage.removeItem('safebox_custom_start');
+    sessionStorage.removeItem('safebox_custom_end');
+    sessionStorage.removeItem('safebox_filter_confirmed');
+    window.location.href = 'safebox.html';
+}
+
+function showToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    const icon = type === 'success' ? ICONS.successCircle : ICONS.warningCircle;
+    const iconColor = type === 'success' ? '#15CF6E' : '#FEA800';
+    toast.innerHTML = `<div class="toast-icon" style="color:${iconColor}">${icon}</div><div class="toast-text">${msg}</div>`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1800);
+}
+
+// 初始化
+init();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>调阅安全锁</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* lock.html 专属：缩减中间区域高度，确保开锁后密码设置不超出屏幕 */
+        .lock-card {
+            padding: 16px 16px 14px;
+        }
+        .lock-icon-big {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 10px;
+        }
+        .lock-icon-big svg {
+            width: 28px;
+            height: 28px;
+        }
+        .section-desc {
+            padding: 0 0 10px;
+        }
+        .lock-switch-row {
+            padding: 12px 16px;
+            margin-bottom: 12px;
+        }
+        .password-section-inner {
+            padding: 14px 16px;
+        }
+        .pwd-label {
+            margin-bottom: 6px;
+        }
+        .pwd-input-group {
+            margin-bottom: 10px;
+        }
+        .pwd-input {
+            padding: 10px 14px;
+            font-size: 16px;
+        }
+        .pwd-strength-text {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 状态栏 -->
+<div class="status-bar">
+    <span>9:41</span>
+    <div class="status-bar-icons">
+        <div class="signal-bars">
+            <span></span><span></span><span></span><span></span>
+        </div>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000000">
+            <path d="M8 2.5C10.5 2.5 12.8 3.5 14.5 5.2L13.5 6.2C12.1 4.9 10.1 4 8 4C5.9 4 3.9 4.9 2.5 6.2L1.5 5.2C3.2 3.5 5.5 2.5 8 2.5Z" fill="currentColor"/>
+            <path d="M8 6C9.4 6 10.7 6.5 11.7 7.5L10.7 8.5C10 7.8 9 7.5 8 7.5C7 7.5 6 7.8 5.3 8.5L4.3 7.5C5.3 6.5 6.6 6 8 6Z" fill="currentColor"/>
+            <circle cx="8" cy="10" r="1.5" fill="currentColor"/>
+        </svg>
+        <div class="battery">
+            <div class="battery-fill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<div class="nav-bar">
+    <div class="nav-back" onclick="goBack()">
+        <img src="../img/返回.png" alt="返回" style="width:24px;height:24px">
+    </div>
+    <span class="nav-title">调阅安全锁</span>
+    <div class="nav-action" onclick="openSettings()">
+        <img src="../img/设置.png" alt="设置" style="width: 62px;height:24px">
+    </div>
+</div>
+
+<!-- 页面内容 -->
+<div class="page">
+    <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <circle cx="12" cy="16" r="1"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        调阅安全锁
+    </div>
+    <div class="section-desc">开启后，他人在调阅您的健康档案时需要输入密码验证，为您的隐私加上一道安全屏障。</div>
+
+    <div class="lock-card" id="lockCard">
+        <div class="lock-icon-big locked" id="lockIconBig">
+            <svg id="lockIconSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+        </div>
+        <div class="lock-title" id="lockTitle">安全锁未开启</div>
+        <div class="lock-desc" id="lockDescText">开启后，调阅档案需要输入密码</div>
+    </div>
+
+    <div class="lock-switch-row">
+        <div>
+            <div class="label">开启调阅安全锁</div>
+            <div class="sub-label">开启后需设置6位数字密码</div>
+        </div>
+        <div class="mini-switch" id="lockSwitch" onclick="toggleLock()"></div>
+    </div>
+
+    <div class="password-section" id="passwordSection">
+        <div class="password-section-inner">
+            <div class="pwd-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                </svg>
+                设置密码
+            </div>
+            <div class="pwd-input-group">
+                <input type="password" class="pwd-input" id="pwdInput1" placeholder="请输入6位数字密码" maxlength="6" oninput="checkPwdStrength()" inputmode="numeric">
+            </div>
+            <div class="pwd-strength" id="pwdStrength" style="display:none">
+                <div class="pwd-strength-bar" id="strengthBar1"></div>
+                <div class="pwd-strength-bar" id="strengthBar2"></div>
+                <div class="pwd-strength-bar" id="strengthBar3"></div>
+            </div>
+            <div class="pwd-strength-text" id="strengthText" style="color: var(--text-secondary)"></div>
+
+            <div class="pwd-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                确认密码
+            </div>
+            <div class="pwd-input-group">
+                <input type="password" class="pwd-input" id="pwdInput2" placeholder="请再次输入密码" maxlength="6" inputmode="numeric">
+            </div>
+            <div class="pwd-hint" id="pwdHint">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                两次输入的密码不一致，请重新输入
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-bar" id="lockBottomBar">
+    <button class="btn btn-primary" onclick="saveLock()" id="lockSaveBtn">保存</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const APP_STATE_KEY = 'privacy_app_state';
+
+const ICONS = {
+    successCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+    warningCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+};
+
+function loadState() {
+    try {
+        const raw = localStorage.getItem(APP_STATE_KEY);
+        if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    return { blockedOrgs: [], modules: {}, lockEnabled: false, lockPassword: '', imEnabled: false };
+}
+
+function saveState(state) {
+    localStorage.setItem(APP_STATE_KEY, JSON.stringify(state));
+}
+
+let lockEnabled = false;
+let lockPassword = '';
+
+function init() {
+    const state = loadState();
+    lockEnabled = state.lockEnabled || false;
+    lockPassword = state.lockPassword || '';
+
+    if (lockEnabled) {
+        document.getElementById('lockSwitch').classList.add('on');
+        document.getElementById('passwordSection').classList.add('show');
+        document.getElementById('lockIconBig').classList.remove('locked');
+        document.getElementById('lockIconBig').classList.add('unlocked');
+        document.getElementById('lockCard').classList.add('unlocked');
+        document.getElementById('lockIconSvg').innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>';
+        document.getElementById('lockTitle').textContent = '安全锁已开启';
+        document.getElementById('lockDescText').textContent = '请设置6位数字密码，调阅档案时需验证';
+        document.getElementById('lockSaveBtn').textContent = '保存密码';
+        if (lockPassword) {
+            document.getElementById('pwdInput1').value = lockPassword;
+            document.getElementById('pwdInput2').value = lockPassword;
+            checkPwdStrength();
+        }
+    }
+}
+
+function toggleLock() {
+    const sw = document.getElementById('lockSwitch');
+    const section = document.getElementById('passwordSection');
+    const iconBig = document.getElementById('lockIconBig');
+    const lockCard = document.getElementById('lockCard');
+    const lockSvg = document.getElementById('lockIconSvg');
+    const title = document.getElementById('lockTitle');
+    const desc = document.getElementById('lockDescText');
+    const saveBtn = document.getElementById('lockSaveBtn');
+
+    lockEnabled = !lockEnabled;
+    sw.classList.toggle('on');
+
+    if (lockEnabled) {
+        section.classList.add('show');
+        iconBig.classList.remove('locked');
+        iconBig.classList.add('unlocked');
+        lockCard.classList.add('unlocked');
+        lockSvg.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>';
+        title.textContent = '安全锁已开启';
+        desc.textContent = '请设置6位数字密码，调阅档案时需验证';
+        saveBtn.textContent = '保存密码';
+    } else {
+        section.classList.remove('show');
+        iconBig.classList.remove('unlocked');
+        iconBig.classList.add('locked');
+        lockCard.classList.remove('unlocked');
+        lockSvg.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>';
+        title.textContent = '安全锁未开启';
+        desc.textContent = '开启后，调阅档案需要输入密码';
+        lockPassword = '';
+        document.getElementById('pwdInput1').value = '';
+        document.getElementById('pwdInput2').value = '';
+        document.getElementById('pwdStrength').style.display = 'none';
+        document.getElementById('strengthText').textContent = '';
+        document.getElementById('pwdHint').classList.remove('show');
+        saveBtn.textContent = '保存';
+    }
+}
+
+function checkPwdStrength() {
+    const pwd = document.getElementById('pwdInput1').value;
+    const strength = document.getElementById('pwdStrength');
+    const text = document.getElementById('strengthText');
+
+    if (pwd.length === 0) {
+        strength.style.display = 'none';
+        text.textContent = '';
+        return;
+    }
+
+    strength.style.display = 'flex';
+    const bar1 = document.getElementById('strengthBar1');
+    const bar2 = document.getElementById('strengthBar2');
+    const bar3 = document.getElementById('strengthBar3');
+
+    bar1.className = 'pwd-strength-bar';
+    bar2.className = 'pwd-strength-bar';
+    bar3.className = 'pwd-strength-bar';
+
+    if (pwd.length < 4) {
+        bar1.classList.add('weak');
+        text.textContent = '密码强度：弱';
+        text.style.color = 'var(--danger)';
+    } else if (pwd.length < 6) {
+        bar1.classList.add('medium');
+        bar2.classList.add('medium');
+        text.textContent = '密码强度：中';
+        text.style.color = 'var(--warning)';
+    } else {
+        bar1.classList.add('strong');
+        bar2.classList.add('strong');
+        bar3.classList.add('strong');
+        text.textContent = '密码强度：强';
+        text.style.color = 'var(--success)';
+    }
+}
+
+function saveLock() {
+    if (!lockEnabled) {
+        const state = loadState();
+        state.lockEnabled = false;
+        state.lockPassword = '';
+        saveState(state);
+        showToast('安全锁已关闭');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+        return;
+    }
+
+    const pwd1 = document.getElementById('pwdInput1').value;
+    const pwd2 = document.getElementById('pwdInput2').value;
+    const hint = document.getElementById('pwdHint');
+
+    if (!pwd1 || pwd1.length < 6) {
+        showToast('请输入6位数字密码', 'warning');
+        document.getElementById('pwdInput1').classList.add('error');
+        setTimeout(() => document.getElementById('pwdInput1').classList.remove('error'), 1500);
+        return;
+    }
+
+    if (pwd1 !== pwd2) {
+        hint.classList.add('show');
+        document.getElementById('pwdInput2').classList.add('error');
+        setTimeout(() => document.getElementById('pwdInput2').classList.remove('error'), 1500);
+        return;
+    }
+
+    hint.classList.remove('show');
+    lockPassword = pwd1;
+
+    const state = loadState();
+    state.lockEnabled = true;
+    state.lockPassword = pwd1;
+    saveState(state);
+
+    showToast('安全锁密码设置成功');
+    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+}
+
+function goBack() {
+    window.location.href = 'index.html';
+}
+
+function showToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    const icon = type === 'success' ? ICONS.successCircle : ICONS.warningCircle;
+    const iconColor = type === 'success' ? '#15CF6E' : '#FEA800';
+    toast.innerHTML = `<div class="toast-icon" style="color:${iconColor}">${icon}</div><div class="toast-text">${msg}</div>`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1800);
+}
+
+// 初始化
+init();
+</script>
+
+</body>
+</html>

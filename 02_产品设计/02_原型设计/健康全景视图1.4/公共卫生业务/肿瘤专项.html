@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>恶性肿瘤病例专项表</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", "SimSun", "宋体", Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            font-size: 14px;
+            padding: 20px;
+        }
+        .container {
+            width: 920px;
+            margin: 0 auto;
+            background: #fff;
+        }
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            letter-spacing: 4px;
+        }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 4px 10px 4px;
+            font-size: 14px;
+            color: #333;
+        }
+        .header-row .left {
+            text-align: left;
+        }
+        .header-row .right {
+            text-align: right;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #b8d4ea;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid #b8d4ea;
+            padding: 10px 14px;
+            text-align: left;
+            vertical-align: middle;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+        .lbl {
+            background: #e6f1f9;
+            text-align: center;
+            color: #333;
+            font-weight: normal;
+        }
+        .val {
+            background: #fff;
+            color: #333;
+        }
+        .diagnosis-content {
+            padding: 12px 14px;
+            line-height: 2;
+            font-size: 14px;
+        }
+        .diagnosis-content .row {
+            display: block;
+            margin-bottom: 2px;
+        }
+        .diagnosis-content .row strong {
+            font-weight: bold;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">恶性肿瘤病例专项表</h1>
+        <div class="header-row">
+            <div class="left">姓名：自壹</div>
+            <div class="right">编号：11200056</div>
+        </div>
+
+        <table>
+            <colgroup>
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+            </colgroup>
+
+            <!-- 基本信息：左侧标签 colspan=4 值 colspan=3，右侧标签 colspan=2 值 colspan=3 -->
+            <tr>
+                <th class="lbl" colspan="4">性别</th>
+                <td class="val" colspan="3">男</td>
+                <th class="lbl" colspan="2">吸烟史</th>
+                <td class="val" colspan="3">从不吸烟</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="4">开始经常吸烟年龄</th>
+                <td class="val" colspan="3">12 岁</td>
+                <th class="lbl" colspan="2">戒烟年龄</th>
+                <td class="val" colspan="3">35 岁</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="4">合计吸烟时间</th>
+                <td class="val" colspan="3">1 年</td>
+                <th class="lbl" colspan="2">日吸烟支数</th>
+                <td class="val" colspan="3">无</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="4">联系人</th>
+                <td class="val" colspan="3">陈友</td>
+                <th class="lbl" colspan="2">联系人电话</th>
+                <td class="val" colspan="3">15589896545</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="4">门诊号</th>
+                <td class="val" colspan="3">无</td>
+                <th class="lbl" colspan="2">住院号</th>
+                <td class="val" colspan="3">无</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="4">病理号</th>
+                <td class="val" colspan="8">无</td>
+            </tr>
+
+            <!-- 肿瘤诊断：分组标签 colspan=2(rowspan=4)，每行并排2个字段 -->
+            <tr>
+                <th class="lbl" colspan="2" rowspan="4">肿瘤<br>诊断</th>
+                <th class="lbl" colspan="2">ICD-10 编码</th>
+                <td class="val" colspan="3">C84.3</td>
+                <th class="lbl" colspan="2">ICD-O-3 形态学编码</th>
+                <td class="val" colspan="3">M9560/1</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">ICD-O-3 形态学名称</th>
+                <td class="val" colspan="3">神经鞘瘤病</td>
+                <th class="lbl" colspan="2">ICD-O-3 解剖学编码</th>
+                <td class="val" colspan="3">C17.2</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">ICD-O-3 解剖学名称</th>
+                <td class="val" colspan="3">回肠（不包括回盲瓣 C18.0）</td>
+                <th class="lbl" colspan="2">肿瘤诊断名称</th>
+                <td class="val" colspan="3">淋巴上皮样淋巴瘤</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">报告卡编号</th>
+                <td class="val" colspan="3">02322</td>
+                <th class="lbl" colspan="2">病情已告知病人</th>
+                <td class="val" colspan="3">不详</td>
+            </tr>
+
+            <!-- 分期、治疗及随访：分组标签 colspan=2(rowspan=11)，每行并排2个字段 -->
+            <tr>
+                <th class="lbl" colspan="2" rowspan="11">分期<br>治疗<br>随访</th>
+                <th class="lbl" colspan="2">肿瘤TNM分期</th>
+                <td class="val" colspan="3">不详</td>
+                <th class="lbl" colspan="2">肿瘤临床分期</th>
+                <td class="val" colspan="3">无法判定</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">分级（组织学分级和分化程度）</th>
+                <td class="val" colspan="3">中等分化（II级）</td>
+                <th class="lbl" colspan="2">肿瘤诊断依据</th>
+                <td class="val" colspan="3">超声波</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">首次出现症状日期</th>
+                <td class="val" colspan="3">2026-06-30</td>
+                <th class="lbl" colspan="2">首次就诊日期</th>
+                <td class="val" colspan="3">2026-07-21</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">确诊日期</th>
+                <td class="val" colspan="3">2026-07-21</td>
+                <th class="lbl" colspan="2">首次治疗情况</th>
+                <td class="val" colspan="3">手术</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">首次手术医院</th>
+                <td class="val" colspan="3">XX医院</td>
+                <th class="lbl" colspan="2">首次手术日期</th>
+                <td class="val" colspan="3">2026-07-21</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">首次手术性质</th>
+                <td class="val" colspan="3">根治</td>
+                <th class="lbl" colspan="2">手术医院</th>
+                <td class="val" colspan="3">X医院</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">化疗医院</th>
+                <td class="val" colspan="3">无</td>
+                <th class="lbl" colspan="2">放疗医院</th>
+                <td class="val" colspan="3">无</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">社区管理医师</th>
+                <td class="val" colspan="3">无</td>
+                <th class="lbl" colspan="2">化疗次数</th>
+                <td class="val" colspan="3">无</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">目前情况类别</th>
+                <td class="val" colspan="3">稳定</td>
+                <th class="lbl" colspan="2">曾经治疗情况</th>
+                <td class="val" colspan="3">无</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">肿瘤家族史标志</th>
+                <td class="val" colspan="3">无</td>
+                <th class="lbl" colspan="2">卡氏评分（KPS）</th>
+                <td class="val" colspan="3">2</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">肿瘤部位转移</th>
+                <td class="val" colspan="8">无</td>
+            </tr>
+
+            <!-- 报告建档：分组标签 colspan=2(rowspan=3)，每行并排2个字段 -->
+            <tr>
+                <th class="lbl" colspan="2" rowspan="3">报告<br>建档</th>
+                <th class="lbl" colspan="2">报告机构</th>
+                <td class="val" colspan="3">青年人民医院</td>
+                <th class="lbl" colspan="2">报告医师</th>
+                <td class="val" colspan="3">夏真</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">报告日期</th>
+                <td class="val" colspan="3">2026-07-21</td>
+                <th class="lbl" colspan="2">建档机构</th>
+                <td class="val" colspan="3">青年人民医院</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="2">建档医师</th>
+                <td class="val" colspan="3">夏真</td>
+                <th class="lbl" colspan="2">建档日期</th>
+                <td class="val" colspan="3">2026-07-21</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>心脑血管高危人群随访</title>
+    <style>
+        /* ============================================================
+           全局重置 & 基础
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        body {
+            font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica,
+                Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+            background-color: #F3F5F7;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .page {
+            width: 375px;
+            max-width: 100%;
+            background-color: #F3F5F7;
+            min-height: 100vh;
+            padding-bottom: 20px;
+            margin: 0 auto;
+        }
+
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-row { display: flex; flex-direction: row; }
+
+        /* ============================================================
+           导航栏
+           ============================================================ */
+        .group_1 {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+
+        .box_1 {
+  display: flex; flex-direction: row; align-items: center;
+  margin: 0 10px 0 24px;
+}
+        .status-spacer { flex: 1; }
+        .text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+        .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0;
+}
+        .text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+        .image_1 {
+  width: 25px;
+  height: 13px;
+  margin: 5px 0 4px 6px;
+}
+
+        .box_2 {
+  margin-top: 15px;
+  display: flex; flex-direction: row;
+  align-items: center; flex-wrap: nowrap;
+}
+        .label_1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+          cursor: pointer;
+}
+        .text_3 {
+  flex: 1; min-width: 0;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+        .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+        /* ============================================================
+           卡片
+           ============================================================ */
+        .card {
+            background-color: #FFFFFF;
+            margin: 16px 16px 0 16px;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #E5E5E5;
+        }
+        .card:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #E5E5E5;
+            margin-top: 12px;
+        }
+        /* ============================================================
+           卡片头部（标题 + 图标）
+           ============================================================ */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: #096AFF;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: #333333;
+            line-height: 22px;
+        }
+
+        /* ============================================================
+           患者信息
+           ============================================================ */
+        .patient-info-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+        .patient-name {
+            color: #333333;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 22px;
+            font-family: 'PingFangSC-Medium', sans-serif;
+        }
+        .patient-meta {
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin-left: auto;
+            font-family: 'PingFangSC-Regular', sans-serif;
+        }
+
+        /* ============================================================
+           信息行 (label + value) - 遵循规范
+           ============================================================ */
+        .info-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            margin-top: 8px;
+        }
+        .info-row--first {
+            margin-top: 12px;
+        }
+
+        .info-label {
+            width: 136px;
+            flex-shrink: 0;
+            color: #333333;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            white-space: nowrap;
+        }
+        .info-value {
+            flex: 1;
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            word-break: break-word;
+        }
+        .info-value--blue {
+            color: #096AFF;
+            font-weight: 500;
+        }
+
+        /* 卡片1：患者基本信息 - 16px */
+        .patient-card .info-label {
+            font-size: 16px;
+            line-height: 22px;
+        }
+        .patient-card .info-value {
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        /* ============================================================
+           生活方式指导 - 标签 Regular 400
+           ============================================================ */
+        .lifestyle-card .info-row--first {
+            margin-top: 8px;
+        }
+        .lifestyle-card .info-label {
+            font-weight: 400;
+        }
+
+        /* ============================================================
+           体格检查 - 网格卡片（2列一行）
+           ============================================================ */
+        .metric-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        .metric-item {
+            background: #F4F6FB;
+            border-radius: 4px;
+            padding: 10px 4px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 56px;
+            text-align: center;
+        }
+
+        .metric-item .m-value {
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: #333333;
+            line-height: 22px;
+            letter-spacing: 0.3px;
+        }
+
+        .metric-item .m-value .m-unit {
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: #666666;
+            margin-left: 1px;
+        }
+
+        .metric-item .m-label {
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: #999999;
+            margin-top: 3px;
+            letter-spacing: 0.2px;
+        }
+
+        /* ============================================================
+           危险因素 - 灰色小圆点列表
+           ============================================================ */
+        .risk-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px 8px;
+            margin-top: 4px;
+        }
+
+        .risk-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: #333333;
+            line-height: 20px;
+            word-break: break-word;
+        }
+
+        .risk-item .risk-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #D1D5DB;
+            margin: 8px;
+            flex-shrink: 0;
+        }
+
+        .risk-item .risk-name {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* ============================================================
+           卡片纯文本内容（14px Regular #666666）
+           ============================================================ */
+        .content-text {
+            font-size: 14px;
+            font-weight: 400;
+            color: #666666;
+            line-height: 20px;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* ============================================================
+           底部脚注
+           ============================================================ */
+        .footer-note {
+            padding: 16px 16px 0 16px;
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            line-height: 17px;
+        }
+
+        /* ============================================================
+           响应式适配
+           ============================================================ */
+        @media (max-width: 375px) {
+            .page {
+                width: 100%;
+            }
+        }
+        @media (max-width: 340px) {
+            .info-label {
+                width: 118px;
+            }
+            .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+            .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+            .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0;
+}
+            .metric-item .m-value {
+                font-size: 14px;
+            }
+            .metric-item .m-value .m-unit {
+                font-size: 12px;
+            }
+            .lifestyle-card .info-label {
+                width: 100px;
+                font-size: 13px;
+            }
+            .lifestyle-card .info-value {
+                font-size: 13px;
+            }
+        }
+        @media (max-width: 320px) {
+            .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+            .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+            .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0;
+}
+            .info-label {
+                width: 90px;
+                font-size: 13px;
+            }
+            .info-value {
+                font-size: 13px;
+            }
+            .patient-meta {
+                margin-left: 0;
+                width: 100%;
+                margin-top: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page flex-col">
+
+        <!-- ==========================================================
+        导航栏
+        ========================================================== -->
+        <div class="group_1 flex-col">
+  <div class="box_1">
+    <span class="text_1">10:19</span>
+    <span class="status-spacer"></span>
+    <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+    <span class="text_2">5G</span>
+    <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+  </div>
+  <div class="box_2 flex-row">
+    <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+    <span class="text_3">心脑血管高危人群随访</span>
+    <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+  </div>
+</div>
+
+        <!-- ==========================================================
+        卡片1：患者基本信息
+        ========================================================== -->
+        <div class="card flex-col patient-card">
+            <div class="patient-info-row">
+                <span class="patient-name">自壹</span>
+                <span class="patient-meta">编号：11200056</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">随访日期</span>
+                <span class="info-value">2026-07-22</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">随访方式</span>
+                <span class="info-value">家庭电话</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">随访医生签名</span>
+                <span class="info-value">夏真</span>
+            </div>
+
+            <div class="info-row ">
+                <span class="info-label">下次随访日期</span>
+                <span class="info-value info-value--blue">2026-08-31</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片2：主要危险因素
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="card-title">主要危险因素</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="risk-grid">
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">2次平均SBP≥160mmHg/DBP≥100mmHg：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">LDL≥4.14mmol/L：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">HDL&lt;0.78mmol/L：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">心肌梗死病史：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">接受经皮冠状动脉介入治疗：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">接受冠状动脉搭桥手术：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">脑卒中病史：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">10年心血管患病风险≥20%：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">高血压：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">血脂异常：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">糖尿病：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">卒中家族史：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">吸烟：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">明显超重或肥胖：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">缺乏运动：是</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">心房颤动：是</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片3：体征
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        <path d="M18 9l3 3-3 3"/>
+                        <path d="M6 15l-3-3 3-3"/>
+                    </svg>
+                </div>
+                <span class="card-title">体征</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="metric-grid-2">
+                <div class="metric-item">
+                    <span class="m-value">140 <span class="m-unit">mmHg</span></span>
+                    <span class="m-label">血压</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">62 <span class="m-unit">kg</span></span>
+                    <span class="m-label">体重</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">177 <span class="m-unit">cm</span></span>
+                    <span class="m-label">身高</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">19.79 <span class="m-unit">kg/m²</span></span>
+                    <span class="m-label">体质指数</span>
+                </div>
+            </div>
+
+            <div class="info-row" style="margin-top:12px;">
+                <span class="info-label">足背动脉搏动</span>
+                <span class="info-value">触及正常</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片4：生活方式指导（按规范样式）
+        ========================================================== -->
+        <div class="card flex-col lifestyle-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M9 15l2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="card-title">生活方式</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">日吸烟量（支）</span>
+                <span class="info-value">5</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">日饮酒量（两）</span>
+                <span class="info-value">4</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">运动</span>
+                <span class="info-value">30 分钟/次 / 3 次/周</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">主食（克/天）</span>
+                <span class="info-value">—</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">心理调整</span>
+                <span class="info-value">良好</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">遵医行为</span>
+                <span class="info-value">良好</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片5：心脑血管分级
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v8"/>
+                        <path d="M8 12h8"/>
+                    </svg>
+                </div>
+                <span class="card-title">心脑血管分级</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label" style="font-weight:400;">心血管</span>
+                <span class="info-value">高危</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label" style="font-weight:400;">脑血管</span>
+                <span class="info-value">高危</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片6：本次随访周期新增疾病
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M9 15l2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="card-title">本次随访周期新增疾病</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label" style="font-weight:400;">房颤</span>
+                <span class="info-value">无</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label" style="font-weight:400;">糖尿病</span>
+                <span class="info-value">未接受降糖治疗</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label" style="font-weight:400;">高血压</span>
+                <span class="info-value">接受降压治疗</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label" style="font-weight:400;">血脂异常</span>
+                <span class="info-value">未接受调脂治疗</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片7：危险因素控制及治疗情况
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <span class="card-title">危险因素控制及治疗情况</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="content-text">配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片8：随访干预意见
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="card-title">随访干预意见</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="content-text">合理膳食、均衡营养、低盐控油、戒烟限酒、适量规律运动、保持健康体重、保证充足睡眠、保持良好心态</span>
+            </div>
+
+            <div class="info-row">
+                <span class="content-text">高血压患者请遵医嘱合理使用降压药物，注意定期复查</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        底部脚注
+        ========================================================== -->
+        <div class="footer-note">
+            心脑血管高危人群随访 · 随访日期 2026-07-22
+        </div>
+
+    </div>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '心脑血管管理列表.html';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>肿瘤管理</title>
+  <style>
+    /* ============================================================
+       肿瘤管理列表页 - 蓝色调，参照心脑血管/高危管理列表风格
+       主要指标：体重 + 体质指数(BMI) + 甲胎蛋白(AFP)
+       ============================================================ */
+
+    /* ---------- Reset & Base ---------- */
+    * { box-sizing: border-box; flex-shrink: 0; margin: 0; padding: 0; }
+    body {
+      font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+      background-color: #F3F5F7;
+      -webkit-font-smoothing: antialiased;
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    .flex-col { display: flex; flex-direction: column; }
+    .flex-row { display: flex; flex-direction: row; }
+    .justify-between { display: flex; justify-content: space-between; }
+    .align-center { display: flex; align-items: center; }
+    .align-start { display: flex; align-items: flex-start; }
+
+    /* ---------- Page ---------- */
+    .page {
+      background-color: #F3F5F7;
+      position: relative;
+      width: 100%;
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding-bottom: 16px;
+    }
+
+    /* ============================================================
+       导航栏
+       ============================================================ */
+    .group_1 {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+    .box_1 {
+  margin: 0 10px 0 24px;
+}
+    .text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+    .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0 5px 191px;
+}
+    .text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+    .image_1 {
+  width: 25px;
+  height: 13px;
+  margin: 5px 0 4px 6px;
+}
+
+    .box_2 {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
+    .label_1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+    .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+    .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+    /* ============================================================
+       时间筛选栏
+       ============================================================ */
+    .filter-bar {
+      background-color: #FFFFFF;
+      padding: 11px 80px;
+      display: flex;
+      justify-content: center;
+    }
+    .filter-date {
+      color: #333333; font-size: 16px; font-family: PingFangSC-Regular;
+      font-weight: 400; text-align: left; white-space: nowrap; line-height: 22px;
+    }
+    .filter-arrow {
+      width: 10px; height: 6px;
+      margin: 8px 0 8px 0;
+      cursor: pointer;
+    }
+
+    /* ============================================================
+       专项信息横幅 — 蓝色渐变
+       ============================================================ */
+    .banner {
+      width: 343px;
+      align-self: center;
+      margin-top: 16px;
+      padding: 16px 0 14px 16px;
+      background: linear-gradient(135deg, #096AFF 0%, #4DA3FF 55%, #99CCFF 100%);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      /* 静态蓝色投影 — 暗示可点击 */
+      box-shadow: 0 2px 8px rgba(9, 106, 255, 0.15);
+      /* 统一过渡曲线 */
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                  filter 0.15s ease;
+    }
+    /* 桌面端 hover — 轻微上浮 + 加深投影 */
+    .banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(9, 106, 255, 0.28);
+    }
+    /* 按压态 — scale 缩放 + 亮度降低 + 投影收缩，反馈明显 */
+    .banner:active {
+      transform: scale(0.97);
+      filter: brightness(0.9);
+      box-shadow: 0 1px 4px rgba(9, 106, 255, 0.15);
+    }
+    /* 键盘焦点态 — 无障碍 */
+    .banner:focus-visible {
+      outline: 3px solid rgba(255, 255, 255, 0.8);
+      outline-offset: -3px;
+    }
+    .banner-text-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .banner-title {
+      color: #FFFFFF;
+      font-size: 16px;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 22px;
+    }
+    .banner-subtitle {
+      color: #F5F5F5;
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 20px;
+      margin-top: 4px;
+    }
+    .banner-icon-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 12px;
+      padding-bottom: 2px;
+      flex-shrink: 0;
+      width: 72px;
+      height: 100%;
+    }
+    .banner-icon-placeholder {
+      width: 60px;
+      height: 53px;
+      flex-shrink: 0;
+      background: url(../img/专项图标.png) 100% no-repeat;
+      background-size: contain;
+    }
+
+    /* ---------- 提示标签 "点击查看专项信息 ›" ---------- */
+    .banner-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      align-self: flex-start;
+      margin-top: 8px;
+      padding: 3px 10px 3px 8px;
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 10px;
+      color: #FFFFFF;
+      font-size: 12px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      line-height: 17px;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .banner-hint svg {
+      width: 5px;
+      height: 9px;
+      flex-shrink: 0;
+    }
+
+    /* ---------- 涟漪扩散动效 ---------- */
+    .banner-ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.45);
+      transform: scale(0);
+      animation: ripple-spread 0.6s ease-out forwards;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes ripple-spread {
+      to { transform: scale(4); opacity: 0; }
+    }
+    .banner > *:not(.banner-ripple) {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================================
+       列表容器
+       ============================================================ */
+    .list-container {
+      width: 343px;
+      align-self: center;
+      margin-top: 16px;
+    }
+
+    /* ============================================================
+       列表卡片
+       ============================================================ */
+    .list-card {
+      background-color: #FFFFFF;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      padding: 14px 16px;
+      border: 1px solid #E5E7EB;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      cursor: pointer;
+      transition: all 200ms ease;
+    }
+    .list-card:active {
+      transform: scale(0.99);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      border-color: #D1D5DB;
+    }
+
+    /* ---------- 第一行：随访时间 + 随访方式标签 ---------- */
+    .card-top-row {
+      margin-bottom: 12px;
+    }
+    .card-date {
+      color: #666666;
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      line-height: 20px;
+    }
+    .card-visit-tag {
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+    .card-visit-tag--clinic { color: #096AFF; }
+    .card-visit-tag--home { color: #15CF6E; }
+    .card-visit-tag--phone { color: #FEA800; }
+
+    /* ---------- 第二行：机构 + 箭头 + 医生 ---------- */
+    .card-mid-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .card-mid-row .icon-svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      stroke: #096AFF;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .card-mid-row .icon-hospital {
+      margin-right: 4px;
+    }
+    .card-mid-row .icon-arrow {
+      margin-left: 12px;
+      margin-right: 4px;
+      stroke: #999999;
+      stroke-width: 2.5;
+    }
+    .card-mid-row .icon-doctor {
+      margin-right: 2px;
+      stroke: #096AFF;
+    }
+    .card-hospital {
+      color: #666666;
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      line-height: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 150px;
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+    .card-doctor {
+      color: #666666;
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      flex-shrink: 0;
+      margin-left: 0;
+    }
+
+    /* ---------- 第三行：卡氏评分 + 当前情况 + 指导内容 （3列指标） ---------- */
+    .indicator-block {
+      background: #F9FAFB;
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      line-height: 1.5;
+    }
+    .indicator-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      flex: 1;
+      text-align: center;
+    }
+    .indicator-value {
+      font-size: 16px;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      line-height: 22px;
+      color: #333333;
+    }
+    .indicator-label {
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      line-height: 20px;
+      color: #999999;
+    }
+    .indicator-divider {
+      width: 1px;
+      height: 28px;
+      background: #EEEEEE;
+      flex-shrink: 0;
+    }
+
+    /* ---------- 随访标签行 ---------- */
+    .symptom-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+      min-height: 0;
+    }
+    .symptom-tags:empty {
+      display: none;
+      margin-top: 0;
+    }
+    .symptom-tag {
+      font-size: 11px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      padding: 3px 10px;
+      border-radius: 10px;
+      line-height: 17px;
+      white-space: nowrap;
+      background: #E4EEFF;
+      color: #096AFF;
+    }
+    .symptom-tag--warn {
+      background: #FFF7ED;
+      color: #FEA800;
+    }
+    .symptom-tag--danger {
+      background: #FEF2F2;
+      color: #F32929;
+    }
+    .symptom-tag--green {
+      background: #E6FEF5;
+      color: #15CF6E;
+    }
+    .symptom-tag--gray {
+      background: #F3F4F6;
+      color: #999999;
+    }
+
+    /* ============================================================
+       底部脚注
+       ============================================================ */
+    .footer-note {
+      padding: 16px 16px 0 16px;
+      text-align: center;
+      font-size: 12px;
+      color: #999999;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+    }
+
+    /* ============================================================
+       响应式适配
+       ============================================================ */
+    @media (max-width: 375px) {
+      .list-container { width: 100%; padding: 0 0; }
+      .banner { width: 100%; }
+      .card-hospital { max-width: 120px; }
+    }
+    @media (max-width: 340px) {
+      .card-mid-row .icon-svg { width: 14px; height: 14px; }
+      .card-hospital { font-size: 13px; max-width: 100px; }
+      .card-doctor { font-size: 13px; }
+      .indicator-value { font-size: 15px; }
+      .indicator-label { font-size: 13px; }
+      .symptom-tag { font-size: 10px; padding: 2px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page flex-col">
+
+    <!-- ==================== 导航栏 ==================== -->
+    <div class="group_1 flex-col">
+  <div class="box_1 flex-row">
+    <span class="text_1">10:19</span>
+    <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+    <span class="text_2">5G</span>
+    <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+  </div>
+  <div class="box_2 flex-row">
+    <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+    <span class="text_3">肿瘤管理</span>
+    <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+  </div>
+</div>
+
+    <!-- ==================== 时间筛选栏 ==================== -->
+    <div class="filter-bar">
+      <span class="filter-date">2025-01-01～2025-06-30</span>
+      <svg class="filter-arrow" viewBox="0 0 10 6" fill="none">
+        <path d="M1 1L5 5L9 1" stroke="#333333" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <!-- ==================== 专项信息横幅（蓝色） ==================== -->
+    <a class="banner" href="肿瘤专项.html">
+      <div class="banner-text-group flex-col">
+        <span class="banner-title">肿瘤专项</span>
+        <span class="banner-subtitle">查看专项，了解病情</span>
+        <span class="banner-hint">
+          点击查看专项信息
+          <svg viewBox="0 0 5 9" fill="none">
+            <path d="M1 1L4 4.5L1 8" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+      <div class="banner-icon-wrap">
+        <div class="banner-icon-placeholder"></div>
+      </div>
+    </a>
+
+    <!-- ==================== 随访记录列表 ==================== -->
+    <div class="list-container flex-col">
+
+      <!-- ========== 记录 1 ========== -->
+      <div class="list-card flex-col" data-target="肿瘤随访.html">
+        <div class="card-top-row flex-row justify-between">
+          <span class="card-date">2026-07-21 09:30</span>
+          <span class="card-visit-tag card-visit-tag--clinic">门诊</span>
+        </div>
+        <div class="card-mid-row">
+          <svg class="icon-svg icon-hospital" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="12" y1="9" x2="12" y2="15"/>
+          </svg>
+          <span class="card-hospital">温江区公平街道卫生院</span>
+          <svg class="icon-svg icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 6 15 12 9 18"/>
+          </svg>
+          <svg class="icon-svg icon-doctor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="card-doctor">自壹</span>
+        </div>
+        <!-- 指标：卡氏评分 + 当前情况 + 指导内容 -->
+        <div class="indicator-block">
+          <div class="indicator-item">
+            <span class="indicator-value">80</span>
+            <span class="indicator-label">卡氏评分</span>
+          </div>
+          <div class="indicator-divider"></div>
+          <div class="indicator-item">
+            <span class="indicator-value">稳定</span>
+            <span class="indicator-label">当前情况</span>
+          </div>
+          <div class="indicator-divider"></div>
+          <div class="indicator-item">
+            <span class="indicator-value">用药</span>
+            <span class="indicator-label">指导内容</span>
+          </div>
+        </div>
+        <!-- 随访标签 -->
+        <div class="symptom-tags">
+          <span class="symptom-tag symptom-tag--warn">体重偏低</span>
+          <span class="symptom-tag symptom-tag--green">AFP正常</span>
+          <span class="symptom-tag">饮食指导</span>
+        </div>
+      </div>
+
+      <!-- ========== 记录 2 ========== -->
+      <div class="list-card flex-col" data-target="肿瘤随访.html">
+        <div class="card-top-row flex-row justify-between">
+          <span class="card-date">2026-06-15 14:00</span>
+          <span class="card-visit-tag card-visit-tag--home">家庭</span>
+        </div>
+        <div class="card-mid-row">
+          <svg class="icon-svg icon-hospital" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="12" y1="9" x2="12" y2="15"/>
+          </svg>
+          <span class="card-hospital">温江区公平街道卫生院</span>
+          <svg class="icon-svg icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 6 15 12 9 18"/>
+          </svg>
+          <svg class="icon-svg icon-doctor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="card-doctor">自壹</span>
+        </div>
+        <div class="indicator-block">
+          <div class="indicator-item">
+            <span class="indicator-value">75</span>
+            <span class="indicator-label">卡氏评分</span>
+          </div>
+          <div class="indicator-divider"></div>
+          <div class="indicator-item">
+            <span class="indicator-value">稳定</span>
+            <span class="indicator-label">当前情况</span>
+          </div>
+          <div class="indicator-divider"></div>
+          <div class="indicator-item">
+            <span class="indicator-value">饮食</span>
+            <span class="indicator-label">指导内容</span>
+          </div>
+        </div>
+        <div class="symptom-tags">
+          <span class="symptom-tag symptom-tag--warn">AFP轻度升高</span>
+          <span class="symptom-tag symptom-tag--warn">体重偏低</span>
+          <span class="symptom-tag">心理疏导</span>
+        </div>
+      </div>
+
+      <!-- ========== 记录 3 ========== -->
+      <div class="list-card flex-col" data-target="肿瘤随访.html">
+        <div class="card-top-row flex-row justify-between">
+          <span class="card-date">2026-05-20 10:30</span>
+          <span class="card-visit-tag card-visit-tag--phone">电话</span>
+        </div>
+        <div class="card-mid-row">
+          <svg class="icon-svg icon-hospital" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="12" y1="9" x2="12" y2="15"/>
+          </svg>
+          <span class="card-hospital">温江区公平街道卫生院</span>
+          <svg class="icon-svg icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 6 15 12 9 18"/>
+          </svg>
+          <svg class="icon-svg icon-doctor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="card-doctor">自壹</span>
+        </div>
+        <div class="indicator-block">
+          <div class="indicator-item">
+            <span class="indicator-value">60</span>
+            <span class="indicator-label">卡氏评分</span>
+          </div>
+          <div class="indicator-divider"></div>
+          <div class="indicator-item">
+            <span class="indicator-value">恶化</span>
+            <span class="indicator-label">当前情况</span>
+          </div>
+          <div class="indicator-divider"></div>
+          <div class="indicator-item">
+            <span class="indicator-value">住院</span>
+            <span class="indicator-label">指导内容</span>
+          </div>
+        </div>
+        <div class="symptom-tags">
+          <span class="symptom-tag symptom-tag--danger">AFP显著升高</span>
+          <span class="symptom-tag symptom-tag--warn">体重下降</span>
+          <span class="symptom-tag">建议复查</span>
+        </div>
+      </div>
+
+      <!-- ========== 记录 4 ========== -->
+      <div class="list-card flex-col" data-target="肿瘤随访.html">
+        <div class="card-top-row flex-row justify-between">
+          <span class="card-date">2026-04-10 08:45</span>
+          <span class="card-visit-tag card-visit-tag--clinic">门诊</span>
+        </div>
+        <div class="card-mid-row">
+          <svg class="icon-svg icon-hospital" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="12" y1="9" x2="12" y2="15"/>
+          </svg>
+          <span class="card-hospital">温江区公平街道卫生院</span>
+          <svg class="icon-svg icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 6 15 12 9 18"/>
+          </svg>
+          <svg class="icon-svg icon-doctor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="card-doctor">自壹</span>
+        </div>
+        <div class="indicator-block">
+          <div class="indicator-item">
+            <span class="indicator-value">85</span>
+            <span class="indicator-label">卡氏评分</span>
+          </div>
+          <div class="indicator-divider"></div>
+          <div class="indicator-item">
+            <span class="indicator-value">好转</span>
+            <span class="indicator-label">当前情况</span>
+          </div>
+          <div class="indicator-divider"></div>
+          <div class="indicator-item">
+            <span class="indicator-value">康复</span>
+            <span class="indicator-label">指导内容</span>
+          </div>
+        </div>
+        <div class="symptom-tags">
+          <span class="symptom-tag symptom-tag--green">体重回升</span>
+          <span class="symptom-tag symptom-tag--green">AFP正常</span>
+          <span class="symptom-tag">营养指导</span>
+        </div>
+      </div>
+
+      <!-- ========== 记录 5（空数据） ========== -->
+      <div class="list-card flex-col" data-target="肿瘤随访.html">
+        <div class="card-top-row flex-row justify-between">
+          <span class="card-date">2026-03-05 11:00</span>
+          <span class="card-visit-tag card-visit-tag--home">家庭</span>
+        </div>
+        <div class="card-mid-row">
+          <svg class="icon-svg icon-hospital" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="12" y1="9" x2="12" y2="15"/>
+          </svg>
+          <span class="card-hospital">温江区公平街道卫生院</span>
+          <svg class="icon-svg icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 6 15 12 9 18"/>
+          </svg>
+          <svg class="icon-svg icon-doctor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="card-doctor">自壹</span>
+        </div>
+        <div class="indicator-block">
+          <div class="indicator-item">
+            <span class="indicator-value">--</span>
+            <span class="indicator-label">卡氏评分</span>
+          </div>
+          <div class="indicator-divider"></div>
+          <div class="indicator-item">
+            <span class="indicator-value">--</span>
+            <span class="indicator-label">当前情况</span>
+          </div>
+          <div class="indicator-divider"></div>
+          <div class="indicator-item">
+            <span class="indicator-value">--</span>
+            <span class="indicator-label">指导内容</span>
+          </div>
+        </div>
+        <div class="symptom-tags">
+          <span class="symptom-tag symptom-tag--gray">暂无数据</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== 底部脚注 ==================== -->
+    <div class="footer-note">
+      共 5 条随访记录
+    </div>
+
+  </div>
+  <script>
+    // 随访卡片点击跳转（事件委托）
+    var listContainer = document.querySelector('.list-container');
+    if (listContainer) {
+      listContainer.addEventListener('click', function(e) {
+        var card = e.target.closest('.list-card');
+        if (!card) return;
+        var target = card.getAttribute('data-target');
+        if (target) {
+          window.location.href = target;
+        }
+      });
+    }
+  </script>
+
+  <script>
+    // 专项信息横幅 — 涟漪扩散动效
+    var banner = document.querySelector('.banner');
+    if (banner) {
+      banner.addEventListener('click', function(e) {
+        var rect = banner.getBoundingClientRect();
+        var ripple = document.createElement('span');
+        ripple.className = 'banner-ripple';
+        var size = Math.max(rect.width, rect.height);
+        var x = e.clientX - rect.left - size / 2;
+        var y = e.clientY - rect.top - size / 2;
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        banner.appendChild(ripple);
+        setTimeout(function() {
+          if (ripple.parentNode) ripple.parentNode.removeChild(ripple);
+        }, 600);
+      });
+    }
+  </script>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '../index.html';
+  });
+</script>
+
+</body>
+</html>

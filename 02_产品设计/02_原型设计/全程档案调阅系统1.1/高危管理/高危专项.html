@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>高危专项 - 张子强</title>
+  <style>
+    /* ============================================================
+       高危专项页面 - 蓝色框嵌入白色卡片内，指标2个一行
+       ============================================================ */
+
+    /* ---------- 全局重置 ---------- */
+    * {
+      box-sizing: border-box;
+      flex-shrink: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+      background-color: #F3F5F7;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ---------- Flex 工具 ---------- */
+    .flex-col {
+      display: flex;
+      flex-direction: column;
+    }
+    .flex-row {
+      display: flex;
+      flex-direction: row;
+    }
+    .justify-between {
+      display: flex;
+      justify-content: space-between;
+    }
+    .align-center {
+      display: flex;
+      align-items: center;
+    }
+    .align-start {
+      display: flex;
+      align-items: flex-start;
+    }
+    .flex-wrap {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    /* ---------- 页面容器 ---------- */
+    .page {
+      background-color: #F3F5F7;
+      position: relative;
+      width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding-bottom: 24px;
+    }
+
+    /* ============================================================
+       导航栏（参照肺结核第一次入户随访 .nav-bar）
+       ============================================================ */
+    .group_1 {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+    .box_1 {
+  margin: 0 10px 0 24px;
+}
+    .text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+    .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0 5px 191px;
+}
+    .text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+    .image_1 {
+  width: 25px;
+  height: 13px;
+  margin: 5px 0 4px 6px;
+}
+
+    .box_2 {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
+    .label_1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+          cursor: pointer;
+}
+    .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+    .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+    /* ============================================================
+       卡片样式
+       ============================================================ */
+    /* 白色卡片（外框） */
+    .card {
+      background-color: #FFFFFF;
+      border-radius: 8px;
+      border: 1px solid #E5E5E5;
+      padding: 16px;
+      width: 375px;
+      margin-top: 16px;
+    }
+
+    /* 白色卡片内部的分区标题 */
+    .section-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #333333;
+      line-height: 22px;
+      margin-bottom: 8px;
+      padding-top: 16px;
+      border-top: none;  /* 去掉border-top */
+    }
+    .section-title--first {
+      margin-top: 16px;  /* 保持与内容间距 */
+      padding-top: 0;
+      border-top: none;
+    }
+
+    /* ---------- 蓝色高亮卡片（嵌入白色卡片内部） ---------- */
+    .card-highlight {
+      background-color: #F6FAFF;
+      border: 1px solid #AFCFFF;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 0 0 16px 0;  /* 上0 右0 下16px 左0 */
+    }
+
+    /* ---------- 标签行 ---------- */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 14px;
+      white-space: nowrap;
+    }
+    .tag--orange {
+      background-color: #FEA800;
+      color: #FFFFFF;
+    }
+
+    /* ---------- 指标网格（2个一行） ---------- */
+    .hl-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 16px; /* 行间距4px，列间距16px */
+    }
+
+    /* ---------- 蓝色框内列表项（紧凑布局：圆点 + 标签：值） ---------- */
+    .hl-item {
+      display: flex;
+      align-items: center; /* 垂直居中 */
+      padding: 3px 0;
+    }
+    .hl-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      margin-right: 8px;
+      flex-shrink: 0;
+      background-color: #096AFF;
+    }
+    .hl-text {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 20px;
+      white-space: nowrap; /* 防止文字换行 */
+    }
+    .hl-text .label {
+      color: #666666;
+      font-weight: 400;
+    }
+
+    /* ---------- info-label 和 info-value 字体样式一致 ---------- */
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 3px 0;
+    }
+    .info-item--first {
+      padding-top: 0;
+    }
+    .info-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      margin-top: 8px;
+      flex-shrink: 0;
+    }
+    .info-dot--gray {
+      background-color: #666666;
+    }
+    .info-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 20px;
+      margin-left: 8px;
+      flex-shrink: 0;
+    }
+    .info-value {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 20px;
+      word-break: break-all;
+    }
+
+    /* ---------- 列表项（纯文本） ---------- */
+    .list-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 3px 0;
+    }
+    .list-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      margin-top: 8px;
+      flex-shrink: 0;
+      background-color: #096AFF;
+    }
+    .list-text {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 20px;
+      margin-left: 8px;
+      word-break: break-all;
+    }
+
+    /* ---------- 底部患者信息（换行展示） ---------- */
+    .patient-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px;
+      background-color: #FFFFFF;
+      width: 375px;
+      margin-top: 16px;
+      border-radius: 8px;
+      border: 1px solid #E5E5E5;
+    }
+    .patient-footer .name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .patient-footer .name-row .name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333333;
+      line-height: 20px;
+    }
+    .patient-footer .name-row .gender,
+    .patient-footer .name-row .age {
+      font-size: 14px;
+      font-weight: 400;
+      color: #333333;
+      line-height: 20px;
+    }
+    .patient-footer .info-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .patient-footer .info-row .label {
+      font-size: 14px;
+      font-weight: 400;
+      color: #333333;
+      line-height: 20px;
+    }
+    .patient-footer .info-row .value {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 20px;
+    }
+    .patient-footer .divider {
+      width: 100%;
+      height: 1px;
+      background-color: #E5E5E5;
+      margin: 4px 0;
+    }
+
+    /* ---------- 底部脚注 ---------- */
+    .footer-note {
+      padding: 16px 16px 0 16px;
+      text-align: center;
+      font-size: 12px;
+      color: #999999;
+      font-weight: 400;
+      line-height: 17px;
+    }
+
+    /* ============================================================
+       响应式适配
+       ============================================================ */
+    @media (max-width: 375px) {
+      .page,
+      .card,
+      .patient-footer { width: 100%; }
+    }
+    @media (max-width: 340px) {
+      .hl-grid {
+        grid-template-columns: 1fr; /* 小屏设备改为单列 */
+        gap: 4px 0;
+      }
+      .hl-item {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page flex-col">
+
+    <!-- ==================== 导航栏 ==================== -->
+    <div class="group_1 flex-col">
+  <div class="box_1 flex-row">
+    <span class="text_1">10:19</span>
+    <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+    <span class="text_2">5G</span>
+    <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+  </div>
+  <div class="box_2 flex-row">
+    <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+    <span class="text_3">高危专项</span>
+    <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+  </div>
+</div>
+
+    <!-- ============================================================
+    白色卡片（内部嵌入蓝色高亮框）
+    ============================================================ -->
+    <div class="card">
+
+      <!-- ===== 蓝色高亮框 margin: 0 0 16px 0 ===== -->
+      <div class="card-highlight">
+        <!-- 高危类型标签 -->
+        <div class="tag-row">
+          <span class="tag tag--orange">高血压高危</span>
+          <span class="tag tag--orange">糖尿病高危</span>
+        </div>
+
+        <!-- 体征指标网格（2个一行） -->
+        <div class="hl-grid">
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">身高：</span>177 cm</span>
+          </div>
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">体重：</span>59 kg</span>
+          </div>
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">腰围：</span>55 cm</span>
+          </div>
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">体质指数：</span>18.83 kg/m²</span>
+          </div>
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">血压：</span><span style="color:#F32929;font-weight:500;">121/92 mmHg</span></span>
+          </div>
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">空腹血糖：</span>5.8 mmol/L</span>
+          </div>
+        </div>
+      </div>
+      <!-- ===== 蓝色高亮框结束 ===== -->
+
+      <!-- ---- 建档信息 ---- -->
+      <div class="section-title section-title--first">建档信息</div>
+
+      <div class="info-item info-item--first">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">建档机构：</span>
+        <span class="info-value">医疗机构乡镇卫生院</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">建档医生：</span>
+        <span class="info-value">孙思邈</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">建档日期：</span>
+        <span class="info-value">2018-05-23</span>
+      </div>
+
+      <!-- ---- 高血压高危异常指标 ---- -->
+      <div class="section-title">高血压高危异常指标</div>
+
+      <div class="list-item">
+        <span class="list-dot"></span>
+        <span class="list-text">血压高值（收缩压130~139mmHg和/或舒张压85~89mmHg）</span>
+      </div>
+      <div class="list-item">
+        <span class="list-dot"></span>
+        <span class="list-text">长期膳食高盐</span>
+      </div>
+      <div class="list-item">
+        <span class="list-dot"></span>
+        <span class="list-text">长期过量饮酒（每日饮酒≥100ml）</span>
+      </div>
+      <div class="list-item">
+        <span class="list-dot"></span>
+        <span class="list-text">高血压家族史（一、二级亲属）</span>
+      </div>
+
+      <!-- ---- 糖尿病高危异常指标 ---- -->
+      <div class="section-title">糖尿病高危异常指标</div>
+
+      <div class="list-item">
+        <span class="list-dot"></span>
+        <span class="list-text">肥胖和超重者：BMI ≥ 24 kg/m²的人</span>
+      </div>
+    </div>
+    <!-- ===== 白色卡片结束 ===== -->
+
+    <!-- ============================================================
+    底部患者信息（换行展示）
+    ============================================================ -->
+    <div class="patient-footer">
+      <div class="name-row">
+        <span class="name">张子强</span>
+        <span class="gender">男</span>
+        <span class="age">25岁</span>
+      </div>
+      <div class="divider"></div>
+      <div class="info-row">
+        <span class="label">档案编号：</span>
+        <span class="value">11200056</span>
+      </div>
+      <div class="info-row">
+        <span class="label">出生日期：</span>
+        <span class="value">1964-06-17</span>
+      </div>
+    </div>
+
+    <!-- ============================================================
+    底部脚注
+    ============================================================ -->
+    <div class="footer-note">
+      编号 11200056 · 高危人群管理 · 建档日期 2018-05-23
+    </div>
+
+  </div>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '高危管理列表.html';
+  });
+</script>
+
+</body>
+</html>

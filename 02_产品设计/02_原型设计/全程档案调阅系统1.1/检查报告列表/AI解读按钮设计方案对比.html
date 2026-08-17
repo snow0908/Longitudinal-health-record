@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI报告解读按钮 · 设计方案对比</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Arial, Microsoft YaHei;
+      background: #F3F5F7;
+      color: #333;
+      padding: 20px 0 40px;
+    }
+
+    /* ---------- 页面框架 ---------- */
+    .doc-header {
+      width: 375px;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+    .doc-header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      line-height: 25px;
+    }
+    .doc-header p {
+      font-size: 13px;
+      color: #999;
+      line-height: 20px;
+      margin-top: 4px;
+    }
+
+    /* ---------- 每个方案区 ---------- */
+    .scheme {
+      width: 375px;
+      margin: 0 auto 32px;
+    }
+    .scheme-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .scheme-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      background: #2B7FFF;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: PingFangSC-Medium;
+    }
+    .scheme-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #333;
+    }
+    .scheme-desc {
+      font-size: 12px;
+      color: #999;
+      line-height: 18px;
+      margin-bottom: 12px;
+      padding-left: 32px;
+    }
+    .scheme-pros-cons {
+      display: flex;
+      gap: 16px;
+      padding-left: 32px;
+      margin-top: 8px;
+    }
+    .scheme-pros-cons span {
+      font-size: 12px;
+      line-height: 18px;
+    }
+    .pros { color: #15CF6E; }
+    .cons { color: #FF6B6B; }
+
+    /* ---------- 模拟卡片公共样式 ---------- */
+    .demo-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .demo-card + .demo-card { margin-top: 16px; }
+    .card-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #333;
+      line-height: 22px;
+    }
+    .card-date {
+      font-size: 14px;
+      color: #666;
+      line-height: 20px;
+      margin-top: 4px;
+    }
+    .card-hospital {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+    }
+    .card-hospital svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .card-hospital span {
+      font-size: 14px;
+      color: #666;
+      line-height: 20px;
+    }
+
+    /* SVG 火花图标 */
+    .spark-icon { width: 14px; height: 14px; flex-shrink: 0; }
+    .arrow-icon { width: 12px; height: 12px; flex-shrink: 0; }
+
+    /* ============================================================
+       方案A — 胶囊渐变按钮（当前已实现）
+       ============================================================ */
+    .scheme-a .ai-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 28px;
+      padding: 0 14px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2B7FFF 0%, #6B5BFF 100%);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(43, 127, 255, 0.25);
+    }
+
+    /* ============================================================
+       方案B — 渐变胶囊按钮（最终采用 v3）
+       三段式：左圆形图标｜中文字（标题+副标题）｜右装饰圆
+       ============================================================ */
+    .scheme-b .demo-card {
+      padding-bottom: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    }
+    .scheme-b .card-divider {
+      height: 1px;
+      background: #EEF0F2;
+      margin: 10px 0 0;
+    }
+    .scheme-b .ai-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 56px;
+      padding: 10px 14px;
+      margin: 10px 0 0;
+      background: linear-gradient(135deg, #E3EEFF 0%, #D6E0FF 100%);
+      border-radius: 10px;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(43, 91, 204, 0.08);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .scheme-b .ai-bar:active {
+      background: linear-gradient(135deg, #D6E4FF 0%, #C8D4FF 100%);
+      transform: scale(0.99);
+      box-shadow: 0 1px 3px rgba(43, 91, 204, 0.12);
+    }
+    .scheme-b .ai-bar .ai-icon-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    .scheme-b .ai-bar .ai-icon-circle svg {
+      width: 18px;
+      height: 18px;
+      color: #2B5BCC;
+    }
+    .scheme-b .ai-bar .ai-bar-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      min-width: 0;
+    }
+    .scheme-b .ai-bar .ai-bar-title {
+      font-family: PingFangSC-Semibold, "Microsoft YaHei", sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1A3A8C;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .scheme-b .ai-bar .ai-bar-subtitle {
+      font-family: PingFangSC-Regular, "Microsoft YaHei", sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      color: #6B7AAA;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .scheme-b .ai-bar .ai-bar-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.55);
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       方案C — 轻量文字链接
+       ============================================================ */
+    .scheme-c .demo-card { position: relative; }
+    .scheme-c .ai-link {
+      position: absolute;
+      right: 12px;
+      bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 13px;
+      color: #2B7FFF;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .scheme-c .ai-link:active { opacity: 0.6; }
+
+    /* ============================================================
+       方案D — 标题旁AI标签
+       ============================================================ */
+    .scheme-d .card-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .scheme-d .ai-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: 18px;
+      padding: 0 6px;
+      border-radius: 4px;
+      border: 1px solid #2B7FFF;
+      color: #2B7FFF;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+      line-height: 16px;
+      cursor: pointer;
+    }
+    .scheme-d .ai-tag:active { opacity: 0.6; }
+
+    /* ============================================================
+       方案E — 底部双按钮操作区
+       ============================================================ */
+    .scheme-e .demo-card { padding-bottom: 0; }
+    .scheme-e .card-divider {
+      height: 1px;
+      background: #F0F0F0;
+      margin: 12px -16px 0;
+    }
+    .scheme-e .action-bar {
+      display: flex;
+      margin: 0 -16px;
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+    }
+    .scheme-e .action-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 40px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+    }
+    .scheme-e .action-btn:active { opacity: 0.7; }
+    .scheme-e .action-view {
+      background: #F8F8F8;
+      color: #666;
+    }
+    .scheme-e .action-ai {
+      background: #2B7FFF;
+      color: #fff;
+    }
+
+    /* ============================================================
+       方案F — 右侧悬浮圆形图标按钮
+       ============================================================ */
+    .scheme-f .ai-fab {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #2B7FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(43, 127, 255, 0.3);
+      border: none;
+    }
+    .scheme-f .ai-fab:active { transform: translateY(-50%) scale(0.92); }
+    .scheme-f .ai-fab svg { width: 18px; height: 18px; color: #fff; }
+    .scheme-f .ai-fab-label {
+      position: absolute;
+      right: 56px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      color: #2B7FFF;
+      white-space: nowrap;
+      background: rgba(43,127,255,0.08);
+      padding: 2px 8px;
+      border-radius: 10px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .scheme-f .demo-card:hover .ai-fab-label { opacity: 1; }
+
+    /* ============================================================
+       方案G — 底部微渐变细条
+       ============================================================ */
+    .scheme-g .demo-card { padding-bottom: 16px; }
+    .scheme-g .ai-strip {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2B7FFF 0%, #6B5BFF 100%);
+      cursor: pointer;
+      border-radius: 0 0 8px 8px;
+    }
+    .scheme-g .ai-strip-hint {
+      position: absolute;
+      right: 12px;
+      bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 10px;
+      color: #2B7FFF;
+      opacity: 0.7;
+    }
+
+    /* ============================================================
+       方案H — 右侧贴边竖排窄按钮
+       ============================================================ */
+    .scheme-h .demo-card { padding-right: 40px; }
+    .scheme-h .ai-side-btn {
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 36px;
+      background: #F0F5FF;
+      border-left: 1px solid #E8EEF7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      border-radius: 0 8px 8px 0;
+    }
+    .scheme-h .ai-side-btn:active { background: #E0EAFF; }
+    .scheme-h .ai-side-btn svg { width: 16px; height: 16px; color: #2B7FFF; }
+    .scheme-h .ai-side-btn span {
+      font-size: 10px;
+      color: #2B7FFF;
+      writing-mode: vertical-rl;
+      letter-spacing: 2px;
+      font-weight: 500;
+    }
+
+    /* ============================================================
+       方案I — 左上角圆角徽章
+       ============================================================ */
+    .scheme-i .demo-card { padding-top: 28px; }
+    .scheme-i .ai-corner-badge {
+      position: absolute;
+      left: 0; top: 0;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 22px;
+      padding: 0 10px 0 8px;
+      background: linear-gradient(135deg, #2B7FFF 0%, #5B8CFF 100%);
+      border-radius: 8px 0 8px 0;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(43,127,255,0.2);
+    }
+    .scheme-i .ai-corner-badge:active { opacity: 0.8; }
+    .scheme-i .ai-corner-badge svg { width: 11px; height: 11px; }
+  </style>
+</head>
+<body>
+
+  <div class="doc-header">
+    <h1>AI报告解读按钮 · 设计方案对比</h1>
+    <p>以下 9 套方案均不改变原有卡片点击跳转功能，仅新增 AI 解读入口</p>
+    <p style="margin-top:6px;font-size:13px;color:#888;">★ 最终采用：<b style="color:#2B7FFF;">方案B（v3 渐变胶囊版）</b>，最末查看实际效果。</p>
+  </div>
+
+  <!-- ========== 方案A ========== -->
+  <div class="scheme scheme-a">
+    <div class="scheme-label">
+      <span class="scheme-badge">A</span>
+      <span class="scheme-title">胶囊渐变按钮（当前方案）</span>
+    </div>
+    <div class="scheme-desc">蓝紫渐变胶囊 + 火花图标 + "AI解读"文字，绝对定位在卡片右侧垂直居中</div>
+
+    <div class="demo-card">
+      <div class="card-title">腹部彩超（肝、胆、胰、脾）</div>
+      <div class="card-date">2022-11-29 12:00</div>
+      <div class="card-hospital">
+        <svg viewBox="0 0 14 14" fill="#999"><circle cx="7" cy="6" r="2.5" stroke="#999" stroke-width="1" fill="none"/><path d="M7 9C4.5 9 3 10.5 3 12V13H11V12C11 10.5 9.5 9 7 9Z" fill="#999"/></svg>
+        <span>内蒙古国际蒙医医院</span>
+      </div>
+      <button class="ai-btn">
+        <svg class="spark-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10 1.5L11.8 7.2L17.5 9L11.8 10.8L10 16.5L8.2 10.8L2.5 9L8.2 7.2L10 1.5Z"/>
+          <path d="M16 13L16.6 14.6L18.2 15.2L16.6 15.8L16 17.4L15.4 15.8L13.8 15.2L15.4 14.6L16 13Z" opacity="0.6"/>
+        </svg>
+        <span>AI解读</span>
+      </button>
+    </div>
+
+    <div class="scheme-pros-cons">
+      <span class="pros">✓ AI属性强，视觉吸睛</span>
+      <span class="cons">✗ 渐变在医疗场景偏花哨，右侧空间局促</span>
+    </div>
+  </div>
+
+  <!-- ========== 方案B（最终采用 v3） ========== -->
+  <div class="scheme scheme-b">
+    <div class="scheme-label">
+      <span class="scheme-badge">B</span>
+      <span class="scheme-title">渐变胶囊按钮 ★</span>
+    </div>
+    <div class="scheme-desc">三段式布局：左圆形白色图标盒 + 中加粗大字"AI智能解读"+ 副标题"快速看懂检查重点" + 右装饰圆；蓝紫渐变背景 #E3EEFF→#D6E0FF，加粗标题字色 #1A3A8C</div>
+
+    <div class="demo-card">
+      <div class="card-title">腹部彩超（肝、胆、胰、脾）</div>
+      <div class="card-date">2022-11-29 12:00</div>
+      <div class="card-hospital">
+        <svg viewBox="0 0 14 14" fill="#999"><circle cx="7" cy="6" r="2.5" stroke="#999" stroke-width="1" fill="none"/><path d="M7 9C4.5 9 3 10.5 3 12V13H11V12C11 10.5 9.5 9 7 9Z" fill="#999"/></svg>
+        <span>内蒙古国际蒙医医院</span>
+      </div>
+      <div class="card-divider"></div>
+      <div class="ai-bar">
+        <div class="ai-icon-circle">
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 1.5L11.8 7.2L17.5 9L11.8 10.8L10 16.5L8.2 10.8L2.5 9L8.2 7.2L10 1.5Z"/>
+            <path d="M16 13L16.6 14.6L18.2 15.2L16.6 15.8L16 17.4L15.4 15.8L13.8 15.2L15.4 14.6L16 13Z" opacity="0.55"/>
+          </svg>
+        </div>
+        <div class="ai-bar-content">
+          <span class="ai-bar-title">AI智能解读</span>
+          <span class="ai-bar-subtitle">快速看懂检查重点</span>
+        </div>
+        <div class="ai-bar-dot"></div>
+      </div>
+    </div>
+
+    <div class="scheme-pros-cons">
+      <span class="pros">✓ 渐变背景 + 加粗大字，可发现性高、与项目反差感强，不刺眼</span>
+      <span class="pros">✓ 圆形白色图标盒 + 主色蓝图标，AI属性明确</span>
+      <span class="pros">✓ 三段式结构清晰，标题+副标题传达价值（"快速看懂检查重点"）</span>
+      <span class="cons">✗ 卡片高度增加约 70px</span>
+    </div>
+  </div>
+
+  <!-- ========== 方案C ========== -->
+  <div class="scheme scheme-c">
+    <div class="scheme-label">
+      <span class="scheme-badge">C</span>
+      <span class="scheme-title">轻量文字链接</span>
+    </div>
+    <div class="scheme-desc">仅右下角蓝色文字"AI解读" + 箭头图标，无容器背景，最克制</div>
+
+    <div class="demo-card">
+      <div class="card-title">腹部彩超（肝、胆、胰、脾）</div>
+      <div class="card-date">2022-11-29 12:00</div>
+      <div class="card-hospital">
+        <svg viewBox="0 0 14 14" fill="#999"><circle cx="7" cy="6" r="2.5" stroke="#999" stroke-width="1" fill="none"/><path d="M7 9C4.5 9 3 10.5 3 12V13H11V12C11 10.5 9.5 9 7 9Z" fill="#999"/></svg>
+        <span>内蒙古国际蒙医医院</span>
+      </div>
+      <div class="ai-link">
+        <svg class="spark-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10 1.5L11.8 7.2L17.5 9L11.8 10.8L10 16.5L8.2 10.8L2.5 9L8.2 7.2L10 1.5Z" opacity="0.5"/>
+        </svg>
+        <span>AI解读</span>
+        <svg class="arrow-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6H9M6.5 3L9 6L6.5 9"/></svg>
+      </div>
+    </div>
+
+    <div class="scheme-pros-cons">
+      <span class="pros">✓ 视觉零负担，不改变卡片原有节奏</span>
+      <span class="cons">✗ 可发现性弱，用户容易忽略</span>
+    </div>
+  </div>
+
+  <!-- ========== 方案D ========== -->
+  <div class="scheme scheme-d">
+    <div class="scheme-label">
+      <span class="scheme-badge">D</span>
+      <span class="scheme-title">标题旁AI标签</span>
+    </div>
+    <div class="scheme-desc">报告标题旁加蓝色描边小标签"AI可解读"，提示性强，点击进入AI解读</div>
+
+    <div class="demo-card">
+      <div class="card-title-row">
+        <span class="card-title">腹部彩超（肝、胆、胰、脾）</span>
+        <span class="ai-tag">
+          <svg viewBox="0 0 12 12" fill="currentColor" style="width:10px;height:10px;"><path d="M6 1L7 4L10 5L7 6L6 9L5 6L2 5L5 4L6 1Z"/></svg>
+          AI可解读
+        </span>
+      </div>
+      <div class="card-date">2022-11-29 12:00</div>
+      <div class="card-hospital">
+        <svg viewBox="0 0 14 14" fill="#999"><circle cx="7" cy="6" r="2.5" stroke="#999" stroke-width="1" fill="none"/><path d="M7 9C4.5 9 3 10.5 3 12V13H11V12C11 10.5 9.5 9 7 9Z" fill="#999"/></svg>
+        <span>内蒙古国际蒙医医院</span>
+      </div>
+    </div>
+
+    <div class="scheme-pros-cons">
+      <span class="pros">✓ 标题旁提示，一眼可见；不占额外空间</span>
+      <span class="cons">✗ 标签和标题挤在一起，长标题时换行风险</span>
+    </div>
+  </div>
+
+  <!-- ========== 方案E ========== -->
+  <div class="scheme scheme-e">
+    <div class="scheme-label">
+      <span class="scheme-badge">E</span>
+      <span class="scheme-title">底部双按钮操作区</span>
+    </div>
+    <div class="scheme-desc">分割线下方左侧"查看详情"(灰) + 右侧"AI解读"(蓝)，两操作并列分区</div>
+
+    <div class="demo-card">
+      <div class="card-title">腹部彩超（肝、胆、胰、脾）</div>
+      <div class="card-date">2022-11-29 12:00</div>
+      <div class="card-hospital">
+        <svg viewBox="0 0 14 14" fill="#999"><circle cx="7" cy="6" r="2.5" stroke="#999" stroke-width="1" fill="none"/><path d="M7 9C4.5 9 3 10.5 3 12V13H11V12C11 10.5 9.5 9 7 9Z" fill="#999"/></svg>
+        <span>内蒙古国际蒙医医院</span>
+      </div>
+      <div class="card-divider"></div>
+      <div class="action-bar">
+        <button class="action-btn action-view">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4C2 3 2.5 2.5 3.5 2.5H12.5C13.5 2.5 14 3 14 4V12C14 13 13.5 13.5 12.5 13.5H3.5C2.5 13.5 2 13 2 12V4Z"/><path d="M2 5L8 9L14 5"/></svg>
+          查看详情
+        </button>
+        <button class="action-btn action-ai">
+          <svg class="spark-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 1.5L11.8 7.2L17.5 9L11.8 10.8L10 16.5L8.2 10.8L2.5 9L8.2 7.2L10 1.5Z"/>
+          </svg>
+          AI解读
+        </button>
+      </div>
+    </div>
+
+    <div class="scheme-pros-cons">
+      <span class="pros">✓ 双操作并列，用户选择路径清晰</span>
+      <span class="cons">✗ 卡片高度增加最多，列表最占空间</span>
+    </div>
+  </div>
+
+  <!-- ========== 方案F ========== -->
+  <div class="scheme scheme-f">
+    <div class="scheme-label">
+      <span class="scheme-badge">F</span>
+      <span class="scheme-title">右侧悬浮圆形图标按钮</span>
+    </div>
+    <div class="scheme-desc">36px 蓝色圆形纯图标按钮悬浮于卡片右侧垂直居中，hover 时弹出文字气泡提示"AI解读"</div>
+
+    <div class="demo-card">
+      <div class="card-title">腹部彩超（肝、胆、胰、脾）</div>
+      <div class="card-date">2022-11-29 12:00</div>
+      <div class="card-hospital">
+        <svg viewBox="0 0 14 14" fill="#999"><circle cx="7" cy="6" r="2.5" stroke="#999" stroke-width="1" fill="none"/><path d="M7 9C4.5 9 3 10.5 3 12V13H11V12C11 10.5 9.5 9 7 9Z" fill="#999"/></svg>
+        <span>内蒙古国际蒙医医院</span>
+      </div>
+      <span class="ai-fab-label">AI解读</span>
+      <button class="ai-fab">
+        <svg viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10 1.5L11.8 7.2L17.5 9L11.8 10.8L10 16.5L8.2 10.8L2.5 9L8.2 7.2L10 1.5Z"/>
+          <path d="M16 13L16.6 14.6L18.2 15.2L16.6 15.8L16 17.4L15.4 15.8L13.8 15.2L15.4 14.6L16 13Z" opacity="0.7"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="scheme-pros-cons">
+      <span class="pros">✓ 图标驱动极简现代，圆形辨识度高，不占文字空间</span>
+      <span class="cons">✗ 纯图标需用户理解含义，首次使用有认知成本</span>
+    </div>
+  </div>
+
+  <!-- ========== 方案G ========== -->
+  <div class="scheme scheme-g">
+    <div class="scheme-label">
+      <span class="scheme-badge">G</span>
+      <span class="scheme-title">底部微渐变细条</span>
+    </div>
+    <div class="scheme-desc">卡片最底部 3px 蓝紫渐变细条作为 AI 入口，右下角小字"AI解读"提示，最克制的视觉标记</div>
+
+    <div class="demo-card">
+      <div class="card-title">腹部彩超（肝、胆、胰、脾）</div>
+      <div class="card-date">2022-11-29 12:00</div>
+      <div class="card-hospital">
+        <svg viewBox="0 0 14 14" fill="#999"><circle cx="7" cy="6" r="2.5" stroke="#999" stroke-width="1" fill="none"/><path d="M7 9C4.5 9 3 10.5 3 12V13H11V12C11 10.5 9.5 9 7 9Z" fill="#999"/></svg>
+        <span>内蒙古国际蒙医医院</span>
+      </div>
+      <div class="ai-strip-hint">
+        <svg viewBox="0 0 10 10" fill="currentColor" style="width:10px;height:10px;"><path d="M5 0.5L5.8 3.5L8.8 4.3L5.8 5.1L5 8.1L4.2 5.1L1.2 4.3L4.2 3.5L5 0.5Z"/></svg>
+        <span>AI解读</span>
+      </div>
+      <div class="ai-strip"></div>
+    </div>
+
+    <div class="scheme-pros-cons">
+      <span class="pros">✓ 零高度增加，视觉装饰感强，列表密度不受影响</span>
+      <span class="cons">✗ 入口过于隐蔽，点击区域仅 3px 高，可发现性极弱</span>
+    </div>
+  </div>
+
+  <!-- ========== 方案H ========== -->
+  <div class="scheme scheme-h">
+    <div class="scheme-label">
+      <span class="scheme-badge">H</span>
+      <span class="scheme-title">右侧贴边竖排窄按钮</span>
+    </div>
+    <div class="scheme-desc">卡片右侧贴边 36px 宽窄长按钮，竖排"AI解读"文字 + 图标，浅蓝底与卡片融为一体</div>
+
+    <div class="demo-card">
+      <div class="card-title">腹部彩超（肝、胆、胰、脾）</div>
+      <div class="card-date">2022-11-29 12:00</div>
+      <div class="card-hospital">
+        <svg viewBox="0 0 14 14" fill="#999"><circle cx="7" cy="6" r="2.5" stroke="#999" stroke-width="1" fill="none"/><path d="M7 9C4.5 9 3 10.5 3 12V13H11V12C11 10.5 9.5 9 7 9Z" fill="#999"/></svg>
+        <span>内蒙古国际蒙医医院</span>
+      </div>
+      <div class="ai-side-btn">
+        <svg viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10 1.5L11.8 7.2L17.5 9L11.8 10.8L10 16.5L8.2 10.8L2.5 9L8.2 7.2L10 1.5Z"/>
+        </svg>
+        <span>AI解读</span>
+      </div>
+    </div>
+
+    <div class="scheme-pros-cons">
+      <span class="pros">✓ 操作区与内容区物理隔离，不增加卡片高度</span>
+      <span class="cons">✗ 占用内容宽度 36px，长标题更易换行</span>
+    </div>
+  </div>
+
+  <!-- ========== 方案I ========== -->
+  <div class="scheme scheme-i">
+    <div class="scheme-label">
+      <span class="scheme-badge">I</span>
+      <span class="scheme-title">左上角圆角徽章</span>
+    </div>
+    <div class="scheme-desc">卡片左上角蓝色渐变徽章"AI解读"，45° 切角造型，图标+文字，类似角标标签</div>
+
+    <div class="demo-card">
+      <div class="ai-corner-badge">
+        <svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 1L7 4L10 5L7 6L6 9L5 6L2 5L5 4L6 1Z"/></svg>
+        <span>AI解读</span>
+      </div>
+      <div class="card-title">腹部彩超（肝、胆、胰、脾）</div>
+      <div class="card-date">2022-11-29 12:00</div>
+      <div class="card-hospital">
+        <svg viewBox="0 0 14 14" fill="#999"><circle cx="7" cy="6" r="2.5" stroke="#999" stroke-width="1" fill="none"/><path d="M7 9C4.5 9 3 10.5 3 12V13H11V12C11 10.5 9.5 9 7 9Z" fill="#999"/></svg>
+        <span>内蒙古国际蒙医医院</span>
+      </div>
+    </div>
+
+    <div class="scheme-pros-cons">
+      <span class="pros">✓ 视觉层级最高，第一眼可见，角标造型有辨识度</span>
+      <span class="cons">✗ 徽章占用卡片顶部空间，内容需整体下移</span>
+    </div>
+  </div>
+
+  <!-- ========== 综合建议 ========== -->
+  <div style="width:375px;margin:0 auto;padding:16px;background:#fff;border-radius:8px;border:1px solid #E8E8E8;">
+    <div style="font-size:15px;font-weight:500;color:#333;margin-bottom:8px;">综合建议</div>
+    <div style="font-size:13px;color:#666;line-height:22px;">
+      <b style="color:#2B7FFF;">★ 最终采用：方案B（v3 渐变胶囊版）</b>——三段式布局（左侧圆形白色图标盒 + 中间加粗大字"AI智能解读"+ 副标题"快速看懂检查重点" + 右侧装饰圆），蓝紫渐变背景 #E3EEFF→#D6E0FF，加粗标题字色 #1A3A8C。<br/><br/>
+      <b>前期版本回顾：</b><br/>
+      · v1 弱化版（灰色）：与项目融合最佳，但发现性太弱，已弃用；<br/>
+      · v2 浅蓝加强版：可发现性提升但仍偏弱，需配合首次气泡引导；<br/>
+      · <b>v3 渐变胶囊版（现采用）</b>：用渐变背景 + 加粗大字双重手段保证发现性，对比截图表明 AI 入口"一眼可见"，副标题"快速看懂检查重点"传达价值点，视觉品质与项目反差感强烈但不突兀。
+    </div>
+    </div>
+  </div>
+
+</body>
+</html>

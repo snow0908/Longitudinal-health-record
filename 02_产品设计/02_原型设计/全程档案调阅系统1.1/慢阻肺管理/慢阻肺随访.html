@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>慢阻肺患者随访</title>
+    <style>
+        /* ============================================================
+           慢阻肺患者随访 - 青绿色调，参照心脑血管随访样式
+           基准宽度：375px
+           ============================================================ */
+
+        /* ---------- 全局重置 & 基础 ---------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica,
+                Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+            background-color: #F3F5F7;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+        }
+
+        .page {
+            width: 375px;
+            background-color: #F3F5F7; min-height: 100vh;
+            padding-bottom: 20px;
+        }
+
+        .flex-col { display: flex; flex-direction: column; }
+        .flex-row { display: flex; flex-direction: row; }
+
+        /* ============================================================
+           导航栏
+           ============================================================ */
+        .group_1 { background-color: rgba(255, 255, 255, 1); padding: 14px 16px 7px 16px; }
+        .box_1 {
+            display: flex; flex-direction: row; align-items: center;
+            margin: 0 10px 0 24px;
+        }
+        .status-spacer { flex: 1; }
+        .text_1 {
+            overflow-wrap: break-word; color: rgba(0, 0, 0, 1); font-size: 16px;
+            letter-spacing: 1.100000023841858px; font-family: PingFangSC-Semibold; font-weight: 600;
+            text-align: center; white-space: nowrap; line-height: 22px;
+        }
+        .thumbnail_1 { width: 19px; height: 12px; margin: 5px 0; }
+        .text_2 {
+            overflow-wrap: break-word; color: rgba(0, 0, 0, 1); font-size: 12px;
+            letter-spacing: 0.925000011920929px; font-family: PingFangSC-Semibold; font-weight: 600;
+            text-align: center; white-space: nowrap; line-height: 17px; margin: 3px 0 0 6px;
+        }
+        .image_1 { width: 25px; height: 13px; margin: 5px 0 4px 6px; }
+
+        .box_2 { margin-top: 15px; display: flex; flex-direction: row; align-items: center; flex-wrap: nowrap; }
+        .label_1 { width: 24px; height: 24px; flex-shrink: 0; cursor: pointer; }
+        .text_3 {
+            flex: 1; min-width: 0; overflow-wrap: break-word;
+            color: rgba(51, 51, 51, 1); font-size: 16px;
+            font-family: PingFangSC-Medium; font-weight: 500; text-align: center;
+            white-space: nowrap; line-height: 22px; margin: 4px 0 0 34px;
+        }
+        .image_2 { width: 78px; height: 30px; flex-shrink: 0; }
+
+        /* ============================================================
+           卡片
+           ============================================================ */
+        .card {
+            background-color: #FFFFFF; margin-top: 16px; padding: 16px;
+        }
+
+        .divider {
+            width: 100%; height: 1px; background-color: #E5E5E5; margin-top: 12px;
+        }
+
+        /* ---------- 卡片标题（纯文字，无图标） ---------- */
+        .card-title {
+            font-size: 16px; font-weight: 500; font-family: 'PingFangSC-Medium', sans-serif;
+            color: #333333; line-height: 22px;
+        }
+
+        /* ============================================================
+           患者信息
+           ============================================================ */
+        .patient-info-row { display: flex; flex-wrap: wrap; align-items: baseline; }
+        .patient-name {
+            color: #333333; font-size: 16px; font-weight: 500;
+            line-height: 22px; font-family: 'PingFangSC-Medium', sans-serif;
+        }
+        .patient-meta {
+            color: #666666; font-size: 14px; font-weight: 400; line-height: 20px;
+            margin-left: auto; font-family: 'PingFangSC-Regular', sans-serif;
+        }
+
+        /* ============================================================
+           信息行 (label + value)
+           ============================================================ */
+        .info-row { display: flex; flex-direction: row; align-items: flex-start; margin-top: 8px; }
+        .info-row--first { margin-top: 12px; }
+
+        .info-label {
+            width: 136px; flex-shrink: 0; color: #333333; font-size: 14px;
+            font-weight: 500; line-height: 20px;
+            font-family: 'PingFangSC-Medium', sans-serif; white-space: nowrap;
+        }
+        .info-value {
+            flex: 1; color: #666666; font-size: 14px; font-weight: 400;
+            line-height: 20px; font-family: 'PingFangSC-Regular', sans-serif; word-break: break-word;
+        }
+        .info-value--blue { color: #096AFF; font-weight: 500; }
+        .info-value--danger { color: #F32929; font-weight: 500; }
+
+        .patient-card .info-label { font-size: 16px; line-height: 22px; }
+        .patient-card .info-value { font-size: 16px; line-height: 22px; }
+
+        /* ============================================================
+           生活方式指导 - 标签 Regular 400
+           ============================================================ */
+        .lifestyle-card .info-row--first { margin-top: 8px; }
+        .lifestyle-card .info-label { font-weight: 400; }
+
+        /* ============================================================
+           体征/指标网格（2列）
+           ============================================================ */
+        .metric-grid-2 {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 8px; margin-top: 4px; margin-bottom: 4px;
+        }
+        .metric-item {
+            background: #F4F6FB; border-radius: 4px; padding: 10px 4px 8px;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 56px; text-align: center;
+        }
+        .metric-item .m-value {
+            font-size: 16px; font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif; color: #333333;
+            line-height: 22px; letter-spacing: 0.3px;
+        }
+        .metric-item .m-value .m-unit {
+            font-size: 14px; font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif; color: #666666; margin-left: 1px;
+        }
+        .metric-item .m-label {
+            font-size: 14px; font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif; color: #999999;
+            margin-top: 3px; letter-spacing: 0.2px;
+        }
+
+        /* ============================================================
+           危险因素/症状 - 灰色小圆点列表
+           ============================================================ */
+        .risk-grid {
+            display: grid; grid-template-columns: 1fr;
+            gap: 10px 8px; margin-top: 4px;
+        }
+        .risk-item {
+            display: flex; align-items: flex-start; gap: 4px;
+            font-size: 14px; font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif; color: #333333;
+            line-height: 20px; word-break: break-word;
+        }
+        .risk-item .risk-dot {
+            width: 4px; height: 4px; border-radius: 50%;
+            background-color: #D1D5DB; margin: 8px; flex-shrink: 0;
+        }
+        .risk-item .risk-name { flex: 1; min-width: 0; }
+
+        /* ============================================================
+           卡片纯文本内容
+           ============================================================ */
+        .content-text {
+            font-size: 14px; font-weight: 400; color: #666666; line-height: 20px;
+            font-family: 'PingFangSC-Regular', sans-serif; word-break: break-word;
+            overflow-wrap: break-word; flex: 1; min-width: 0;
+        }
+
+        /* ============================================================
+           用药情况 - 表格样式
+           ============================================================ */
+        .med-table-header {
+            margin-top: 14px; align-items: center; gap: 16px;
+        }
+        .med-header-label {
+            font-size: 14px; font-weight: 500; color: #333333;
+            font-family: 'PingFangSC-Medium', sans-serif; line-height: 22px;
+            white-space: nowrap; text-align: center;
+        }
+        .med-col-name { flex: 1; min-width: 0; text-align: left !important; }
+        .med-col-dose { width: 64px; flex-shrink: 0; }
+        .med-col-freq { width: 64px; flex-shrink: 0; }
+        .med-header-spacer { width: 22px; flex-shrink: 0; }
+
+        .med-separator {
+            width: 100%; height: 1px; background-color: #EEEEEE;
+            margin-top: 10px;
+        }
+
+        .med-row {
+            margin-top: 10px; align-items: center; gap: 16px;
+        }
+        .med-drug-name {
+            flex: 1; min-width: 0;
+            font-size: 14px; font-weight: 400; color: #666666;
+            font-family: 'PingFangSC-Regular', sans-serif; line-height: 22px;
+            word-break: break-word; text-align: left;
+        }
+        .med-drug-dose {
+            width: 64px; flex-shrink: 0; text-align: center;
+            font-size: 14px; font-weight: 400; color: #666666;
+            font-family: 'PingFangSC-Regular', sans-serif; line-height: 22px;
+            white-space: nowrap;
+        }
+        .med-drug-freq {
+            width: 64px; flex-shrink: 0; text-align: center;
+            font-size: 14px; font-weight: 400; color: #666666;
+            font-family: 'PingFangSC-Regular', sans-serif; line-height: 22px;
+            white-space: nowrap;
+        }
+        .med-chevron {
+            width: 16px; height: 16px; flex-shrink: 0; margin-left: 6px;
+        }
+
+        .med-note {
+            font-size: 14px; font-weight: 400; color: #666666;
+            font-family: 'PingFangSC-Regular', sans-serif; line-height: 22px;
+            margin-top: 10px;
+        }
+
+        .med-compliance-box {
+            background-color: #F6FAFF; border-radius: 8px;
+            border: 1px solid #AFD0FF;
+            margin-top: 12px; padding: 8px 12px; align-items: center;
+        }
+        .med-compliance-label {
+            font-size: 14px; font-weight: 400; color: #666666;
+            font-family: 'PingFangSC-Regular', sans-serif; line-height: 22px;
+            white-space: nowrap;
+        }
+        .med-compliance-value {
+            font-size: 14px; font-weight: 400; color: #666666;
+            font-family: 'PingFangSC-Regular', sans-serif; line-height: 22px;
+        }
+        .med-compliance-divider {
+            width: 1px; height: 14px; background-color: #D9D9D9;
+            margin: 0 12px; flex-shrink: 0;
+        }
+
+        /* ============================================================
+           底部脚注
+           ============================================================ */
+        .footer-note {
+            padding: 16px 16px 0 16px; text-align: center; font-size: 12px;
+            color: #999999; font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif; line-height: 17px;
+        }
+
+        /* ============================================================
+           响应式适配
+           ============================================================ */
+        @media (max-width: 375px) { .page { width: 100%; } }
+        @media (max-width: 340px) {
+            .info-label { width: 118px; }
+            .metric-item .m-value { font-size: 14px; }
+            .metric-item .m-value .m-unit { font-size: 12px; }
+            .lifestyle-card .info-label { width: 100px; font-size: 13px; }
+            .lifestyle-card .info-value { font-size: 13px; }
+        }
+        @media (max-width: 320px) {
+            .info-label { width: 90px; font-size: 13px; }
+            .info-value { font-size: 13px; }
+            .patient-meta { margin-left: 0; width: 100%; margin-top: 4px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page flex-col">
+
+        <!-- ==================== 导航栏 ==================== -->
+        <div class="group_1 flex-col">
+            <div class="box_1">
+                <span class="text_1">10:19</span>
+                <span class="status-spacer"></span>
+                <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+                <span class="text_2">5G</span>
+                <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+            </div>
+            <div class="box_2 flex-row">
+                <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+                <span class="text_3">慢阻肺患者随访</span>
+                <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+            </div>
+        </div>
+
+        <!-- ==================== 卡片1：患者基本信息 ==================== -->
+        <div class="card flex-col patient-card">
+            <div class="patient-info-row">
+                <span class="patient-name">自壹</span>
+                <span class="patient-meta">编号：11200056</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">随访日期</span>
+                <span class="info-value">2026-07-29</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">随访方式</span>
+                <span class="info-value">家庭、门诊</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">随访医生签名</span>
+                <span class="info-value">夏嘉</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">下次随访日期</span>
+                <span class="info-value info-value--blue">2026-08-28</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">此次随访分类</span>
+                <span class="info-value info-value--danger">控制不满意</span>
+            </div>
+        </div>
+
+        <!-- ==================== 卡片2：症状 ==================== -->
+        <div class="card flex-col">
+            <span class="card-title">症状</span>
+            <div class="divider"></div>
+
+            <div class="risk-grid">
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">咳嗽：轻度（间断咳嗽，不咳痰）</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">咳痰：中度（昼夜咳痰量约10～50 ml）</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">呼吸困难：平地正常速度行走约100米后出现气促</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">其他症状：无</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 卡片3：体征 ==================== -->
+        <div class="card flex-col">
+            <span class="card-title">体征</span>
+            <div class="divider"></div>
+
+            <div class="risk-grid">
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">口唇紫绀</span>
+                </div>
+                <div class="risk-item">
+                    <span class="risk-dot"></span>
+                    <span class="risk-name">哮鸣音/湿啰音</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 卡片4：体格检查 & 肺功能 ==================== -->
+        <div class="card flex-col">
+            <span class="card-title">体格检查 &amp; 肺功能</span>
+            <div class="divider"></div>
+
+            <div class="metric-grid-2">
+                <div class="metric-item">
+                    <span class="m-value">155/87 <span class="m-unit">mmHg</span></span>
+                    <span class="m-label">血压</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">62 <span class="m-unit">%</span></span>
+                    <span class="m-label">肺功能 FEV1/FVC</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">170 <span class="m-unit">cm</span></span>
+                    <span class="m-label">身高</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">56 <span class="m-unit">kg</span></span>
+                    <span class="m-label">体重</span>
+                </div>
+            </div>
+
+            <div class="info-row" style="margin-top:12px;">
+                <span class="info-label">体质指数</span>
+                <span class="info-value">19.38 kg/m²</span>
+            </div>
+        </div>
+
+        <!-- ==================== 卡片5：生活方式指导 ==================== -->
+        <div class="card flex-col lifestyle-card">
+            <span class="card-title">生活方式指导</span>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">日吸烟量（支）</span>
+                <span class="info-value">10 <span style="color:#999999;margin-left:4px;">→ 目标 5</span></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">运动</span>
+                <span class="info-value">3 次/周，30 分钟/次 <span style="color:#999999;margin-left:4px;">→ 目标 5 次/周，45 分钟/次</span></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">呼吸锻炼</span>
+                <span class="info-value">是（已指导）</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">心理调整</span>
+                <span class="info-value">良好</span>
+            </div>
+        </div>
+
+        <!-- ==================== 卡片6：实验室检查 ==================== -->
+        <div class="card flex-col">
+            <span class="card-title">实验室检查</span>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label" style="font-weight:400;">白细胞</span>
+                <span class="info-value">8.5×10⁹/L</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label" style="font-weight:400;">中性粒细胞</span>
+                <span class="info-value">65%</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label" style="font-weight:400;">肺功能 FEV1/FVC</span>
+                <span class="info-value info-value--danger">62%（中度阻塞性）</span>
+            </div>
+        </div>
+
+        <!-- ==================== 卡片7：用药情况 ==================== -->
+        <div class="card flex-col">
+            <span class="card-title" style="margin-bottom:0;">用药情况</span>
+            <div class="divider"></div>
+
+            <!-- 表头 -->
+            <div class="med-table-header flex-row">
+                <span class="med-header-label med-col-name">药品名称</span>
+                <span class="med-header-label med-col-dose">单次剂量</span>
+                <span class="med-header-label med-col-freq">用药次数</span>
+                <span class="med-header-spacer"></span>
+            </div>
+            <div class="med-separator"></div>
+
+            <!-- 药物1 -->
+            <div class="med-row flex-row">
+                <span class="med-drug-name">布地奈德福莫特罗粉吸入剂</span>
+                <span class="med-drug-dose">每次1吸</span>
+                <span class="med-drug-freq">每日2次</span>
+                <svg class="med-chevron" viewBox="0 0 24 24" width="16" height="16">
+                    <polyline points="9 18 15 12 9 6" fill="none" stroke="#C0C0C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="med-separator"></div>
+
+            <!-- 药物2 -->
+            <div class="med-row flex-row">
+                <span class="med-drug-name">噻托溴铵粉雾剂</span>
+                <span class="med-drug-dose">每次1粒</span>
+                <span class="med-drug-freq">每日1次</span>
+                <svg class="med-chevron" viewBox="0 0 24 24" width="16" height="16">
+                    <polyline points="9 18 15 12 9 6" fill="none" stroke="#C0C0C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="med-separator"></div>
+
+            <!-- 备注 -->
+            <span class="med-note">备注：无其他药物</span>
+
+            <!-- 依从性 & 不良反应 -->
+            <div class="med-compliance-box flex-row">
+                <span class="med-compliance-label">服药依从性：</span>
+                <span class="med-compliance-value">规律</span>
+                <span class="med-compliance-divider"></span>
+                <span class="med-compliance-label">药物不良反应：</span>
+                <span class="med-compliance-value">无</span>
+            </div>
+        </div>
+
+        <!-- ==================== 卡片8：随访结果 ==================== -->
+        <div class="card flex-col">
+            <span class="card-title">随访结果</span>
+            <div class="divider"></div>
+
+            <div class="content-text" style="margin-top:12px;">
+                患者仍间断咳嗽、咳痰，活动后气促较前无明显改善，肺功能提示中度阻塞性通气功能障碍，建议规律吸入药物，加强呼吸锻炼，下月复查。
+            </div>
+        </div>
+
+        <!-- ==================== 卡片9：随访结论 ==================== -->
+        <div class="card flex-col">
+            <span class="card-title">随访结论</span>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label" style="font-weight:400;">转诊原因</span>
+                <span class="info-value">无</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label" style="font-weight:400;">随访状态</span>
+                <span class="info-value">正常</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label" style="font-weight:400;">建档机构</span>
+                <span class="info-value">青羊人民医院</span>
+            </div>
+        </div>
+
+        <!-- ==================== 底部脚注 ==================== -->
+        <div class="footer-note">
+            慢阻肺患者随访 · 随访日期 2026-07-29 · 编号 11200056
+        </div>
+
+    </div>
+
+    <script>
+        document.querySelector('.label_1').addEventListener('click', function() {
+            window.location.href = '慢阻肺随访列表.html';
+        });
+    </script>
+
+</body>
+</html>

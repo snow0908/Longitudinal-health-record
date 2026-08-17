@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI报告分析</title>
+    <script>
+(function flexible(window, document) {
+  function resetFontSize() {
+    const size = (document.documentElement.clientWidth / 375) * 37.5;
+    document.documentElement.style.fontSize = size + 'px';
+  }
+  window.addEventListener('pageshow', resetFontSize);
+  window.addEventListener('resize', resetFontSize);
+})(window, document);
+    </script>
+    <style>
+/* ============================================================
+   全局基础样式 —— 参照 AI智能分析结果 移动端规范
+   基准宽度：375px
+   ============================================================ */
+* { box-sizing: border-box; -webkit-box-sizing: border-box; }
+body * { box-sizing: border-box; flex-shrink: 0; }
+body {
+  margin: 0;
+  font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma,
+    Arial, PingFang SC-Light, Microsoft YaHei;
+  background-color: #f3f5f7;
+}
+
+/* Flex 工具类 */
+.flex-col { display: flex; flex-direction: column; }
+.flex-row { display: flex; flex-direction: row; }
+.justify-between { display: flex; justify-content: space-between; }
+.align-center { display: flex; align-items: center; }
+button { margin: 0; padding: 0; border: 1px solid transparent; outline: none; background-color: transparent; }
+
+.page {
+  background-color: #f3f5f7;
+  position: relative;
+  width: 375px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.page-content {
+  padding: 12px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ============================================================
+   头部导航栏 —— 参照 健康教育 白底黑字风格
+   ============================================================ */
+.group_1 {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+.box_1 {
+  margin: 0 10px 0 24px;
+}
+.text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+.thumbnail_1 {
+  width: 19px; height: 12px;
+  margin: 5px 0 5px 191px;
+}
+.text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+.image_1 {
+  width: 25px; height: 13px;
+  margin: 5px 0 4px 6px;
+}
+.box_2 {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
+.label_1 {
+  width: 24px; height: 24px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+.image_2 {
+  width: 78px; height: 30px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   AI 报告深度解读头部横幅（参照 检验报告AI分析.html）
+   ============================================================ */
+.hero-card {
+  background: linear-gradient(135deg, #E6F4FF 0%, #F0F7FF 100%);
+  margin: 4px 0;
+  padding: 24px 20px;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-title {
+  color: #2A7AE8;
+  font-size: 22px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: left;
+  line-height: 30px;
+}
+.hero-subtitle {
+  color: #5A8FD6;
+  font-size: 13px;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  text-align: left;
+  line-height: 18px;
+  margin-top: 6px;
+  word-break: break-word;
+}
+.hero-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 64px;
+  height: 64px;
+}
+
+/* ============================================================
+   AI 内容卡片（白底 12px 圆角，与智能分析结果一致）
+   ============================================================ */
+.content-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f3f7;
+  margin-bottom: 12px;
+}
+.card-icon {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.card-icon.find { background: linear-gradient(135deg, #5b8cff 0%, #096aff 100%); }
+.card-icon.suggest { background: linear-gradient(135deg, #ff8a4a 0%, #ff6b1a 100%); }
+.card-icon svg { width: 14px; height: 14px; fill: #ffffff; }
+.card-title {
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  font-size: 16px;
+  color: #333333;
+  line-height: 22px;
+}
+
+/* 列表条目 */
+.list { display: flex; flex-direction: column; gap: 10px; }
+.list-item {
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333333;
+  line-height: 22px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+}
+.list-item .dot {
+  flex-shrink: 0;
+  width: 6px; height: 6px;
+  background: #096aff;
+  border-radius: 50%;
+  margin-top: 8px;
+}
+.list-item .text { flex: 1; }
+.list-item .index {
+  flex-shrink: 0;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  font-size: 14px;
+  color: #ff6b1a;
+  min-width: 18px;
+  line-height: 22px;
+}
+
+/* 高亮 */
+.highlight-red { color: #ff4d4f; font-weight: 500; }
+.highlight-blue { color: #096aff; font-weight: 500; }
+.highlight-orange { color: #ff6b1a; font-weight: 500; }
+
+/* ============================================================
+   底部操作按钮
+   ============================================================ */
+.action-bar {
+  display: flex; gap: 12px; margin-top: 4px;
+}
+.btn {
+  flex: 1;
+  height: 44px;
+  border-radius: 22px;
+  font-family: PingFangSC-Medium;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-outline {
+  background: #ffffff;
+  color: #096aff;
+  border: 1px solid #096aff;
+}
+.btn-outline:active { opacity: 0.6; }
+
+/* ============================================================
+   底部免责声明
+   ============================================================ */
+.footer {
+  padding: 12px 16px;
+  background: #f8f9fb;
+  border-radius: 8px;
+}
+.footer-text {
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  font-size: 11px;
+  color: #999999;
+  line-height: 18px;
+  text-align: justify;
+}
+    </style>
+  </head>
+  <body>
+    <div class="page">
+
+      <!-- 导航栏（参照 健康教育） -->
+      <div class="group_1 flex-col">
+        <div class="box_1 flex-row">
+          <span class="text_1">10:19</span>
+          <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+          <span class="text_2">5G</span>
+          <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+        </div>
+        <div class="box_2 flex-row">
+          <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" onclick="history.back()" />
+          <span class="text_3">AI报告分析</span>
+          <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+        </div>
+      </div>
+
+      <!-- 页面内容区 -->
+      <div class="page-content">
+
+        <!-- ==================== AI 报告深度解读头部 ==================== -->
+        <div class="hero-card">
+            <div class="hero-title">AI报告深度解读</div>
+            <div class="hero-subtitle">基于检查结果，AI 智能分析与临床解读</div>
+            <img class="hero-icon" src="../img/AI分析.png" referrerpolicy="no-referrer" />
+        </div>
+
+        <!-- AI 分析发现 -->
+        <div class="content-card">
+          <div class="card-header">
+            <div class="card-icon find">
+              <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.5 10.5L2 7l1-1 2.5 2.5L11 3l1 1z"/>
+              </svg>
+            </div>
+            <span class="card-title">AI分析发现</span>
+          </div>
+          <div class="list">
+            <div class="list-item">
+              <span class="dot"></span>
+              <span class="text"><span class="highlight-red">谷丙转氨酶 257.80 U/L</span>（参考9-50），约为正常上限5倍，提示肝功能明显异常</span>
+            </div>
+            <div class="list-item">
+              <span class="dot"></span>
+              <span class="text"><span class="highlight-red">谷草转氨酶 192.80 U/L</span>（参考15-40），约为正常上限5倍，提示肝细胞损伤</span>
+            </div>
+            <div class="list-item">
+              <span class="dot"></span>
+              <span class="text"><span class="highlight-orange">葡萄糖 3.88 mmol/L</span>（参考4.1-16.38），低于正常下限，可能为空腹低血糖</span>
+            </div>
+            <div class="list-item">
+              <span class="dot"></span>
+              <span class="text">尿酸406.00（参考202.3-416.5）接近上限，肾小球滤过率84.30（参考&gt;80）接近下限，需关注肾功能变化</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI 建议 -->
+        <div class="content-card">
+          <div class="card-header">
+            <div class="card-icon suggest">
+              <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 1h6l3 3v9H3V1zm5 1v3h3"/>
+                <line x1="5" y1="8" x2="9" y2="8" stroke="#fff" stroke-width="1.2"/>
+                <line x1="5" y1="10" x2="9" y2="10" stroke="#fff" stroke-width="1.2"/>
+              </svg>
+            </div>
+            <span class="card-title">AI建议</span>
+          </div>
+          <div class="list">
+            <div class="list-item">
+              <span class="index">1、</span>
+              <span class="text">谷丙转氨酶和谷草转氨酶显著升高，提示<span class="highlight-red">肝功能明显异常</span>，建议尽快至消化内科或肝病科就诊，进一步检查肝炎病毒标志物、自身免疫性肝病抗体及肝脏影像学</span>
+            </div>
+            <div class="list-item">
+              <span class="index">2、</span>
+              <span class="text">葡萄糖3.88偏低，可能为空腹低血糖，建议排查饮食、运动等因素，必要时行糖耐量试验评估糖代谢状态</span>
+            </div>
+            <div class="list-item">
+              <span class="index">3、</span>
+              <span class="text">尿酸接近上限，建议低嘌呤饮食、适量饮水，定期复查肾功能指标</span>
+            </div>
+            <div class="list-item">
+              <span class="index">4、</span>
+              <span class="text">建议<span class="highlight-blue">6-8周</span>后复查肝功能，监测转氨酶变化趋势，明确病因后针对性治疗</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部按钮 -->
+        <div class="action-bar">
+          <a class="btn btn-outline" href="./AI报告分析-选择报告.html">与历史检验对比</a>
+        </div>
+
+        <!-- 免责声明 -->
+        <div class="footer">
+          <div class="footer-text">
+            免责声明：本AI分析结果由系统基于医学检验数据智能分析生成，仅供临床医生参考使用，最终诊断须以专业医师判断为准。
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>

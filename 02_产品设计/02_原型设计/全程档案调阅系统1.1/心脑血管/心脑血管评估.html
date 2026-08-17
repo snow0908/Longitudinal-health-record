@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>心脑血管评估</title>
+    <style>
+        /* ============================================================
+           心脑血管评估 - 严格遵循《C端UED交互与视觉设计规范 v1.2》
+           基准宽度：375px
+           ============================================================ */
+
+        /* ---------- 全局重置（§2.1 盒模型与CSS重置） ---------- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica,
+                Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+            background-color: #F3F5F7;   /* §1.3 页面背景 */
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ---------- Flex 工具类（§2.2 Flexbox工具类） ---------- */
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+        }
+        .justify-between {
+            display: flex;
+            justify-content: space-between;
+        }
+        .align-center {
+            display: flex;
+            align-items: center;
+        }
+        .align-start {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        /* ---------- 页面容器（§2.3 + §5.1） ---------- */
+        .page {
+            background-color: #F3F5F7;
+            position: relative;
+            width: 375px;
+            min-height: 100vh;
+            padding-bottom: 24px;
+        }
+
+        /* ============================================================
+           导航栏（§8.1 导航栏）
+           ============================================================ */
+        .group_1 {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+        .box_1 {
+  margin: 0 10px 0 24px;
+}
+        .text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+        .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0 5px 191px;
+}
+        .text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+        .image_1 {
+  width: 25px;
+  height: 13px;
+  margin: 5px 0 4px 6px;
+}
+
+        .box_2 {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
+        .label_1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+          cursor: pointer;
+}
+        .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+        .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+        /* ============================================================
+           卡片样式（§8.4 基础卡片样式规范 — A.标准内容卡片）
+           ============================================================ */
+
+        /* 白色卡片（外框）— §8.4.2 + §8.4.4-A */
+        .card {
+            background-color: #FFFFFF;   /* §8.4.2 背景色 */
+            border-radius: 8px;          /* §5.2 卡片圆角 = 8px */
+            border: 1px solid #E5E5E5;    /* §3.4 Divider 作为边框 */
+            padding: 16px;               /* §8.4.2 内边距 = 16px */
+            margin-top: 16px;            /* §6.2 卡片间距 = 16px */
+            width: 100%;
+            box-shadow: none;            /* §8.4.1 平面化：无阴影 */
+        }
+
+        /* 卡片内分区标题 — §8.4.4-A 标题规格 */
+        .section-title {
+            font-size: 16px;             /* §4.2 H2 = 16px */
+            font-weight: 500;            /* §4.1 Medium = 500 */
+            font-family: PingFangSC-Medium;
+            color: #333333;             /* §3.4 Text Primary */
+            line-height: 22px;          /* §4.2 H2 行高 */
+            margin-bottom: 12px;        /* §6.1 md = 12px */
+        }
+
+        /* ---------- 蓝色高亮卡片（§8.4.4-D 高亮信息卡片） ---------- */
+        .card-highlight {
+            background-color: #F6FAFF;   /* §3.5 规则6 + §8.4.4-D */
+            border: 1px solid #AFCFFF;   /* §3.5 规则6 + §8.4.4-D */
+            border-radius: 8px;          /* 外层圆角保持8px */
+            padding: 16px;               /* 内边距统一16px */
+        }
+
+        /* ---------- 标签组件（§8.4 辅助组件） ---------- */
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;                    /* §6.1 sm = 8px */
+            margin-bottom: 12px;         /* §6.1 md = 12px */
+        }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 4px;          /* §5.2 小圆角 = 4px */
+            padding: 3px 8px;
+            font-size: 12px;             /* §4.2 C1 = 12px 标签文字 */
+            font-weight: 400;            /* §4.1 Regular = 400 */
+            font-family: PingFangSC-Regular;
+            line-height: 17px;           /* §4.2 C1 行高 17px */
+            white-space: nowrap;
+        }
+        /* 警告/高危标签 — 使用功能色警告色 §3.2 */
+        .tag--warning {
+            background-color: #FFF7ED;   /* §3.2 警告背景 */
+            color: #FEA800;              /* §3.2 警告/待审 */
+            border: 1px solid #FEA800;   /* §3.5 规则2：标签文字色与边框色一致 */
+        }
+
+        /* ---------- 列表项（用于病史危险因素） ---------- */
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 4px 0;              /* 紧凑行间距 */
+        }
+        .list-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            margin-top: 8px;
+            flex-shrink: 0;
+            background-color: #096AFF;   /* §3.1 Primary 主色 */
+        }
+        .list-text {
+            font-size: 14px;             /* §4.2 H3 = 14px 正文 */
+            font-weight: 400;            /* §4.1 Regular = 400 */
+            font-family: PingFangSC-Regular;
+            color: #666666;             /* §3.4 Text Secondary 次要正文 */
+            line-height: 20px;          /* §4.2 H3 行高 20px */
+            margin-left: 8px;            /* §6.1 sm = 8px */
+            word-break: break-all;
+        }
+        .list-text .label {
+            color: #333333;             /* §3.4 Text Primary 主要正文 */
+            font-weight: 400;
+        }
+        .list-text .status-no {
+            color: #999999;             /* §3.4 Text Tertiary 辅助文字 */
+            margin-left: 12px;
+            font-weight: 400;
+        }
+
+        /* ============================================================
+           简洁列表样式（转诊卡片）
+           遵循 §8.4.4-A 标准内容卡片内部排版
+           标题下有分割线，内容行无分割线
+           ============================================================ */
+        .simple-card-title {
+            font-size: 16px;             /* §4.2 H2 = 16px 段落标题 */
+            font-weight: 500;            /* §4.1 Medium = 500 */
+            font-family: PingFangSC-Medium;
+            color: #333333;             /* §3.4 Text Primary */
+            line-height: 22px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E5E5E5;  /* 标题下方分割线 */
+            margin-bottom: 0;            /* 分割线代替margin */
+        }
+
+        .simple-row {
+            display: flex;
+            align-items: baseline;
+            padding: 10px 0;             /* 内容行间距稍大（无分割线时用间距区分） */
+            /* 无分割线 — 用户要求内容区域无分割线 */
+        }
+        .simple-label {
+            font-size: 14px;             /* §4.2 H3 = 14px 正文 */
+            font-weight: 400;            /* §4.1 Regular = 400 */
+            font-family: PingFangSC-Regular;
+            color: #666666;             /* §3.4 Text Secondary */
+            line-height: 20px;
+            min-width: 70px;            /* 使用min-width替代固定width，避免溢出 */
+            flex-shrink: 0;
+        }
+        .simple-value {
+            font-size: 14px;             /* §4.2 H3 = 14px 正文 */
+            font-weight: 400;            /* §4.1 Regular = 400 */
+            font-family: PingFangSC-Regular;
+            color: #333333;             /* §3.4 Text Primary */
+            line-height: 20px;
+            flex: 1;
+            text-align: left;
+            word-break: break-all;
+        }
+
+        /* ============================================================
+           辅助检查样式
+           严格遵循 §4.2 字号层级 + §4.1 字体家族字重
+           ============================================================ */
+
+        /* 分组小标题 — 升级为H2级别段落标题 */
+        .lab-group-title {
+            font-size: 14px;             /* 分组标题用H3 = 14px */
+            font-weight: 500;            /* Medium = 500 区分层级 */
+            font-family: PingFangSC-Medium;
+            color: #666666;             /* Text Secondary 作为分组标识 */
+            line-height: 20px;
+            margin: 12px 0 8px 0;       /* 分组间距 md+sm */
+            position: relative;
+            padding-left: 10px;
+        }
+        .lab-group-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 12px;
+            background-color: #096AFF;   /* Primary色竖线装饰 */
+            border-radius: 1px;
+        }
+        .lab-group-title:first-child {
+            margin-top: 4px;
+        }
+
+        /* 数据行 — 虚线在标签和数值中间填充 */
+        .lab-row {
+            display: flex;
+            align-items: baseline;
+            padding: 8px 0;              /* 行间距 8px */
+        }
+        .lab-key {
+            font-size: 14px;             /* §4.2 H3 = 14px 正文/标签 */
+            color: #666666;             /* §3.4 Text Secondary ← 原#9CA3AF非标 */
+            font-weight: 400;            /* §4.1 Regular = 400 */
+            font-family: PingFangSC-Regular;
+            flex-shrink: 0;              /* 标签不压缩，保持原始宽度 */
+            position: relative;
+        }
+        /* 虚线填充区 — 位于label与value之间 */
+        .lab-dash {
+            flex: 1;                     /* 弹性占据剩余空间 */
+            border-bottom: 1px dashed #E5E5E5;  /* 虚线仅绘制在中间区域 */
+            margin: 0 8px;               /* 左右留出与文字的间距 */
+            min-width: 12px;             /* 最小宽度保证可见性 */
+            position: relative;
+            top: -4px;                   /* 微调与文字基线对齐 */
+        }
+        .lab-val {
+            font-size: 14px;             /* §4.2 H3 = 14px ← 原15px非标 */
+            color: #333333;             /* §3.4 Text Primary ← 原#1F2937非标 */
+            font-weight: 500;            /* §4.1 Medium = 500 数据指标值 */
+            font-family: PingFangSC-Medium;
+            text-align: right;
+            flex-shrink: 0;              /* 数值不压缩 */
+        }
+
+        /* ---------- 底部脚注 ---------- */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #E5E5E5;   /* §3.4 Divider = #E5E5E5 */
+            margin: 8px 0;               /* §6.1 sm = 8px */
+        }
+
+        /* ---------- 分割线（§3.4 Divider） ---------- */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;                    /* §6.1 sm = 8px */
+            margin-bottom: 4px;
+        }
+        .card-header-icon {
+            width: 20px;
+            height: 20px;               /* §7 菜单/列表图标 = 20×20px */
+            flex-shrink: 0;
+        }
+        .card-header-title {
+            font-size: 16px;             /* §4.2 H2 = 16px 卡片标题 */
+            font-weight: 500;            /* §4.1 Medium = 500 */
+            font-family: PingFangSC-Medium;
+            color: #333333;             /* §3.4 Text Primary */
+            line-height: 22px;
+        }
+
+        /* ---------- 辅助检查卡片头部图标区 ---------- */
+        .footer-note {
+            padding: 16px 16px 0 16px;
+            text-align: center;
+            font-size: 12px;             /* §4.2 C1 = 12px 辅助信息 */
+            color: #999999;             /* §3.4 Text Tertiary */
+            font-weight: 400;
+            font-family: PingFangSC-Regular;
+            line-height: 17px;           /* §4.2 C1 行高 17px */
+        }
+
+        /* ============================================================
+           响应式适配（§11）
+           ============================================================ */
+        @media (max-width: 375px) {
+            .page {
+                width: 100%;
+            }
+        }
+        @media (max-width: 340px) {
+            .lab-row {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .lab-val {
+                text-align: left;
+            }
+            .simple-label {
+                min-width: 56px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page flex-col">
+
+        <!-- ==================== 导航栏 ==================== -->
+        <div class="group_1 flex-col">
+  <div class="box_1 flex-row">
+    <span class="text_1">10:19</span>
+    <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+    <span class="text_2">5G</span>
+    <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+  </div>
+  <div class="box_2 flex-row">
+    <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+    <span class="text_3">心脑血管评估</span>
+    <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+  </div>
+</div>
+
+        <!-- ============================================================
+        卡片 1：病史危险因素（D类高亮信息卡片嵌套在A类标准卡片中）
+        ============================================================ -->
+        <div class="card">
+            <div class="card-highlight">
+                <!-- 高危标签 -->
+                <div class="tag-row">
+                    <span class="tag tag--warning">脑卒中高危</span>
+                    <span class="tag tag--warning">心血管病高危</span>
+                </div>
+
+                <!-- 危险因素列表 -->
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">高血压病</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">糖尿病</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">血脂异常</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">脑卒中家族史</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">吸烟史</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">明显超重或肥胖 (BMI≥26kg/m²)</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">运动缺乏或体力劳动者</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">心房颤动/瓣膜性心脏病</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">脑卒中病史</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">2次平均SBP≥160mmHg/DBP≥100mmHg</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">LDL≥4.14mmol/L</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">HDL&lt;0.78mmol/L</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">接受经皮冠状动脉介入治疗(PCI)</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">心肌梗死(心梗)病史</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">接受冠状动脉旁路搭桥手术(CABG)</span><span class="status-no">否</span></span>
+                </div>
+                <div class="list-item">
+                    <span class="list-dot"></span>
+                    <span class="list-text"><span class="label">10年心血管病患病风险≥20%</span><span class="status-no">否</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        卡片 2：辅助检查（A类标准内容卡片）
+        ============================================================ -->
+        <div class="card flex-col">
+            <!-- 卡片标题栏：SVG图标 + 标题 -->
+            <div class="card-header">
+                <svg class="card-header-icon" viewBox="0 0 20 20" fill="none">
+                    <!-- 显微镜/实验室图标 — 专业医疗风格 -->
+                    <path d="M4 14h12M6 14V9a4 4 0 118 0v5M8 6V3h4v3M10 3v3" stroke="#096AFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="10" cy="11" r="2" stroke="#096AFF" stroke-width="1.5"/>
+                    <path d="M7 17l3-3 3 3" stroke="#096AFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="card-header-title">辅助检查</span>
+            </div>
+            <div class="divider"></div>
+
+            <!-- 体格检查 -->
+            <div class="lab-group-title">体格检查</div>
+            <div class="lab-row">
+                <span class="lab-key">身高</span>
+                <span class="lab-dash"></span>
+                <span class="lab-val">177 cm</span>
+            </div>
+            <div class="lab-row">
+                <span class="lab-key">体重</span>
+                <span class="lab-dash"></span>
+                <span class="lab-val">56 kg</span>
+            </div>
+            <div class="lab-row">
+                <span class="lab-key">体质指数</span>
+                <span class="lab-dash"></span>
+                <span class="lab-val">17.87 kg/m²</span>
+            </div>
+
+            <!-- 血压 -->
+            <div class="lab-group-title">血压</div>
+            <div class="lab-row">
+                <span class="lab-key">现测左侧血压</span>
+                <span class="lab-dash"></span>
+                <span class="lab-val">145/98 mmHg</span>
+            </div>
+            <div class="lab-row">
+                <span class="lab-key">现测右侧血压</span>
+                <span class="lab-dash"></span>
+                <span class="lab-val">146/89 mmHg</span>
+            </div>
+
+            <!-- 血脂 -->
+            <div class="lab-group-title">血脂</div>
+            <div class="lab-row">
+                <span class="lab-key">血总胆固醇</span>
+                <span class="lab-dash"></span>
+                <span class="lab-val">5.5 mmol/L</span>
+            </div>
+            <div class="lab-row">
+                <span class="lab-key">甘油三酯</span>
+                <span class="lab-dash"></span>
+                <span class="lab-val">5.2 mmol/L</span>
+            </div>
+            <div class="lab-row">
+                <span class="lab-key">低密度脂蛋白胆固醇</span>
+                <span class="lab-dash"></span>
+                <span class="lab-val">5.5 mmol/L</span>
+            </div>
+            <div class="lab-row">
+                <span class="lab-key">高密度脂蛋白胆固醇</span>
+                <span class="lab-dash"></span>
+                <span class="lab-val">5.2 mmol/L</span>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        卡片 3：转诊（A类标准内容卡片）
+        ============================================================ -->
+        <div class="card">
+            <div class="simple-card-title">转诊</div>
+
+            <div class="simple-row">
+                <span class="simple-label">转诊机构</span>
+                <span class="simple-value">江都第一人民医院</span>
+            </div>
+            <div class="simple-row">
+                <span class="simple-label">转诊科室</span>
+                <span class="simple-value">消化内科</span>
+            </div>
+            <div class="simple-row">
+                <span class="simple-label">原因</span>
+                <span class="simple-value">—</span>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        底部脚注
+        ============================================================ -->
+        <div class="footer-note">
+            编号 11200056 · 心脑血管评估 · 评估日期 2026-07-21
+        </div>
+
+    </div>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '心脑血管管理列表.html';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>高危人群随访记录</title>
+    <style>
+        /* ============================================================
+           全局重置 & 基础
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        body {
+            font-family: "PingFang SC", "苹方-简", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+            background-color: #F3F5F7;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* ---------- 页面容器 ---------- */
+        .page {
+            width: 375px;
+            max-width: 100%;
+            background-color: #F3F5F7;
+            min-height: 100vh;
+            padding-bottom: 20px;
+            margin: 0 auto;
+        }
+
+        /* ---------- 工具类 ---------- */
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-row { display: flex; flex-direction: row; }
+
+        /* ============================================================
+           导航栏
+           ============================================================ */
+        .group_1 {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+
+        .box_1 {
+  display: flex; flex-direction: row; align-items: center;
+  margin: 0 10px 0 24px;
+}
+        .status-spacer { flex: 1; }
+        .text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+        .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0;
+}
+        .text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+        .image_1 {
+  width: 25px;
+  height: 13px;
+  margin: 5px 0 4px 6px;
+}
+
+        .box_2 {
+  margin-top: 15px;
+  display: flex; flex-direction: row;
+  align-items: center; flex-wrap: nowrap;
+}
+        .label_1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+          cursor: pointer;
+}
+        .text_3 {
+  flex: 1; min-width: 0;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+        .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+        /* ============================================================
+           卡片
+           ============================================================ */
+        .card {
+            background-color: #FFFFFF;
+            margin: 16px 16px 0 16px;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #E5E5E5;
+        }
+        .card:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #E5E5E5;
+            margin-top: 12px;
+        }
+
+        /* ============================================================
+           卡片头部（标题 + 图标）
+           ============================================================ */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: #096AFF;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: 500;
+            font-family: "PingFang SC", "苹方-简", "PingFangSC-Medium", sans-serif;
+            color: #333333;
+            line-height: 22px;
+        }
+
+        /* ============================================================
+           患者信息
+           ============================================================ */
+        .patient-info-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+        .patient-name {
+            color: #333333;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+        }
+        .patient-gender {
+            color: #333333;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin-left: 8px;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+        }
+        .patient-age {
+            color: #333333;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin-left: 8px;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+        }
+        .patient-meta {
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin-left: auto;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+        }
+
+        /* ============================================================
+           信息行 (label + value) - 主要用于其他模块
+           ============================================================ */
+        .info-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            margin-top: 8px;
+        }
+        .info-row--first {
+            margin-top: 12px;
+        }
+
+        .info-label {
+            width: 136px;
+            flex-shrink: 0;
+            color: #333333;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+            white-space: nowrap;
+        }
+        .info-value {
+            flex: 1;
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+            word-break: break-word;
+        }
+        .info-value--blue {
+            color: #096AFF;
+            font-weight: 500;
+        }
+        .info-value--empty {
+            color: #999999;
+        }
+
+        /* 卡片1：患者基本信息 - 16px */
+        .patient-card .info-label {
+            font-size: 16px;
+            line-height: 22px;
+        }
+        .patient-card .info-value {
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        /* ============================================================
+           生活方式指导 - 标签 Regular 400
+           ============================================================ */
+        .lifestyle-card .info-row--first {
+            margin-top: 8px;
+        }
+        .lifestyle-card .info-label {
+            font-weight: 400;
+        }
+
+        /* ============================================================
+           卡片纯文本内容（14px Regular #666666）
+           ============================================================ */
+        .content-text {
+            font-size: 14px;
+            font-weight: 400;
+            color: #666666;
+            line-height: 20px;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* ============================================================
+           症状模块
+           ============================================================ */
+        .symptom-value {
+            font-size: 14px;
+            font-weight: 400;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+            color: #666666;
+            line-height: 20px;
+            margin-top: 4px;
+        }
+
+        /* ============================================================
+           体格检查 - 参照新生儿访视样式（网格卡片）
+           ============================================================ */
+        .metric-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        .metric-item {
+            background: #F4F6FB;
+            border-radius: 4px;
+            padding: 10px 4px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 56px;
+            text-align: center;
+        }
+
+        .metric-item .m-value {
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: #333333;
+            line-height: 22px;
+            letter-spacing: 0.3px;
+        }
+
+        .metric-item .m-value .m-unit {
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: #666666;
+            margin-left: 1px;
+        }
+
+        .metric-item .m-label {
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: #999999;
+            margin-top: 3px;
+            letter-spacing: 0.2px;
+        }
+
+        /* 特殊样式：其他（空值） */
+        .metric-item--empty .m-value {
+            color: #999999;
+            font-weight: 400;
+        }
+
+        /* ============================================================
+           生化检查 - 虚线分隔样式
+           ============================================================ */
+        .dotted-row {
+            display: flex;
+            align-items: baseline;
+            padding: 8px 0;
+            min-height: 44px;
+        }
+
+        .dotted-name {
+            font-size: 14px;
+            font-weight: 400;
+            color: #333333;
+            line-height: 20px;
+            white-space: nowrap;
+        }
+
+        .dotted-line {
+            flex: 1;
+            min-width: 8px;
+            border-bottom: 1px dotted #D1D5DB;
+            margin: 0 8px;
+            align-self: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .dotted-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333333;
+            line-height: 20px;
+            white-space: nowrap;
+            text-align: right;
+        }
+
+        .dotted-value--empty {
+            color: #999999;
+            font-weight: 400;
+        }
+
+        /* ============================================================
+           底部脚注
+           ============================================================ */
+        .footer-note {
+            padding: 16px 16px 0 16px;
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            font-weight: 400;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+            line-height: 17px;
+        }
+
+        /* ============================================================
+           响应式适配
+           ============================================================ */
+        @media (max-width: 375px) {
+            .page {
+                width: 100%;
+            }
+        }
+        @media (max-width: 340px) {
+            .patient-meta {
+                margin-left: 0;
+                width: 100%;
+                margin-top: 4px;
+            }
+            .info-label {
+                width: 100px;
+            }
+            .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+            .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+            .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0;
+}
+            .metric-grid-2 {
+                gap: 6px;
+            }
+            .metric-item .m-value {
+                font-size: 14px;
+            }
+            .metric-item .m-value .m-unit {
+                font-size: 12px;
+            }
+            .lifestyle-card .info-label {
+                width: 100px;
+                font-size: 13px;
+            }
+            .lifestyle-card .info-value {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+            .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+            .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0;
+}
+            .info-label {
+                width: 90px;
+                font-size: 13px;
+            }
+            .info-value {
+                font-size: 13px;
+            }
+            .metric-item .m-value {
+                font-size: 13px;
+            }
+            .metric-item .m-value .m-unit {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page flex-col">
+
+        <!-- ==========================================================
+        导航栏
+        ========================================================== -->
+        <div class="group_1 flex-col">
+  <div class="box_1">
+    <span class="text_1">10:19</span>
+    <span class="status-spacer"></span>
+    <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+    <span class="text_2">5G</span>
+    <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+  </div>
+  <div class="box_2 flex-row">
+    <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+    <span class="text_3">随访服务记录</span>
+    <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+  </div>
+</div>
+
+        <!-- ==========================================================
+        卡片1：患者基本信息
+        ========================================================== -->
+        <div class="card flex-col patient-card">
+            <div class="patient-info-row">
+                <span class="patient-name">自登</span>
+                <span class="patient-gender">男</span>
+                <span class="patient-age">62岁</span>
+                <span class="patient-meta">档案编号：11200056</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">随访方式</span>
+                <span class="info-value">入户</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">随访日期</span>
+                <span class="info-value">2026-07-21</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">随访医生签名</span>
+                <span class="info-value">夏真</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">随访结果</span>
+                <span class="info-value">控制满意</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">失访日期</span>
+                <span class="info-value info-value--blue">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">失访原因</span>
+                <span class="info-value">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">下次随访日期</span>
+                <span class="info-value info-value--blue">2026-08-20</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片2：症状
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <span class="card-title">症状</span>
+            </div>
+            <div class="divider"></div>
+            <div style="margin-top: 12px;">
+                <div class="symptom-value">头痛头晕、恶心呕吐、呼吸困难、心悸胸闷、多饮、多食、多尿</div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片3：体格检查 （参照新生儿访视样式 - 网格卡片）
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        <path d="M18 9l3 3-3 3"/>
+                        <path d="M6 15l-3-3 3-3"/>
+                    </svg>
+                </div>
+                <span class="card-title">体格检查</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="metric-grid-2">
+                <!-- 血压 -->
+                <div class="metric-item">
+                    <span class="m-value">145/98 <span class="m-unit">mmHg</span></span>
+                    <span class="m-label">血压</span>
+                </div>
+                <!-- 体重 -->
+                <div class="metric-item">
+                    <span class="m-value">68.5 <span class="m-unit">kg</span></span>
+                    <span class="m-label">体重</span>
+                </div>
+                <!-- 目标体重 -->
+                <div class="metric-item">
+                    <span class="m-value">65.0 <span class="m-unit">kg</span></span>
+                    <span class="m-label">目标体重</span>
+                </div>
+                <!-- 身高 -->
+                <div class="metric-item">
+                    <span class="m-value">172 <span class="m-unit">cm</span></span>
+                    <span class="m-label">身高</span>
+                </div>
+                <!-- 体质指数 (BMI) -->
+                <div class="metric-item">
+                    <span class="m-value">23.15 <span class="m-unit">kg/m²</span></span>
+                    <span class="m-label">体质指数 (BMI)</span>
+                </div>
+                <!-- 腰围 -->
+                <div class="metric-item">
+                    <span class="m-value">88 <span class="m-unit">cm</span></span>
+                    <span class="m-label">腰围</span>
+                </div>
+                <!-- 目标腰围 -->
+                <div class="metric-item">
+                    <span class="m-value">85 <span class="m-unit">cm</span></span>
+                    <span class="m-label">目标腰围</span>
+                </div>
+                <!-- 心率 -->
+                <div class="metric-item">
+                    <span class="m-value">78 <span class="m-unit">次/分</span></span>
+                    <span class="m-label">心率</span>
+                </div>
+                <!-- 血糖 -->
+                <div class="metric-item">
+                    <span class="m-value">6.2 <span class="m-unit">mmol/L</span></span>
+                    <span class="m-label">血糖</span>
+                </div>
+                <!-- 其他（空值） -->
+                <div class="metric-item metric-item--empty">
+                    <span class="m-value">—</span>
+                    <span class="m-label">其他</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片4：生化检查
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2L9 5M6 2v20M6 2h12M18 2v20M18 2L15 5M6 22h12M6 10h12M6 14h12M6 18h12"/>
+                        <path d="M9 5h6"/>
+                    </svg>
+                </div>
+                <span class="card-title">生化检查</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="dotted-row">
+                <span class="dotted-name">血红蛋白</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">121g/L</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">白细胞</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">56*10^9g/L</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">血小板</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">56*10^9g/L</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">其他</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value dotted-value--empty">—</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片5：生活方式
+        ========================================================== -->
+        <div class="card flex-col lifestyle-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span class="card-title">生活方式指导</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">运动</span>
+                <span class="info-value">3 次/周，25 分钟/次</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">目标运动</span>
+                <span class="info-value">5 次/周，40 分钟/次</span>
+            </div>
+            
+            <div class="info-row">
+                <span class="info-label">日吸烟量</span>
+                <span class="info-value">5支</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">目标日吸烟量</span>
+                <span class="info-value">3支</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">日饮酒量</span>
+                <span class="info-value">5两</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">目标日饮酒量</span>
+                <span class="info-value">1两</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">摄盐情况</span>
+                <span class="info-value">轻</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">心理调整</span>
+                <span class="info-value">良好</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">遵医行为</span>
+                <span class="info-value">良好</span>
+            </div>
+        </div>
+
+
+        <!-- ==========================================================
+        卡片6：随访结果与管理
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M9 15l2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="card-title">随访管理</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">是否继续管理</span>
+                <span class="info-value">是</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">结束管理原因</span>
+                <span class="info-value info-value--empty">—</span>
+            </div>
+
+        </div>
+
+        <!-- ==========================================================
+        底部脚注
+        ========================================================== -->
+        <div class="footer-note">
+            编号 11200056 · 高危人群随访 · 随访日期 2026-07-21 · 夏真医生
+        </div>
+
+    </div>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '高危管理列表.html';
+  });
+</script>
+
+</body>
+</html>

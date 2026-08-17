@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>心脑血管高危人群随访表</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", "SimSun", "宋体", Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            font-size: 14px;
+            padding: 20px;
+        }
+        .layout {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            width: 1180px;
+            margin: 0 auto;
+        }
+        .container {
+            flex: 0 0 920px;
+            width: 920px;
+            background: #fff;
+        }
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            letter-spacing: 4px;
+        }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 4px 10px 4px;
+            font-size: 14px;
+            color: #333;
+        }
+        .header-row .left {
+            text-align: left;
+        }
+        .header-row .right {
+            text-align: right;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #b8d4ea;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid #b8d4ea;
+            padding: 10px 14px;
+            text-align: left;
+            vertical-align: middle;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+        .lbl {
+            background: #e6f1f9;
+            text-align: center;
+            color: #333;
+            font-weight: normal;
+        }
+        .val {
+            background: #fff;
+            color: #333;
+        }
+        .diagnosis-content {
+            padding: 12px 14px;
+            line-height: 2;
+            font-size: 14px;
+        }
+        .diagnosis-content .row {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* 左侧时间轴样式 */
+        .timeline {
+            flex: 0 0 160px;
+            width: 160px;
+            padding: 50px 0 10px 0;
+        }
+        .timeline-list {
+            position: relative;
+            padding: 4px 0 4px 0;
+        }
+        .timeline-list::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 8px;
+            bottom: 12px;
+            width: 2px;
+            background: #d9d9d9;
+        }
+        .timeline-item {
+            position: relative;
+            padding: 0 0 14px 20px;
+        }
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        .timeline-item .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #007aff;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #007aff;
+        }
+        .timeline-date {
+            font-size: 12px;
+            color: #595959;
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+        .timeline-card {
+            background: #f9fafd;
+            border-radius: 6px;
+            padding: 8px 0px 0 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-align: center;
+            overflow: hidden;
+        }
+        .timeline-card.active {
+            background: #bfdeff;
+        }
+        .card-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: rgba(0, 122, 255, 1);
+            line-height: 1.2;
+        }
+        .card-label {
+            font-size: 12px;
+            color: rgba(0, 122, 255, 1);
+            line-height: 1.2;
+        }
+        .card-status {
+            font-size: 11px;
+            padding: 4px 0;
+            margin-top: 4px;
+            line-height: 1.5;
+            width: 100%;
+            align-self: stretch;
+        }
+        .card-status.warn {
+            background: #fde7d0;
+            color: #d9531e;
+        }
+        .card-status.good {
+            background: #d8efd9;
+            color: #2e8b57;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- 左侧时间轴列表 -->
+        <div class="timeline">
+            <div class="timeline-list">
+                <!-- Item 1 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-05-22</div>
+                    <div class="timeline-card active">
+                        <div class="card-value">160/100</div>
+                        <div class="card-label">血压</div>
+                        <div class="card-status warn">控制不满意</div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-06-05</div>
+                    <div class="timeline-card">
+                        <div class="card-value">155/95</div>
+                        <div class="card-label">血压</div>
+                        <div class="card-status warn">控制不满意</div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-06-20</div>
+                    <div class="timeline-card">
+                        <div class="card-value">148/92</div>
+                        <div class="card-label">血压</div>
+                        <div class="card-status warn">控制不满意</div>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-07-22</div>
+                    <div class="timeline-card">
+                        <div class="card-value">140/89</div>
+                        <div class="card-label">血压</div>
+                        <div class="card-status good">控制满意</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧表格 -->
+        <div class="container">
+            <h1 class="title">心脑血管高危人群随访表</h1>
+            <div class="header-row">
+                <div class="left">姓名：自壹</div>
+                <div class="right">编号：11200056</div>
+            </div>
+
+            <table>
+                <colgroup>
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                </colgroup>
+
+                <!-- 基本随访信息 -->
+                <tr>
+                    <th class="lbl" colspan="4">随访日期</th>
+                    <td class="val" colspan="3">2026-07-22</td>
+                    <th class="lbl" colspan="2">随访方式</th>
+                    <td class="val" colspan="3">家庭、电话、门诊</td>
+                </tr>
+
+                <!-- 主要危险因素 -->
+                <tr>
+                    <th class="lbl" colspan="4">主要危险因素</th>
+                    <td class="val" colspan="8">2次平均SBP≥160/DBP≥100、脑卒中（缺血性或出血性）病史</td>
+                </tr>
+
+                <!-- 体格测量：分组标签 colspan=2(rowspan=3)，每行并排2个字段 -->
+                <tr>
+                    <th class="lbl" colspan="2" rowspan="3">体格<br>测量</th>
+                    <th class="lbl" colspan="2">血压(mmHg)</th>
+                    <td class="val" colspan="3">140 / 89</td>
+                    <th class="lbl" colspan="2">体重(kg)</th>
+                    <td class="val" colspan="3">62 / 55</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">身高(cm)</th>
+                    <td class="val" colspan="3">177</td>
+                    <th class="lbl" colspan="2">体质指数(kg/m²)</th>
+                    <td class="val" colspan="3">19.79 / 17.56</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">足背动脉搏动</th>
+                    <td class="val" colspan="3">无</td>
+                    <th class="lbl" colspan="2">其他</th>
+                    <td class="val" colspan="3">0/50</td>
+                </tr>
+
+                <!-- 生活方式指导：分组标签 colspan=2(rowspan=4)，吸烟饮酒+生活方式合并 -->
+                <tr>
+                    <th class="lbl" colspan="2" rowspan="4">生活<br>方式<br>指导</th>
+                    <th class="lbl" colspan="2">日吸烟量(支)</th>
+                    <td class="val" colspan="3">5 / 3</td>
+                    <th class="lbl" colspan="2">日饮酒量(两)</th>
+                    <td class="val" colspan="3">4 / 2</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">运动</th>
+                    <td class="val" colspan="8">3次/周 30分钟/次；3次/周 60分钟/次</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">主食(克/天)</th>
+                    <td class="val" colspan="3">无</td>
+                    <th class="lbl" colspan="2">心理调整</th>
+                    <td class="val" colspan="3">无</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">遵医行为</th>
+                    <td class="val" colspan="8">无</td>
+                </tr>
+
+                <!-- 心脑血管分级：分组标签 colspan=2(rowspan=1)，每行并排2个字段 -->
+                <tr>
+                    <th class="lbl" colspan="2" rowspan="1">心脑<br>血管<br>分级</th>
+                    <th class="lbl" colspan="2">心脑血管</th>
+                    <td class="val" colspan="3">无</td>
+                    <th class="lbl" colspan="2">高危 / 低危</th>
+                    <td class="val" colspan="3">无</td>
+                </tr>
+
+                <!-- 本次随访周期内是否新增下列疾病诊断 -->
+                <tr>
+                    <th class="lbl" colspan="4">本次随访周期内是否新增下列疾病诊断</th>
+                    <td class="diagnosis-content" colspan="8">
+                        <span class="row"><strong>房颤：</strong>无</span>
+                        <span class="row"><strong>糖尿病：</strong>有（未接受降糖治疗）</span>
+                        <span class="row"><strong>高血压：</strong>无</span>
+                        <span class="row"><strong>血脂异常：</strong>无</span>
+                        <span class="row"><strong>脑卒中：</strong>无</span>
+                    </td>
+                </tr>
+
+                <!-- 危险因素控制及治疗情况 -->
+                <tr>
+                    <th class="lbl" colspan="4">危险因素控制及治疗情况</th>
+                    <td class="val" colspan="8">配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合治疗配合</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">随访干预意见</th>
+                    <td class="diagnosis-content" colspan="8">
+                        <span class="row">• 合理膳食、均衡营养、低盐控油、戒烟限酒、适量规律运动、保持健康体重、保证充足睡眠、保持良好心态</span>
+                        <span class="row">• 高血压患者请遵医嘱合理使用降压药物，注意定期复查</span>
+                        <span class="row">• 高血脂患者请遵医嘱合理使用降脂药物，注意定期复查</span>
+                        <span class="row">• 糖尿病患者请遵医嘱合理使用降糖药物，注意定期复查</span>
+                        <span class="row">• 心脏病患者请遵医嘱合理使用药物，注意定期复查</span>
+                        <span class="row">• 其他</span>
+                    </td>
+                </tr>
+
+                <!-- 随访结论 -->
+                <tr>
+                    <th class="lbl" colspan="4">随访医生签名</th>
+                    <td class="val" colspan="3">夏真</td>
+                    <th class="lbl" colspan="2">下次随访日期</th>
+                    <td class="val" colspan="3">2026-08-31</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">随访状态</th>
+                    <td class="val" colspan="3">正常</td>
+                    <th class="lbl" colspan="2">失访日期 / 死亡日期</th>
+                    <td class="val" colspan="3">无</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">失访原因 / 死亡原因</th>
+                    <td class="val" colspan="8">无</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

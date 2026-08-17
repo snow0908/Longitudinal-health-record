@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>死亡证明</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: "Microsoft YaHei", "微软雅黑", "SimSun", "宋体", Arial, sans-serif;
+    background: #ffffff;
+    color: #333;
+    font-size: 14px;
+    padding: 20px;
+  }
+  .container {
+    width: 920px;
+    margin: 0 auto;
+    background: #fff;
+  }
+  .title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+    letter-spacing: 4px;
+  }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4px 10px 4px;
+    font-size: 14px;
+    color: #333;
+  }
+  .header-row .left {
+    text-align: left;
+  }
+  .header-row .right {
+    text-align: right;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #b8d4ea;
+    table-layout: fixed;
+  }
+  th, td {
+    border: 1px solid #b8d4ea;
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: middle;
+    line-height: 1.6;
+    word-break: break-all;
+  }
+  .lbl {
+    background: #e6f1f9;
+    text-align: center;
+    color: #333;
+    font-weight: normal;
+  }
+  .val {
+    background: #fff;
+    color: #333;
+  }
+  .diagnosis-content {
+    padding: 12px 14px;
+    line-height: 2;
+    font-size: 14px;
+  }
+  .diagnosis-content .row {
+    display: block;
+    margin-bottom: 2px;
+  }
+  .diagnosis-content .row strong {
+    font-weight: bold;
+    margin-right: 6px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">死亡证明</h1>
+    <div class="header-row">
+      <div class="left">姓名：孔会</div>
+      <div class="right">编号：00123476</div>
+    </div>
+
+    <table>
+      <colgroup>
+        <col style="width:8.333%">
+        <col style="width:8.333%">
+        <col style="width:8.333%">
+        <col style="width:8.333%">
+        <col style="width:8.333%">
+        <col style="width:8.333%">
+        <col style="width:8.333%">
+        <col style="width:8.333%">
+        <col style="width:8.333%">
+        <col style="width:8.333%">
+        <col style="width:8.333%">
+        <col style="width:8.333%">
+      </colgroup>
+
+      <!-- 基本信息：左侧标签 colspan=4 值 colspan=3，右侧标签 colspan=2 值 colspan=3 -->
+      <tr>
+        <th class="lbl" colspan="4">性别</th>
+        <td class="val" colspan="3">男</td>
+        <th class="lbl" colspan="2">出生日期</th>
+        <td class="val" colspan="3">2012-12-09</td>
+      </tr>
+      <tr>
+        <th class="lbl" colspan="4">公民身份号码</th>
+        <td class="val" colspan="3">352313200012191234</td>
+        <th class="lbl" colspan="2">死亡时年龄</th>
+        <td class="val" colspan="3">180岁</td>
+      </tr>
+      <tr>
+        <th class="lbl" colspan="4">民族</th>
+        <td class="val" colspan="3">满族</td>
+        <th class="lbl" colspan="2">婚姻状况</th>
+        <td class="val" colspan="3">已婚</td>
+      </tr>
+      <tr>
+        <th class="lbl" colspan="4">户籍地址</th>
+        <td class="val" colspan="8">河北省张家口市宣化区文昌胡同468号</td>
+      </tr>
+
+      <!-- 死亡信息：分组标签 colspan=2(rowspan=3)，每行并排2个字段 -->
+      <tr>
+        <th class="lbl" colspan="2" rowspan="3">死亡<br>信息</th>
+        <th class="lbl" colspan="2">死亡日期时间</th>
+        <td class="val" colspan="3">2013-05-21 03:12</td>
+        <th class="lbl" colspan="2">死亡地点类别</th>
+        <td class="val" colspan="3">医疗卫生机构</td>
+      </tr>
+      <tr>
+        <th class="lbl" colspan="2">国籍</th>
+        <td class="val" colspan="3">中国</td>
+        <th class="lbl" colspan="2">民族</th>
+        <td class="val" colspan="3">汉族</td>
+      </tr>
+      <tr>
+        <th class="lbl" colspan="2">发现死亡者</th>
+        <td class="val" colspan="3">洛辉纯</td>
+        <th class="lbl" colspan="2">死亡地址</th>
+        <td class="val" colspan="3">河南省平顶山市鲁山县长春街169号</td>
+      </tr>
+
+      <!-- 死亡原因及诊断 -->
+      <tr>
+        <th class="lbl" colspan="4">死亡原因及诊断</th>
+        <td class="diagnosis-content" colspan="8">
+          <span class="row"><strong>直接死亡原因(a):</strong> 急性心肌梗死</span>
+          <span class="row"><strong>引起(a)的疾病情况(b):</strong> 冠状动脉粥样硬化性心脏病</span>
+          <span class="row"><strong>根本死亡原因(d):</strong> 冠状动脉粥样硬化性心脏病</span>
+          <span class="row"><strong>发病至死亡大概时间间隔:</strong> 2小时</span>
+          <span class="row"><strong>其他疾病诊断:</strong> 1. 高血压病 (I10);2. 2型糖尿病 (E11.9)</span>
+          <span class="row"><strong>诊断机构名称:</strong> 南京市第一医院心血管内科</span>
+        </td>
+      </tr>
+
+      <!-- 签发信息：分组标签 colspan=2(rowspan=2)，两行并排布局 -->
+      <tr>
+        <th class="lbl" colspan="2" rowspan="2">签发<br>信息</th>
+        <th class="lbl" colspan="2">签发日期</th>
+        <td class="val" colspan="3">2001-07-23</td>
+        <th class="lbl" colspan="2">签发机构</th>
+        <td class="val" colspan="3">首都医科大学附属北京同仁医院</td>
+      </tr>
+      <tr>
+        <th class="lbl" colspan="2">家属联系人</th>
+        <td class="val" colspan="3">张伟（儿子）</td>
+        <th class="lbl" colspan="2">联系人电话</th>
+        <td class="val" colspan="3">138****5678</td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>

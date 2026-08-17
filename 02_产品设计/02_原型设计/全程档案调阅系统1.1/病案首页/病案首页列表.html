@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>门急诊病案</title>
+  <style>
+    /* ============================================================
+       基准宽度：375px
+       ============================================================ */
+
+    /* ---------- Reset & Base ---------- */
+    * { box-sizing: border-box; flex-shrink: 0; margin: 0; padding: 0; }
+    body {
+      font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+      background-color: #F3F5F7;
+      -webkit-font-smoothing: antialiased;
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    input { background-color: transparent; border: 0; }
+    button {
+      margin: 0; padding: 0; border: 1px solid transparent;
+      outline: none; background-color: transparent;
+    }
+    button:active { opacity: 0.6; }
+
+    /* ---------- Flex 工具类 ---------- */
+    .flex-col { display: flex; flex-direction: column; }
+    .flex-row { display: flex; flex-direction: row; }
+    .justify-start { display: flex; justify-content: flex-start; }
+    .justify-center { display: flex; justify-content: center; }
+    .justify-end { display: flex; justify-content: flex-end; }
+    .justify-evenly { display: flex; justify-content: space-evenly; }
+    .justify-around { display: flex; justify-content: space-around; }
+    .justify-between { display: flex; justify-content: space-between; }
+    .align-start { display: flex; align-items: flex-start; }
+    .align-center { display: flex; align-items: center; }
+    .align-end { display: flex; align-items: flex-end; }
+
+    /* ---------- Page ---------- */
+    .page {
+      background-color: #F3F5F7;
+      position: relative;
+      width: 100%;
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding-bottom: 16px;
+    }
+
+    /* ============================================================
+       导航栏（参照肿瘤管理列表）
+       ============================================================ */
+    .group_1 {
+      background-color: rgba(255, 255, 255, 1);
+      padding: 14px 16px 7px 16px;
+    }
+    .box_1 {
+      display: flex; flex-direction: row; align-items: center;
+      margin: 0 10px 0 24px;
+    }
+    .status-spacer { flex: 1; }
+    .text_1 {
+      overflow-wrap: break-word;
+      color: rgba(0, 0, 0, 1);
+      font-size: 16px;
+      letter-spacing: 1.100000023841858px;
+      font-family: PingFangSC-Semibold;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+      line-height: 22px;
+    }
+    .thumbnail_1 {
+      width: 19px; height: 12px;
+      margin: 5px 0;
+    }
+    .text_2 {
+      overflow-wrap: break-word;
+      color: rgba(0, 0, 0, 1);
+      font-size: 12px;
+      letter-spacing: 0.925000011920929px;
+      font-family: PingFangSC-Semibold;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+      line-height: 17px;
+      margin: 3px 0 0 6px;
+    }
+    .image_1 {
+      width: 25px; height: 13px;
+      margin: 5px 0 4px 6px;
+    }
+
+    .box_2 {
+      margin-top: 15px;
+      display: flex; flex-direction: row;
+      align-items: center; flex-wrap: nowrap;
+    }
+    .label_1 {
+      width: 24px; height: 24px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .text_3 {
+      flex: 1; min-width: 0;
+      overflow-wrap: break-word;
+      color: rgba(51, 51, 51, 1);
+      font-size: 16px;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+      line-height: 22px;
+      margin: 4px 0 0 34px;
+    }
+    .image_2 {
+      width: 78px; height: 30px;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       筛选栏
+       ============================================================ */
+    .group_2 {
+      padding-bottom: 126px;
+    }
+    .box_3 {
+      background-color: rgba(255, 255, 255, 1);
+      padding: 11px 16px 11px 16px;
+    }
+    .section_1 {
+      width: 343px;
+    }
+    .image-text_1 {
+      width: 88px;
+    }
+    .thumbnail_2 {
+      width: 16px; height: 16px;
+      margin: 3px 0 3px 0;
+    }
+    .text-group_1 {
+      overflow-wrap: break-word;
+      color: rgba(51, 51, 51, 1);
+      font-size: 16px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 22px;
+    }
+    .text_4 {
+      overflow-wrap: break-word;
+      color: rgba(102, 102, 102, 1);
+      font-size: 16px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 22px;
+    }
+    .image_3 {
+      width: 343px; height: 1px;
+      margin-top: 11px;
+    }
+    .section_2 {
+      width: 343px;
+      margin-top: 10px;
+    }
+    .image-text_2 {
+      width: 88px;
+    }
+    .thumbnail_3 {
+      width: 16px; height: 16px;
+      margin: 3px 0 3px 0;
+    }
+    .text-group_2 {
+      overflow-wrap: break-word;
+      color: rgba(51, 51, 51, 1);
+      font-size: 16px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 22px;
+    }
+    .text_5 {
+      overflow-wrap: break-word;
+      color: rgba(102, 102, 102, 1);
+      font-size: 16px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 22px;
+    }
+
+    /* ============================================================
+       列表容器
+       ============================================================ */
+    .list_1 {
+      width: 343px; height: 350px;
+      align-self: center;
+      margin-top: 16px;
+    }
+
+    /* ============================================================
+       列表卡片 - 通用
+       ============================================================ */
+    .list-items_1-0,
+    .list-items_1-1,
+    .list-items_1-2 {
+      background-color: rgba(255, 255, 255, 1);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      padding: 16px 16px 16px 16px;
+      cursor: pointer;
+    }
+    .list-items_1-0:active,
+    .list-items_1-1:active,
+    .list-items_1-2:active { opacity: 0.7; }
+
+    .text-wrapper_1-0,
+    .text-wrapper_1-1,
+    .text-wrapper_1-2 {
+      width: 311px;
+    }
+
+    /* 诊断名称 */
+    .text_6-0, .text_6-1, .text_6-2 {
+      width: 80px;
+      overflow-wrap: break-word;
+      color: rgba(51, 51, 51, 1);
+      font-size: 16px;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 22px;
+    }
+
+    /* 付费方式标签 */
+    .text_7-0, .text_7-1, .text_7-2 {
+      display: inline-flex; align-items: center;
+      overflow-wrap: break-word;
+      font-size: 12px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 17px;
+      margin-top: 1px;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .text_7-0 {
+      color: #2378F5; background-color: #E8F1FE; border: 1px solid #2378F5;
+    }
+    .text_7-1 {
+      color: #06A8A0; background-color: #E0F5F4; border: 1px solid #06A8A0;
+    }
+    .text_7-2 {
+      color: #18CF8E; background-color: #E6FBF0; border: 1px solid #18CF8E;
+    }
+
+    /* 日期行 */
+    .text-wrapper_2-0,
+    .text-wrapper_2-1,
+    .text-wrapper_2-2 {
+      margin: 4px 193px 0 0;
+    }
+    .text_8-0, .text_8-1, .text_8-2 {
+      overflow-wrap: break-word;
+      color: rgba(102, 102, 102, 1);
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 20px;
+    }
+
+    /* 第三行：机构 + 科室 */
+    .group_3-0, .group_3-1, .group_3-2 {
+      margin: 8px 67px 0 0;
+    }
+
+    .thumbnail_4-0, .thumbnail_4-1, .thumbnail_4-2 {
+      width: 14px; height: 14px;
+      margin: 3px 0 3px 0;
+    }
+
+    .image-text_3-0, .image-text_3-1, .image-text_3-2 {
+      width: 144px;
+      margin-left: 4px;
+    }
+    .text-group_3-0, .text-group_3-1, .text-group_3-2 {
+      overflow-wrap: break-word;
+      color: rgba(102, 102, 102, 1);
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 20px;
+    }
+    .thumbnail_5-0, .thumbnail_5-1, .thumbnail_5-2 {
+      width: 10px; height: 6px;
+      margin: 7px 0 7px 0;
+    }
+
+    .image-text_4-0, .image-text_4-1, .image-text_4-2 {
+      width: 74px;
+      margin-left: 8px;
+    }
+    .thumbnail_6-0, .thumbnail_6-1, .thumbnail_6-2 {
+      width: 14px; height: 14px;
+      margin: 3px 0 3px 0;
+    }
+    .text-group_4-0, .text-group_4-1, .text-group_4-2 {
+      width: 56px;
+      overflow-wrap: break-word;
+      color: rgba(102, 102, 102, 1);
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 20px;
+    }
+
+    /* 费用行 */
+    .fee-row-0, .fee-row-1, .fee-row-2 {
+      margin-top: 8px;
+      display: flex;
+      align-items: baseline;
+    }
+    .fee-label {
+      overflow-wrap: break-word;
+      color: rgba(102, 102, 102, 1);
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 20px;
+    }
+    .fee-value {
+      overflow-wrap: break-word;
+      color: rgba(242, 43, 38, 1);
+      font-size: 14px;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 20px;
+      margin-left: 4px;
+    }
+    .fee-self {
+      overflow-wrap: break-word;
+      color: rgba(102, 102, 102, 1);
+      font-size: 12px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      white-space: nowrap;
+      line-height: 20px;
+      margin-left: 8px;
+    }
+
+    /* ============================================================
+       响应式适配
+       ============================================================ */
+    @media (max-width: 375px) {
+      .list_1 { width: 100%; }
+      .section_1, .section_2 { width: 100%; }
+      .image_3 { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page flex-col">
+
+    <!-- ==================== 导航栏 ==================== -->
+    <div class="group_1 flex-col">
+      <div class="box_1">
+        <span class="text_1">10:19</span>
+        <span class="status-spacer"></span>
+        <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+        <span class="text_2">5G</span>
+        <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+      </div>
+      <div class="box_2 flex-row">
+        <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+        <span class="text_3">门急诊病案首页</span>
+        <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+      </div>
+    </div>
+
+    <!-- ==================== 筛选栏 ==================== -->
+    <div class="group_2 flex-col">
+      <div class="box_3 flex-col">
+        <div class="section_1 flex-row justify-between">
+          <div class="image-text_1 flex-row justify-between">
+            <img class="thumbnail_2" referrerpolicy="no-referrer"
+              src="../lanhu_menzhenjilu8/img/SketchPng5e886a804a5fad2452e7bd67f63c18f8cf083a291365eb2923d590a7c81268e0.png" />
+            <span class="text-group_1">查询日期</span>
+          </div>
+          <span class="text_4">2022-11-29～2023-11-23</span>
+        </div>
+        <img class="image_3" referrerpolicy="no-referrer"
+          src="../lanhu_menzhenjilu8/img/SketchPng834c12bb1d7718fa2ed606c5418c900b02750bc05228bf36313128ce8fbcfffa.png" />
+        <div class="section_2 flex-row justify-between">
+          <div class="image-text_2 flex-row justify-between">
+            <img class="thumbnail_3" referrerpolicy="no-referrer"
+              src="../lanhu_menzhenjilu8/img/SketchPng5e886a804a5fad2452e7bd67f63c18f8cf083a291365eb2923d590a7c81268e0.png" />
+            <span class="text-group_2">查询医院</span>
+          </div>
+          <span class="text_5">全部</span>
+        </div>
+      </div>
+
+      <!-- ==================== 门急诊病案列表 ==================== -->
+      <div class="list_1 flex-col">
+
+        <!-- 记录 1：急性肠胃炎 — 城镇职工医保 -->
+        <div class="list-items_1-0 flex-col">
+          <div class="text-wrapper_1-0 flex-row justify-between">
+            <span class="text_6-0">急性肠胃炎</span>
+            <span class="text_7-0">城镇职工医保</span>
+          </div>
+          <div class="text-wrapper_2-0 flex-row">
+            <span class="text_8-0">2022-11-29&nbsp;12:00</span>
+          </div>
+          <div class="group_3-0 flex-row">
+            <img class="thumbnail_4-0" referrerpolicy="no-referrer"
+              src="../lanhu_menzhenjilu8/img/SketchPngaaa99f43d9f3567d003bfe2b41d9567dae54b968007c925bd79d37a60f814a98.png" />
+            <div class="image-text_3-0 flex-row justify-between">
+              <span class="text-group_3-0">内蒙古国际蒙医医院</span>
+              <img class="thumbnail_5-0" referrerpolicy="no-referrer"
+                src="../lanhu_menzhenjilu8/img/SketchPngc891ace8076a01a72fc2d1fc002415dfdc9222033354ed54e4cf4c18dbbba84e.png" />
+            </div>
+            <div class="image-text_4-0 flex-row justify-between">
+              <img class="thumbnail_6-0" referrerpolicy="no-referrer"
+                src="../lanhu_menzhenjilu8/img/SketchPngbb247a7fc8ec76c615b464a7d82e82ebbbec08803aabbacfe5277be7b21c8ad3.png" />
+              <span class="text-group_4-0">消化内科</span>
+            </div>
+          </div>
+          <div class="fee-row-0">
+            <span class="fee-label">总费用：</span>
+            <span class="fee-value">¥486.50</span>
+            <span class="fee-self">（自费 ¥138.00）</span>
+          </div>
+        </div>
+
+        <!-- 记录 2：发热 — 城乡居民医保 -->
+        <div class="list-items_1-1 flex-col">
+          <div class="text-wrapper_1-1 flex-row justify-between">
+            <span class="text_6-1">发热</span>
+            <span class="text_7-1">城乡居民医保</span>
+          </div>
+          <div class="text-wrapper_2-1 flex-row">
+            <span class="text_8-1">2022-11-29&nbsp;12:00</span>
+          </div>
+          <div class="group_3-1 flex-row">
+            <img class="thumbnail_4-1" referrerpolicy="no-referrer"
+              src="../lanhu_menzhenjilu8/img/SketchPngaaa99f43d9f3567d003bfe2b41d9567dae54b968007c925bd79d37a60f814a98.png" />
+            <div class="image-text_3-1 flex-row justify-between">
+              <span class="text-group_3-1">内蒙古国际蒙医医院</span>
+              <img class="thumbnail_5-1" referrerpolicy="no-referrer"
+                src="../lanhu_menzhenjilu8/img/SketchPngc891ace8076a01a72fc2d1fc002415dfdc9222033354ed54e4cf4c18dbbba84e.png" />
+            </div>
+            <div class="image-text_4-1 flex-row justify-between">
+              <img class="thumbnail_6-1" referrerpolicy="no-referrer"
+                src="../lanhu_menzhenjilu8/img/SketchPngbb247a7fc8ec76c615b464a7d82e82ebbbec08803aabbacfe5277be7b21c8ad3.png" />
+              <span class="text-group_4-1">外科</span>
+            </div>
+          </div>
+          <div class="fee-row-1">
+            <span class="fee-label">总费用：</span>
+            <span class="fee-value">¥120.00</span>
+            <span class="fee-self">（自费 ¥45.00）</span>
+          </div>
+        </div>
+
+        <!-- 记录 3：心肌梗塞 — 公费医疗 -->
+        <div class="list-items_1-2 flex-col">
+          <div class="text-wrapper_1-2 flex-row justify-between">
+            <span class="text_6-2">心肌梗塞</span>
+            <span class="text_7-2">公费医疗</span>
+          </div>
+          <div class="text-wrapper_2-2 flex-row">
+            <span class="text_8-2">2022-11-29&nbsp;12:00</span>
+          </div>
+          <div class="group_3-2 flex-row">
+            <img class="thumbnail_4-2" referrerpolicy="no-referrer"
+              src="../lanhu_menzhenjilu8/img/SketchPngaaa99f43d9f3567d003bfe2b41d9567dae54b968007c925bd79d37a60f814a98.png" />
+            <div class="image-text_3-2 flex-row justify-between">
+              <span class="text-group_3-2">内蒙古国际蒙医医院</span>
+              <img class="thumbnail_5-2" referrerpolicy="no-referrer"
+                src="../lanhu_menzhenjilu8/img/SketchPngc891ace8076a01a72fc2d1fc002415dfdc9222033354ed54e4cf4c18dbbba84e.png" />
+            </div>
+            <div class="image-text_4-2 flex-row justify-between">
+              <img class="thumbnail_6-2" referrerpolicy="no-referrer"
+                src="../lanhu_menzhenjilu8/img/SketchPngbb247a7fc8ec76c615b464a7d82e82ebbbec08803aabbacfe5277be7b21c8ad3.png" />
+              <span class="text-group_4-2">心脏内科</span>
+            </div>
+          </div>
+          <div class="fee-row-2">
+            <span class="fee-label">总费用：</span>
+            <span class="fee-value">¥8,560.00</span>
+            <span class="fee-self">（自费 ¥2,100.00）</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* rem 自适应 */
+    (function flexible(window, document) {
+      function resetFontSize() {
+        const size = (document.documentElement.clientWidth / 375) * 37.5;
+        document.documentElement.style.fontSize = size + 'px';
+      }
+      window.addEventListener('pageshow', resetFontSize);
+      window.addEventListener('resize', resetFontSize);
+    })(window, document);
+
+    /* 返回按钮 */
+    document.querySelector('.label_1').addEventListener('click', function() {
+      window.location.href = '../index.html';
+    });
+
+    /* 列表卡片点击跳转详情页 */
+    document.querySelector('.list-items_1-0').addEventListener('click', function() {
+      window.location.href = '病案首页详情.html?id=1';
+    });
+    document.querySelector('.list-items_1-1').addEventListener('click', function() {
+      window.location.href = '病案首页详情.html?id=2';
+    });
+    document.querySelector('.list-items_1-2').addEventListener('click', function() {
+      window.location.href = '病案首页详情.html?id=4';
+    });
+  </script>
+
+</body>
+</html>

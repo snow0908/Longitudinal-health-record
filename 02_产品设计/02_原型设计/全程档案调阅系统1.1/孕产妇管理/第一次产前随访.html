@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>第一次产前检查记录</title>
+    <style>
+        /* ============================================================
+           统一设计系统（内容区域采用规范，头部保留原有样式）
+           ============================================================ */
+        :root {
+            --primary: #E85A8F;
+            --primary-light: #FFF0F6;
+            --primary-dark: #D1477A;
+            --secondary: #4ECDC4;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --error: #EF4444;
+
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #3b5278;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+
+            /* 新规范颜色（用于内容区） */
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --border-light: #F3F4F6;
+            --border: #E5E7EB;
+            --bg: #F8F9FB;
+            --surface: #FFFFFF;
+
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            min-height: 100vh;
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+            font-size: 14px;
+            line-height: 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            max-width: 375px;
+            margin: 0 auto;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+        }
+
+        /* ---------- Page ---------- */
+        .page {
+            background-color: var(--gray-50);
+            position: relative;
+            width: 375px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-bottom: 24px;
+        }
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+        }
+        .justify-between {
+            justify-content: space-between;
+        }
+        .align-center {
+            align-items: center;
+        }
+
+        /* ============================================================
+           导航栏 — 覆盖在渐变上，白色文字/图标
+           参照 lanhu_jiankangtijian2beifen 样式
+           ============================================================ */
+        .box_1 {
+          padding: 14px 16px 7px 16px;
+        }
+        .section_10 {
+          margin: 0 10px 0 24px;
+        }
+        .text_1 {
+          overflow-wrap: break-word;
+          color: rgba(255, 255, 255, 1);
+          font-size: 16px;
+          letter-spacing: 1.100000023841858px;
+          font-family: PingFangSC-Semibold;
+          font-weight: 600;
+          text-align: center;
+          white-space: nowrap;
+          line-height: 22px;
+        }
+        .thumbnail_1 {
+          width: 19px;
+          height: 12px;
+          margin: 5px 0 5px auto;
+        }
+        .text_2 {
+          overflow-wrap: break-word;
+          color: rgba(255, 255, 255, 1);
+          font-size: 12px;
+          letter-spacing: 0.925000011920929px;
+          font-family: PingFangSC-Semibold;
+          font-weight: 600;
+          text-align: center;
+          white-space: nowrap;
+          line-height: 17px;
+          margin: 3px 0 0 6px;
+        }
+        .image_1 {
+          width: 25px;
+          height: 13px;
+          margin: 5px 0 4px 6px;
+        }
+        .section_11 {
+          margin-top: 15px;
+          display: flex;
+          align-items: center;
+        }
+        .label_1 {
+          width: 24px;
+          height: 24px;
+          flex-shrink: 0;
+          cursor: pointer;
+        }
+        .text_3 {
+          flex: 1;
+          overflow-wrap: break-word;
+          color: rgba(255, 255, 255, 1);
+          font-size: 16px;
+          font-family: PingFangSC-Medium;
+          font-weight: 500;
+          text-align: center;
+          white-space: nowrap;
+          line-height: 22px;
+          margin: 4px 0 0 34px;
+        }
+        .image_2 {
+          width: 78px;
+          height: 30px;
+          flex-shrink: 0;
+        }
+        .nav-action {
+            font-size: 14px;
+            color: white;
+            cursor: pointer;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-weight: 500;
+            transition: background 150ms;
+        }
+        .nav-action:active { background: rgba(255,255,255,0.35); }
+
+        /* ============================================================
+           患者头部（渐变背景）— 与孕产妇随访列表页完全一致
+           ============================================================ */
+        .patient-header {
+            position: relative;
+            overflow: hidden;
+            height: 273px;
+            color: white;
+            background: linear-gradient(135deg, #E85A8F 0%, #F080AA 60%, #F9B4D2 100%);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ph-decor {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+        .ph-decor-1 {
+            width: 180px;
+            height: 180px;
+            background: white;
+            top: -60px;
+            right: -40px;
+        }
+        .ph-decor-2 {
+            width: 120px;
+            height: 120px;
+            background: white;
+            bottom: 10px;
+            left: -30px;
+        }
+        .ph-decor-3 {
+            width: 60px;
+            height: 60px;
+            background: white;
+            top: 80px;
+            right: 60px;
+            opacity: 0.12;
+        }
+
+        /* ===== 主内容区：flex 行，左侧内容 + 右侧插图（与列表页一致） ===== */
+        .ph-main {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 220px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 0;
+        }
+
+        /* 左侧：透明框 + 姓名统计 */
+        .ph-left {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 100%;
+            padding-left: 16px;
+        }
+
+        /* ===== 透明框（毛玻璃效果）与列表页一致 ===== */
+        .glass-card {
+            margin-top: 5px;
+            background: rgba(255, 255, 255, 0.20);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.30);
+            padding: 8px 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .gc-row {
+            font-size: 12px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: white;
+            line-height: 1.5;
+            letter-spacing: 0.3px;
+            opacity: 0.95;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .gc-row:not(:last-child) {
+            margin-bottom: 1px;
+        }
+
+        /* ===== 姓名 + 统计（与列表页一致） ===== */
+        .patient-info {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .pi-name {
+            font-size: 22px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            line-height: 1.2;
+        }
+        .pi-stats {
+            margin-top: 6px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px 8px;
+        }
+        .pi-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 0;
+        }
+        .pi-stat .value {
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            line-height: 1.3;
+            white-space: nowrap;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .pi-stat .label {
+            font-size: 10px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            opacity: 0.75;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 0px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        /* ===== 右侧插图：固定 177×220（与列表页一致） ===== */
+        .ph-illustration {
+            width: 177px;
+            height: 220px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-left: auto;
+            padding-right: 16px;
+        }
+        .ph-illustration img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* ============================================================
+           内容卡片（采用新规范，宽度343，左右居中）
+           ============================================================ */
+        .card {
+            background-color: #FFFFFF;
+            margin-top: 12px;
+            padding: 16px 16px;
+            border-radius: 10px;
+            width: 343px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ---------- 分隔线 ---------- */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: var(--gray-200);
+            margin-top: 12px;
+        }
+
+        /* ============================================================
+           统一卡片标题（20x20 图标 + 14px 标题文字）
+           ============================================================ */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: #E85A8F;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333333;
+            line-height: 20px;
+            font-family: "PingFang SC", "苹方-简", "PingFangSC-Medium", sans-serif;
+        }
+
+        /* ============================================================
+           统一的数据行样式（值左对齐）
+           ============================================================ */
+        .data-row {
+            display: flex;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+            line-height: 20px;
+        }
+        .data-row:last-child {
+            border-bottom: none;
+        }
+        .data-row .label {
+            color: var(--text-secondary);
+            font-weight: 400;
+            width: 100px;
+            flex-shrink: 0;
+        }
+        .data-row .value {
+            color: var(--text-primary);
+            font-weight: 500;
+            flex: 1;
+            text-align: left;
+        }
+        .data-row .value.highlight {
+            color: #096aff;
+            font-weight: 600;
+        }
+
+        /* ============================================================
+           卡片纯文本内容（14px Regular #666666，参照肿瘤随访指导内容）
+           ============================================================ */
+        .content-text {
+            font-size: 14px;
+            font-weight: 400;
+            color: #666666;
+            line-height: 20px;
+            font-family: "PingFang SC", "苹方-简", "PingFangSC-Regular", sans-serif;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* ============================================================
+           体格检查指标卡片 — 2列布局 + 粉色背景
+           ============================================================ */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        .metric-item {
+            background: linear-gradient(135deg, #FFF0F6 0%, #FFE4EC 100%);
+            border-radius: 10px;
+            padding: 12px 4px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 56px;
+            text-align: center;
+        }
+
+        .metric-item .m-value {
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: var(--primary);
+            line-height: 20px;
+        }
+
+        .metric-item .m-label {
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: #999999;
+            margin-top: 4px;
+        }
+
+        /* ============================================================
+           辅助检查样式 — 虚线分隔（参照肿瘤随访的肿瘤四项检查卡片）
+           ============================================================ */
+        .lab-sub-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin: 16px 0 4px 0;
+            line-height: 20px;
+        }
+        .lab-sub-title:first-of-type {
+            margin-top: 12px;
+        }
+
+        .dotted-row {
+            display: flex;
+            align-items: baseline;
+            padding: 8px 0;
+            min-height: 44px;
+        }
+
+        .dotted-name {
+            font-size: 14px;
+            font-weight: 400;
+            color: #333333;
+            line-height: 20px;
+            white-space: nowrap;
+        }
+
+        .dotted-line {
+            flex: 1;
+            min-width: 8px;
+            border-bottom: 1px dotted #D1D5DB;
+            margin: 0 8px;
+            align-self: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .dotted-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333333;
+            line-height: 20px;
+            white-space: nowrap;
+            text-align: right;
+        }
+
+        .dotted-unit {
+            font-size: 12px;
+            font-weight: 400;
+            color: #666666;
+            margin-left: 2px;
+        }
+
+        /* ============================================================
+           子分组标题（听诊等）
+           ============================================================ */
+        .sub-title {
+            color: var(--gray-600);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            margin: 14px 0 2px 0;
+            padding: 10px 0 0 0;
+            border-top: 1px solid var(--gray-200);
+        }
+        .sub-title:first-of-type {
+            margin-top: 10px;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        /* ============================================================
+           底部脚注
+           ============================================================ */
+        .footer-note {
+            padding: 20px 16px 0 16px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--gray-400);
+        }
+
+        /* ============================================================
+           info-row 样式 — 参照肿瘤随访的生活方式指导卡片
+           label: #333333 Regular 400, value: #666666 Regular 400
+           ============================================================ */
+        .info-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            margin: 8px 0 0 0;
+        }
+        .info-row--first {
+            margin-top: 12px;
+        }
+        .info-label {
+            width: 136px;
+            flex-shrink: 0;
+            color: #333333;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            font-family: "PingFang SC", "苹方-简", "PingFangSC-Regular", sans-serif;
+        }
+        .info-value {
+            flex: 1;
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: left;
+            font-family: "PingFang SC", "苹方-简", "PingFangSC-Regular", sans-serif;
+            word-break: break-word;
+        }
+        .info-value--blue {
+            color: #096AFF;
+            font-weight: 500;
+        }
+        .info-value--warn {
+            color: #F59E0B;
+        }
+    </style>
+</head>
+<body>
+    <div class="page flex-col">
+
+        <!-- ==================== 患者头部（与孕产妇随访列表页完全一致） ==================== -->
+        <div class="patient-header">
+
+            <div class="ph-decor ph-decor-1"></div>
+            <div class="ph-decor ph-decor-2"></div>
+            <div class="ph-decor ph-decor-3"></div>
+
+            <!-- 导航栏 — 覆盖在渐变上，参照 lanhu_jiankangtijian2beifen -->
+            <div class="box_1 flex-col">
+              <div class="section_10 flex-row">
+                <span class="text_1">10:19</span>
+                <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/白色信号.png" />
+                <span class="text_2">5G</span>
+                <img class="image_1" referrerpolicy="no-referrer" src="../img/白色电量.png" />
+              </div>
+              <div class="section_11 flex-row">
+                <img class="label_1" referrerpolicy="no-referrer" src="../img/白色返回.png" />
+                <span class="text_3">产前检查记录</span>
+                <img class="image_2" referrerpolicy="no-referrer" src="../img/白色设置.png" />
+              </div>
+            </div>
+
+            <div class="ph-main">
+                <div class="ph-left">
+                    <div class="glass-card" style="width:190px">
+                        <div class="gc-row">ID: M20260723001</div>
+                        <div class="gc-row">孕12周 · 2027-02-06</div>
+                        <div class="gc-row">填表日期：2026年7月23日</div>
+                    </div>
+
+                    <div class="patient-info">
+                        <div class="pi-name">张丽</div>
+                        <div class="pi-stats">
+                            <div class="pi-stat">
+                                <span class="value">G2P0</span>
+                                <span class="label">孕产次</span>
+                            </div>
+                            <div class="pi-stat">
+                                <span class="value">28岁</span>
+                                <span class="label">孕妇年龄</span>
+                            </div>
+                            <div class="pi-stat">
+                                <span class="value">12周</span>
+                                <span class="label">孕周</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ph-illustration">
+                    <img referrerpolicy="no-referrer" src="../img/孕妇.png" />
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 内容区域 ==================== -->
+
+        <!-- 卡片1：基本信息 -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                </div>
+                <span class="card-title">基本信息</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">丈夫姓名</span>
+                <span class="info-value">王强</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">丈夫年龄</span>
+                <span class="info-value">30岁</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">丈夫电话</span>
+                <span class="info-value">138****5678</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">末次月经</span>
+                <span class="info-value">2026年4月30日</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">预产期</span>
+                <span class="info-value info-value--blue">2027年2月6日</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">孕次 / 产次</span>
+                <span class="info-value">2次 / 0次</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">阴道分娩 / 剖宫产</span>
+                <span class="info-value">0次 / 0次</span>
+            </div>
+        </div>
+
+        <!-- 卡片2：病史 -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                </div>
+                <span class="card-title">病史</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">既往史</span>
+                <span class="info-value">无</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">家族史</span>
+                <span class="info-value">无</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">个人史</span>
+                <span class="info-value">无特殊</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">妇产科手术史</span>
+                <span class="info-value">无</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">孕产史</span>
+                <span class="info-value info-value--warn">自然流产：1次</span>
+            </div>
+        </div>
+
+        <!-- 卡片3：体格检查 -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                </div>
+                <span class="card-title">体格检查</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="metric-grid">
+                <div class="metric-item">
+                    <span class="m-value">162</span>
+                    <span class="m-label">身高 (cm)</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">55</span>
+                    <span class="m-label">体重 (kg)</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">115/75</span>
+                    <span class="m-label">血压 (mmHg)</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">21.0</span>
+                    <span class="m-label">体质指数 (kg/m²)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 卡片3b：听诊 -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                        <line x1="12" y1="19" x2="12" y2="23"/>
+                        <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                </div>
+                <span class="card-title">听诊</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">心脏听诊</span>
+                <span class="info-value">未见异常</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">肺部听诊</span>
+                <span class="info-value">未见异常</span>
+            </div>
+        </div>
+
+        <!-- 卡片4：妇科检查 -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                </div>
+                <span class="card-title">妇科检查</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="metric-grid">
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">外阴</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">阴道</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">宫颈</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">子宫</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">附件</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 卡片5：辅助检查 -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2L9 5M6 2v20M6 2h12M18 2v20M18 2L15 5M6 22h12M6 10h12M6 14h12M6 18h12"/>
+                        <path d="M9 5h6"/>
+                    </svg>
+                </div>
+                <span class="card-title">辅助检查</span>
+            </div>
+            <div class="divider"></div>
+
+            <!-- 血常规 -->
+            <div class="lab-sub-title">血常规</div>
+            <div class="dotted-row">
+                <span class="dotted-name">血红蛋白</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">118 <span class="dotted-unit">g/L</span></span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">白细胞计数</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">8.5 <span class="dotted-unit">×10⁹/L</span></span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">血小板计数</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">220 <span class="dotted-unit">×10⁹/L</span></span>
+            </div>
+
+            <!-- 尿常规 -->
+            <div class="lab-sub-title">尿常规</div>
+            <div class="dotted-row">
+                <span class="dotted-name">尿蛋白</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阴性 (−)</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">尿糖</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阴性 (−)</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">尿酮体</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阴性 (−)</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">尿潜血</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阴性 (−)</span>
+            </div>
+
+            <!-- 血型 -->
+            <div class="lab-sub-title">血型</div>
+            <div class="dotted-row">
+                <span class="dotted-name">ABO血型</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">O型</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">RhD血型</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阳性 (+)</span>
+            </div>
+
+            <!-- 血糖 -->
+            <div class="lab-sub-title">血糖</div>
+            <div class="dotted-row">
+                <span class="dotted-name">空腹血糖</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">5.0 <span class="dotted-unit">mmol/L</span></span>
+            </div>
+
+            <!-- 肝功能 -->
+            <div class="lab-sub-title">肝功能</div>
+            <div class="dotted-row">
+                <span class="dotted-name">血清谷丙转氨酶</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">22 <span class="dotted-unit">U/L</span></span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">血清谷草转氨酶</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">18 <span class="dotted-unit">U/L</span></span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">白蛋白</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">42 <span class="dotted-unit">g/L</span></span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">总胆红素</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">10.5 <span class="dotted-unit">μmol/L</span></span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">结合胆红素</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">3.2 <span class="dotted-unit">μmol/L</span></span>
+            </div>
+
+            <!-- 肾功能 -->
+            <div class="lab-sub-title">肾功能</div>
+            <div class="dotted-row">
+                <span class="dotted-name">血清肌酐</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">52 <span class="dotted-unit">μmol/L</span></span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">血尿素</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">3.8 <span class="dotted-unit">mmol/L</span></span>
+            </div>
+
+            <!-- 阴道分泌物 -->
+            <div class="lab-sub-title">阴道分泌物</div>
+            <div class="dotted-row">
+                <span class="dotted-name">清洁度</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">Ⅰ度</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">滴虫/假丝酵母菌</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">未见异常</span>
+            </div>
+
+            <!-- 乙型肝炎 -->
+            <div class="lab-sub-title">乙型肝炎</div>
+            <div class="dotted-row">
+                <span class="dotted-name">HBsAg (表面抗原)</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阴性 (−)</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">HBsAb (表面抗体)</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阳性 (+)</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">HBeAg (E抗原)</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阴性 (−)</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">HBeAb (E抗体)</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阴性 (−)</span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">HBcAb (核心抗体)</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阴性 (−)</span>
+            </div>
+
+            <!-- 梅毒血清学试验 -->
+            <div class="lab-sub-title">梅毒血清学试验</div>
+            <div class="dotted-row">
+                <span class="dotted-name">结果</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阴性</span>
+            </div>
+
+            <!-- HIV抗体检测 -->
+            <div class="lab-sub-title">HIV抗体检测</div>
+            <div class="dotted-row">
+                <span class="dotted-name">结果</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">阴性</span>
+            </div>
+        </div>
+
+        <!-- 卡片6：总体评估 -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <span class="card-title">总体评估</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="content-text">孕妇一般情况良好，各项检查基本正常。血红蛋白118 g/L略偏低，建议加强营养。既往有1次自然流产史，目前无出血、腹痛等异常，需注意休息，避免劳累。</span>
+            </div>
+        </div>
+
+        <!-- 卡片6b：保健指导 -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="card-title">保健指导</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="content-text">生活方式指导（合理饮食、适当运动、避免熬夜）；心理保健指导（保持心情舒畅）；营养指导（增加铁质摄入，补充叶酸、维生素）；避免接触有害物质（放射线、化学毒物等）；孕期用药指导（谨慎用药，遵医嘱）；产前筛查告知（唐氏筛查、NT检查等）</span>
+            </div>
+        </div>
+
+        <!-- 卡片6c：转诊 -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                </div>
+                <span class="card-title">转诊</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">转诊</span>
+                <span class="info-value">有</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">原因</span>
+                <span class="info-value">需要住院保胎</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">机构及科室</span>
+                <span class="info-value">第一人民医院妇产科</span>
+            </div>
+        </div>
+
+        <!-- 卡片7：随访信息 -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+                    </svg>
+                </div>
+                <span class="card-title">随访信息</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">下次随访日期</span>
+                <span class="info-value info-value--blue">2026年8月20日</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">随访医生签名</span>
+                <span class="info-value">李敏</span>
+            </div>
+        </div>
+
+        <!-- ==================== 底部脚注 ==================== -->
+        <div class="footer-note">
+            档案编号 M20260723001 · 检查日期 2026-07-23
+        </div>
+
+    </div>
+
+<script>
+  // 返回按钮 — 点击返回随访列表
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '孕产妇随访列表界面.html';
+  });
+</script>
+</body>
+</html>

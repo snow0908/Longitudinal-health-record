@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>新生儿访视记录 - 周*凤</title>
+    <style>
+        /* ============================================================
+           新生儿访视记录 - 字体样式按图片标准整改
+           ============================================================ */
+
+        /* ---------- Design Tokens ---------- */
+        :root {
+            --primary: #096AFF;
+            --primary-light: #196DFF;
+            --primary-bg: #E4EEFF;
+            --primary-gradient-start: #096AFF;
+            --primary-gradient-mid: #4DA3FF;
+            --primary-gradient-end: #99CCFF;
+
+            --success: #15CF6E;
+            --success-bg: #E6FEF5;
+            --error: #F32929;
+            --error-bg: #FFF4F4;
+            --warning: #FEA800;
+            --warning-bg: #FFF7ED;
+
+            --page-bg: #F3F5F7;
+            --card-bg: #FFFFFF;
+            --divider: #E5E5E5;
+            --indicator-bg: #F4F6FB;
+
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+
+            --radius-card: 8px;
+            --radius-tag: 4px;
+            --radius-pill: 44px;
+
+            /* ===== 字体规范 ===== */
+            --label-font-size: 14px;
+            --label-font-weight: 500;
+            --label-font-family: 'PingFangSC-Medium', sans-serif;
+            --label-color: #333333;
+            --label-line-height: 20px;
+
+            --value-font-size: 14px;
+            --value-font-weight: 500;
+            --value-font-family: 'PingFangSC-Medium', sans-serif;
+            --value-color: #666666;
+            --value-line-height: 20px;
+
+            /* ===== 卡片标题字体规范 ===== */
+            --title-font-size: 16px;
+            --title-font-weight: 500;
+            --title-font-family: 'PingFangSC-Medium', sans-serif;
+            --title-color: #333333;
+            --title-line-height: 22px;
+        }
+
+        /* ---------- Reset & Base ---------- */
+        * {
+            box-sizing: border-box;
+            flex-shrink: 0;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+            background-color: var(--page-bg);
+            -webkit-font-smoothing: antialiased;
+            max-width: 375px;
+            margin: 0 auto;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+            color: var(--text-primary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+        }
+        .justify-between {
+            justify-content: space-between;
+        }
+        .align-center {
+            align-items: center;
+        }
+        .align-start {
+            align-items: flex-start;
+        }
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .gap-sm {
+            gap: 8px;
+        }
+        .gap-md {
+            gap: 12px;
+        }
+
+        /* ============================================================
+           患者信息头部 — 蓝色渐变风格
+           ============================================================ */
+        .patient-header {
+            position: relative;
+            overflow: hidden;
+            height: 273px;
+            color: white;
+            background: linear-gradient(135deg,
+                    var(--primary-gradient-start) 0%,
+                    var(--primary-gradient-mid) 55%,
+                    var(--primary-gradient-end) 100%);
+        }
+
+        .ph-decor {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+        .ph-decor-1 {
+            width: 180px;
+            height: 180px;
+            background: white;
+            top: -60px;
+            right: -40px;
+        }
+        .ph-decor-2 {
+            width: 120px;
+            height: 120px;
+            background: white;
+            bottom: 10px;
+            left: -30px;
+        }
+        .ph-decor-3 {
+            width: 60px;
+            height: 60px;
+            background: white;
+            top: 80px;
+            right: 60px;
+            opacity: 0.12;
+        }
+
+        /* ============================================================
+           导航栏 — 覆盖在蓝色渐变上，白色文字/图标
+           参照 lanhu_jiankangtijian2beifen 样式
+           ============================================================ */
+        .box_1 {
+          padding: 14px 16px 7px 16px;
+        }
+        .section_10 {
+          margin: 0 10px 0 24px;
+        }
+        .text_1 {
+          overflow-wrap: break-word;
+          color: rgba(255, 255, 255, 1);
+          font-size: 16px;
+          letter-spacing: 1.100000023841858px;
+          font-family: PingFangSC-Semibold;
+          font-weight: 600;
+          text-align: center;
+          white-space: nowrap;
+          line-height: 22px;
+        }
+        .thumbnail_1 {
+          width: 19px;
+          height: 12px;
+          margin: 5px 0 5px 191px;
+        }
+        .text_2 {
+          overflow-wrap: break-word;
+          color: rgba(255, 255, 255, 1);
+          font-size: 12px;
+          letter-spacing: 0.925000011920929px;
+          font-family: PingFangSC-Semibold;
+          font-weight: 600;
+          text-align: center;
+          white-space: nowrap;
+          line-height: 17px;
+          margin: 3px 0 0 6px;
+        }
+        .image_1 {
+          width: 25px;
+          height: 13px;
+          margin: 5px 0 4px 6px;
+        }
+        .section_11 {
+          margin-top: 15px;
+          display: flex;
+          align-items: center;
+        }
+        .label_1 {
+          width: 24px;
+          height: 24px;
+          flex-shrink: 0;
+          cursor: pointer;
+        }
+        .text_3 {
+          flex: 1;
+          overflow-wrap: break-word;
+          color: rgba(255, 255, 255, 1);
+          font-size: 16px;
+          font-family: PingFangSC-Medium;
+          font-weight: 500;
+          text-align: center;
+          white-space: nowrap;
+          line-height: 22px;
+          margin: 4px 0 0 34px;
+        }
+        .image_2 {
+          width: 78px;
+          height: 30px;
+          flex-shrink: 0;
+        }
+
+        .ph-main {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 220px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 0;
+        }
+
+        .ph-left {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 100%;
+            padding-left: 16px;
+        }
+
+        .glass-card {
+            margin-top: 5px;
+            background: rgba(255, 255, 255, 0.20);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.30);
+            padding: 8px 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .gc-row {
+            font-size: 12px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: white;
+            line-height: 1.5;
+            letter-spacing: 0.3px;
+            opacity: 0.95;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .gc-row:not(:last-child) {
+            margin-bottom: 1px;
+        }
+
+        .patient-info {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .pi-name {
+            font-size: 22px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            line-height: 1.2;
+        }
+
+        .pi-stats {
+            margin-top: 6px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px 8px;
+        }
+        .pi-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 0;
+        }
+        .pi-stat .value {
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            line-height: 1.3;
+            white-space: nowrap;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .pi-stat .label {
+            font-size: 10px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            opacity: 0.75;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 0px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .ph-illustration {
+            width: 177px;
+            height: 220px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-left: auto;
+            padding-right: 16px;
+        }
+        .ph-illustration svg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 16px rgba(9, 106, 255, 0.25));
+            animation: phImgFloat 3.5s ease-in-out infinite;
+        }
+        @keyframes phImgFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* ============================================================
+           内容卡片
+           ============================================================ */
+        .content {
+            padding: 0 16px;
+            margin-top: 0px;
+            position: relative;
+            z-index: 4;
+        }
+
+        /* ---------- 通用卡片 ---------- */
+        .card {
+            background-color: var(--card-bg);
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: var(--radius-card);
+            border: 1px solid var(--divider);
+            width: 100%;
+            max-width: 343px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--primary);
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        /* ===== 卡片标题 — 16px #333333 行高22px ===== */
+        .card-title {
+            font-size: var(--title-font-size);  /* 16px */
+            font-weight: var(--title-font-weight);
+            font-family: var(--title-font-family);
+            color: var(--title-color);
+            line-height: var(--title-line-height);  /* 22px */
+        }
+
+        .card-divider {
+            width: 100%;
+            height: 1px;
+            background-color: var(--divider);
+            margin-bottom: 12px;
+        }
+
+        /* ===== 数据行 — Label #333333, Value #666666 ===== */
+        .data-row {
+            display: flex;
+            padding: 4px 0;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            line-height: 20px;
+            border-bottom: none;
+            color: #333333;
+        }
+        .data-row .label {
+            color: #333333;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            line-height: 20px;
+            width: 136px;
+            flex-shrink: 0;
+        }
+        .data-row .value {
+            color: #666666;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            line-height: 20px;
+            flex: 1;
+            text-align: left;
+        }
+        .data-row .value.empty {
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+        .data-row .value.address {
+            font-size: 13px;
+        }
+
+        /* ============================================================
+           指标卡片网格 — 值颜色默认 #666666
+           ============================================================ */
+        .metric-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+        .metric-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+        .metric-item {
+            background: var(--indicator-bg);
+            border-radius: var(--radius-tag);
+            padding: 10px 4px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 56px;
+            text-align: center;
+        }
+        .metric-item .m-value {
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: #666666;  /* 默认值颜色 #666666 */
+            line-height: 20px;
+            letter-spacing: 0.3px;
+        }
+        .metric-item .m-value .m-unit {
+            font-size: 13px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: var(--text-secondary);
+            margin-left: 1px;
+        }
+        .metric-item .m-label {
+            font-size: 12px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: var(--text-tertiary);
+            margin-top: 3px;
+            letter-spacing: 0.2px;
+        }
+
+        /* ===== 指标值颜色 #333333（用于一般情况、喂养与体征、体格检查） ===== */
+        .general-info-card .metric-item .m-value,
+        .feeding-card .metric-item .m-value,
+        .exam-card .metric-item .m-value {
+            color: #333333;
+        }
+
+        /* ============================================================
+           父母信息卡片 — 分组标题 #333333, 内容 #666666
+           ============================================================ */
+        .guardian-group-title {
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: #333333;
+            line-height: 20px;
+            margin-top: 8px;
+            margin-bottom: 2px;
+            padding: 0;
+        }
+        .guardian-group-title:first-of-type {
+            margin-top: 4px;
+        }
+
+        .guardian-item {
+            display: flex;
+            padding: 2px 0;
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: #666666;
+            line-height: 20px;
+            align-items: baseline;
+            border-bottom: none;
+        }
+        .guardian-item::before {
+            content: '· ';
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            flex-shrink: 0;
+        }
+        .guardian-item .g-label {
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            line-height: 20px;
+            flex-shrink: 0;
+        }
+        .guardian-item .g-value {
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            line-height: 20px;
+            flex: 1;
+            text-align: left;
+        }
+        .guardian-item .g-value.empty {
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+        .guardian-group {
+            padding-left: 0;
+            margin-bottom: 4px;
+        }
+        .guardian-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ============================================================
+           指导方式 & 转诊意见 — 无分割线，无图标，内容直接展示
+           ============================================================ */
+        .no-divider-card .card-divider {
+            display: none;
+        }
+        .no-divider-card .card-icon {
+            display: none;
+        }
+
+        .content-display-card .data-row {
+            padding: 2px 0;
+        }
+        .content-display-card .data-row .label {
+            display: none;
+        }
+        .content-display-card .data-row .value {
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            line-height: 20px;
+            flex: 1;
+            text-align: left;
+        }
+
+        /* ---------- 底部脚注 ---------- */
+        .footer-note {
+            padding: 20px 16px 0 16px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: var(--text-tertiary);
+        }
+        .bottom-spacer {
+            height: 24px;
+        }
+
+        /* ============================================================
+           响应式适配
+           ============================================================ */
+        @media (max-width: 375px) {
+            .card {
+                max-width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+            }
+            .ph-illustration {
+                width: 145px;
+            }
+            .pi-stats {
+                gap: 4px 6px;
+            }
+            .pi-stat .value {
+                font-size: 15px;
+            }
+            .data-row .label {
+                width: 100px;
+            }
+            .metric-grid-3 {
+                gap: 6px;
+            }
+            .metric-grid-2 {
+                gap: 6px;
+            }
+            .metric-item .m-value {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 340px) {
+            .ph-illustration {
+                width: 120px;
+            }
+            .pi-stat .value {
+                font-size: 14px;
+            }
+            .pi-stat .label {
+                font-size: 9px;
+            }
+            .pi-stats {
+                gap: 4px 4px;
+            }
+            .data-row .label {
+                width: 80px;
+                font-size: 13px;
+            }
+            .data-row .value {
+                font-size: 13px;
+            }
+            .guardian-item {
+                font-size: 13px;
+            }
+            .guardian-item::before {
+                font-size: 13px;
+            }
+            .guardian-item .g-label {
+                font-size: 13px;
+            }
+            .guardian-item .g-value {
+                font-size: 13px;
+            }
+            .metric-item .m-value {
+                font-size: 13px;
+            }
+            .metric-item .m-value .m-unit {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    头部区域
+    ============================================================ -->
+    <div class="patient-header">
+
+        <div class="ph-decor ph-decor-1"></div>
+        <div class="ph-decor ph-decor-2"></div>
+        <div class="ph-decor ph-decor-3"></div>
+
+        <!-- 导航栏 — 覆盖在渐变上，参照 lanhu_jiankangtijian2beifen -->
+        <div class="box_1 flex-col">
+          <div class="section_10 flex-row">
+            <span class="text_1">10:19</span>
+            <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/白色信号.png" />
+            <span class="text_2">5G</span>
+            <img class="image_1" referrerpolicy="no-referrer" src="../img/白色电量.png" />
+          </div>
+          <div class="section_11 flex-row">
+            <img class="label_1" referrerpolicy="no-referrer" src="../img/白色返回.png" />
+            <span class="text_3">新生儿访视</span>
+            <img class="image_2" referrerpolicy="no-referrer" src="../img/白色设置.png" />
+          </div>
+        </div>
+
+        <div class="ph-main">
+            <div class="ph-left">
+                <div class="glass-card">
+                    <div class="gc-row">档案编号：00100210</div>
+                    <div class="gc-row">女 2022-7-20</div>
+                    <div class="gc-row">第1胎 · 第1产 · 顺产</div>
+                </div>
+
+                <div class="patient-info">
+                    <div class="pi-name">周*凤</div>
+                    <div class="pi-stats">
+                        <div class="pi-stat">
+                            <span class="value">3.52 kg</span>
+                            <span class="label">出生体重</span>
+                        </div>
+                        <div class="pi-stat">
+                            <span class="value">50 cm</span>
+                            <span class="label">出生身长</span>
+                        </div>
+                        <div class="pi-stat">
+                            <span class="value">39+2周</span>
+                            <span class="label">出生孕周</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ph-illustration">
+                <img  referrerpolicy="no-referrer" src="../img/男童png.png" />
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    内容区域
+    ============================================================ -->
+    <div class="content flex-col">
+
+        <!-- ===== 卡片1：一般情况（值颜色 #333333） ===== -->
+        <div class="card flex-col general-info-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <span class="card-title">一般情况</span>
+            </div>
+            <div class="card-divider"></div>
+
+            <div class="metric-grid-3">
+                <div class="metric-item">
+                    <span class="m-value">3.52 <span class="m-unit">kg</span></span>
+                    <span class="m-label">出生体重</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">3.55 <span class="m-unit">kg</span></span>
+                    <span class="m-label">目前体重</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">50 <span class="m-unit">cm</span></span>
+                    <span class="m-label">出生身长</span>
+                </div>
+            </div>
+
+            <div class="data-row" style="margin-top:4px;">
+                <span class="label">出生孕周</span>
+                <span class="value">39+2</span>
+            </div>
+            <div class="data-row">
+                <span class="label">母亲妊娠期患病情况</span>
+                <span class="value">无</span>
+            </div>
+            <div class="data-row">
+                <span class="label">助产机构名称</span>
+                <span class="value">XXXXX妇幼保健院</span>
+            </div>
+            <div class="data-row">
+                <span class="label">出生情况</span>
+                <span class="value">顺产</span>
+            </div>
+            <div class="data-row">
+                <span class="label">新生儿窒息(Apgar评分)</span>
+                <span class="value">无 不详</span>
+            </div>
+            <div class="data-row">
+                <span class="label">新生儿听力筛查</span>
+                <span class="value">通过</span>
+            </div>
+            <div class="data-row">
+                <span class="label">新生儿疾病筛查</span>
+                <span class="value">检查均阴性</span>
+            </div>
+
+            <div class="data-row" style="margin-top:4px; border-top:1px solid #EEEEEE; padding-top:8px;">
+                <span class="label">家庭住址</span>
+                <span class="value address">江苏省 / 扬州市 / 江都区 / 仙女...</span>
+            </div>
+            <div class="data-row">
+                <span class="label">户籍地址</span>
+                <span class="value address">江苏省 / 扬州市 / 江都区 / 仙女镇 / 龙川社区 / 龙川组203</span>
+            </div>
+            <div class="data-row">
+                <span class="label">现住址</span>
+                <span class="value address">江苏省 / 扬州市 / 江都区 / 仙女镇 / 龙川社区 / 龙川组203</span>
+            </div>
+        </div>
+
+        <!-- ===== 卡片2：父母信息 ===== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <span class="card-title">父母信息</span>
+            </div>
+            <div class="card-divider"></div>
+
+            <!-- 母亲 -->
+            <div class="guardian-group">
+                <div class="guardian-group-title">母亲</div>
+                <div class="guardian-item">
+                    <span class="g-label">姓名：</span>
+                    <span class="g-value">刘楠</span>
+                </div>
+                <div class="guardian-item">
+                    <span class="g-label">职业：</span>
+                    <span class="g-value">国家机关、党群组织、企业</span>
+                </div>
+                <div class="guardian-item">
+                    <span class="g-label">出生日期：</span>
+                    <span class="g-value">1983-05-14</span>
+                </div>
+                <div class="guardian-item">
+                    <span class="g-label">联系电话：</span>
+                    <span class="g-value">155****4556</span>
+                </div>
+            </div>
+
+            <!-- 父亲 -->
+            <div class="guardian-group">
+                <div class="guardian-group-title">父亲</div>
+                <div class="guardian-item">
+                    <span class="g-label">姓名：</span>
+                    <span class="g-value">周晓军</span>
+                </div>
+                <div class="guardian-item">
+                    <span class="g-label">职业：</span>
+                    <span class="g-value">国家机关、党群组织、企业</span>
+                </div>
+                <div class="guardian-item">
+                    <span class="g-label">出生日期：</span>
+                    <span class="g-value">1983-05-14</span>
+                </div>
+                <div class="guardian-item">
+                    <span class="g-label">联系电话：</span>
+                    <span class="g-value">155****4556</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 卡片3：喂养与体征（值颜色 #333333） ===== -->
+        <div class="card flex-col feeding-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2v4M12 22v-4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                </div>
+                <span class="card-title">喂养与体征</span>
+            </div>
+            <div class="card-divider"></div>
+
+            <div class="metric-grid-3">
+                <div class="metric-item">
+                    <span class="m-value">纯母乳</span>
+                    <span class="m-label">喂养方式</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">60 <span class="m-unit">ml</span></span>
+                    <span class="m-label">吃奶量/次</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">6 <span class="m-unit">次</span></span>
+                    <span class="m-label">吃奶次数/日</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">无</span>
+                    <span class="m-label">呕吐</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">糊状</span>
+                    <span class="m-label">大便</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">1 <span class="m-unit">次</span></span>
+                    <span class="m-label">大便次数/日</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">36.8 <span class="m-unit">℃</span></span>
+                    <span class="m-label">体温</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">70 <span class="m-unit">次/分</span></span>
+                    <span class="m-label">心率</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">70 <span class="m-unit">次/分</span></span>
+                    <span class="m-label">呼吸频率</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 卡片4：体格检查（值颜色 #333333） ===== -->
+        <div class="card flex-col exam-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                </div>
+                <span class="card-title">体格检查</span>
+            </div>
+            <div class="card-divider"></div>
+
+            <div class="metric-grid-2">
+                <div class="metric-item">
+                    <span class="m-value">黄染</span>
+                    <span class="m-label">面色</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">面部、四肢</span>
+                    <span class="m-label">黄疸部位</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">3cm×3cm 正常</span>
+                    <span class="m-label">前囟</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">四肢活动度</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">眼睛</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">无</span>
+                    <span class="m-label">颈部包块</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">耳外观</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">皮肤</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">口腔</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">肛门</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">心肺听诊</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">胸部</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">腹部听诊</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">脊柱</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未见异常</span>
+                    <span class="m-label">外生殖器</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">未脱</span>
+                    <span class="m-label">脐带</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 卡片5：指导方式 ===== -->
+        <div class="card flex-col no-divider-card content-display-card">
+            <div class="card-header">
+                <span class="card-title">指导方式</span>
+            </div>
+
+            <div class="data-row" style="margin-top:4px;">
+                <span class="value">科学喂养、生长发育</span>
+            </div>
+        </div>
+
+        <!-- ===== 卡片6：转诊意见 ===== -->
+        <div class="card flex-col no-divider-card content-display-card">
+            <div class="card-header">
+                <span class="card-title">转诊意见</span>
+            </div>
+
+            <div class="data-row" style="margin-top:4px;">
+                <span class="value">无</span>
+            </div>
+        </div>
+
+        <!-- ===== 卡片7：随访信息 ===== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                </div>
+                <span class="card-title">随访信息</span>
+            </div>
+            <div class="card-divider"></div>
+
+            <div class="data-row" style="margin-top:4px;">
+                <span class="label">本次随访日期</span>
+                <span class="value">2025-03-25</span>
+            </div>
+            <div class="data-row">
+                <span class="label">下次随访地点</span>
+                <span class="value">家里</span>
+            </div>
+            <div class="data-row">
+                <span class="label">下次随访日期</span>
+                <span class="value">2025-03-25</span>
+            </div>
+            <div class="data-row">
+                <span class="label">随访医生签名</span>
+                <span class="value">陈颖茵</span>
+            </div>
+        </div>
+
+        <!-- ===== 底部脚注 ===== -->
+        <div class="footer-note">
+            档案编号 00100210 · 新生儿访视 · 2025-03-25 · 陈颖茵医生
+        </div>
+
+        <div class="bottom-spacer"></div>
+
+    </div>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '儿童管理.html';
+  });
+</script>
+</body>
+</html>

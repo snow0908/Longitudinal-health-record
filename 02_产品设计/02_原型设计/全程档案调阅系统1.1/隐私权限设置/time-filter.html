@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>时间筛选</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+<!-- 状态栏 -->
+<div class="status-bar">
+    <span>9:41</span>
+    <div class="status-bar-icons">
+        <div class="signal-bars">
+            <span></span><span></span><span></span><span></span>
+        </div>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000000">
+            <path d="M8 2.5C10.5 2.5 12.8 3.5 14.5 5.2L13.5 6.2C12.1 4.9 10.1 4 8 4C5.9 4 3.9 4.9 2.5 6.2L1.5 5.2C3.2 3.5 5.5 2.5 8 2.5Z" fill="currentColor"/>
+            <path d="M8 6C9.4 6 10.7 6.5 11.7 7.5L10.7 8.5C10 7.8 9 7.5 8 7.5C7 7.5 6 7.8 5.3 8.5L4.3 7.5C5.3 6.5 6.6 6 8 6Z" fill="currentColor"/>
+            <circle cx="8" cy="10" r="1.5" fill="currentColor"/>
+        </svg>
+        <div class="battery">
+            <div class="battery-fill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<div class="nav-bar">
+    <div class="nav-back" onclick="goBack()">
+        <img src="../img/返回.png" alt="返回" style="width:24px;height:24px">
+    </div>
+    <span class="nav-title">时间筛选</span>
+    <div class="nav-action" onclick="openSettings()">
+        <img src="../img/设置.png" alt="设置" style="width: 62px;height:24px">
+    </div>
+</div>
+
+<!-- 页面内容 -->
+<div class="page">
+    <!-- 模块标签 -->
+    <div style="padding: 0 4px 8px;">
+        <div style="font-size: 14px; font-weight: 600; color: var(--text-secondary);" id="filterModuleLabel">检查报告</div>
+    </div>
+
+    <!-- 当前日期范围显示 -->
+    <div style="padding: 0 4px 16px;">
+        <div style="font-size: 15px; color: var(--text-primary); font-feature-settings: 'tnum';" id="filterDateRangeText">2026-07-23~2026-07-23</div>
+    </div>
+
+    <!-- 快捷选项 -->
+    <div style="padding: 0 4px 16px;">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;" id="quickFilterGrid">
+            <div class="quick-filter-btn active" onclick="quickSelect('6m')">近半年</div>
+            <div class="quick-filter-btn" onclick="quickSelect('1y')">近一年</div>
+            <div class="quick-filter-btn" onclick="quickSelect('3y')">近三年</div>
+            <div class="quick-filter-btn" onclick="quickSelect('custom')">自定义</div>
+        </div>
+    </div>
+
+    <!-- 日期输入行 -->
+    <div style="padding: 0 4px 16px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="ref-date-input" id="refStartDateBox">
+                <input type="date" id="refStartDate" onchange="onRefDateChange()" placeholder="开始日期">
+            </div>
+            <span style="font-size: 14px; color: var(--text-secondary); flex-shrink: 0;">至</span>
+            <div class="ref-date-input" id="refEndDateBox">
+                <input type="date" id="refEndDate" onchange="onRefDateChange()" placeholder="结束日期">
+            </div>
+        </div>
+        <!-- 校验提示 -->
+        <div class="date-range-hint" id="refDateHint" style="margin-top: 10px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>结束日期不能早于开始日期</span>
+        </div>
+    </div>
+
+    <!-- 确定按钮 -->
+    <div style="padding: 0 4px 20px;">
+        <button class="ref-confirm-btn" id="refConfirmBtn" onclick="confirmTimeFilter()">确定</button>
+    </div>
+
+    <!-- 筛选结果列表 -->
+    <div style="padding: 0 4px;">
+        <div class="ref-result-summary" id="refResultSummary">暂无数据</div>
+    </div>
+    <div id="refFilterList" style="padding: 0 4px 80px;"></div>
+</div>
+
+<div class="bottom-bar">
+    <button class="btn btn-primary" onclick="saveTimeFilter()">保存</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const APP_STATE_KEY = 'privacy_app_state';
+
+const ICONS = {
+    successCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+    warningCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+};
+
+// 业务模块数据
+const moduleData = [
+    {
+        id: 'maternity', name: '孕产妇管理', icon: '🤰', color: '#FFF4E6',
+        subItems: [
+            { id: 'm1', name: '首次产检随访', date: '2024-10-15', doctor: '王丽华', type: 'followup', typeName: '随访' },
+            { id: 'm2', name: '孕中期随访', date: '2024-12-20', doctor: '王丽华', type: 'followup', typeName: '随访' },
+            { id: 'm3', name: '孕晚期随访', date: '2025-01-10', doctor: '张芳', type: 'followup', typeName: '随访' },
+            { id: 'm4', name: '产后访视', date: '2025-01-20', doctor: '张芳', type: 'followup', typeName: '随访' },
+            { id: 'm5', name: '产后42天健康检查', date: '2025-02-05', doctor: '王丽华', type: 'checkup', typeName: '体检' },
+        ]
+    },
+    {
+        id: 'hypertension', name: '高血压患者管理', icon: '🩺', color: '#F0EDFF',
+        subItems: [
+            { id: 'h1', name: '随访记录（2025-01）', date: '2025-01-05', doctor: '李明', type: 'followup', typeName: '随访' },
+            { id: 'h2', name: '随访记录（2024-12）', date: '2024-12-05', doctor: '李明', type: 'followup', typeName: '随访' },
+            { id: 'h3', name: '随访记录（2024-11）', date: '2024-11-05', doctor: '陈强', type: 'followup', typeName: '随访' },
+            { id: 'h4', name: '年度健康评估', date: '2024-12-30', doctor: '李明', type: 'checkup', typeName: '评估' },
+        ]
+    },
+    {
+        id: 'diabetes', name: '糖尿病患者管理', icon: '💉', color: '#E8F1FF',
+        subItems: [
+            { id: 'd1', name: '随访记录（2025-01）', date: '2025-01-08', doctor: '赵伟', type: 'followup', typeName: '随访' },
+            { id: 'd2', name: '随访记录（2024-12）', date: '2024-12-08', doctor: '赵伟', type: 'followup', typeName: '随访' },
+            { id: 'd3', name: '糖化血红蛋白检测', date: '2025-01-08', doctor: '赵伟', type: 'test', typeName: '检验' },
+        ]
+    },
+    {
+        id: 'children', name: '0-6岁儿童管理', icon: '👶', color: '#E8F8EC',
+        subItems: [
+            { id: 'c1', name: '新生儿访视', date: '2024-06-10', doctor: '孙颖', type: 'followup', typeName: '访视' },
+            { id: 'c2', name: '1岁健康检查', date: '2024-09-15', doctor: '孙颖', type: 'checkup', typeName: '体检' },
+            { id: 'c3', name: '疫苗接种记录', date: '2024-12-20', doctor: '周婷', type: 'other', typeName: '接种' },
+            { id: 'c4', name: '视力筛查', date: '2025-01-05', doctor: '孙颖', type: 'test', typeName: '筛查' },
+        ]
+    },
+    {
+        id: 'elderly', name: '老年人健康管理', icon: '👴', color: '#FFF1F0',
+        subItems: [
+            { id: 'e1', name: '年度体检报告', date: '2024-11-20', doctor: '刘洋', type: 'checkup', typeName: '体检' },
+            { id: 'e2', name: '生活方式指导', date: '2024-12-15', doctor: '刘洋', type: 'other', typeName: '指导' },
+            { id: 'e3', name: '随访记录（2025-01）', date: '2025-01-12', doctor: '刘洋', type: 'followup', typeName: '随访' },
+        ]
+    },
+    {
+        id: 'mental', name: '严重精神障碍患者管理', icon: '🧠', color: '#F0EDFF',
+        subItems: [
+            { id: 'p1', name: '随访记录（2025-01）', date: '2025-01-03', doctor: '马俊', type: 'followup', typeName: '随访' },
+            { id: 'p2', name: '用药指导', date: '2025-01-03', doctor: '马俊', type: 'other', typeName: '指导' },
+            { id: 'p3', name: '康复评估', date: '2024-12-20', doctor: '马俊', type: 'checkup', typeName: '评估' },
+        ]
+    }
+];
+
+function loadState() {
+    try {
+        const raw = localStorage.getItem(APP_STATE_KEY);
+        if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    const modules = {};
+    moduleData.forEach(m => { modules[m.id] = { mode: 'none', blockedItems: [] }; });
+    return { blockedOrgs: [], modules: modules, lockEnabled: false, lockPassword: '', imEnabled: false };
+}
+
+function saveState(state) {
+    localStorage.setItem(APP_STATE_KEY, JSON.stringify(state));
+}
+
+let currentSubPageModuleId = null;
+let subPageTimeFilter = '6m';
+let customDateStart = '';
+let customDateEnd = '';
+
+function init() {
+    currentSubPageModuleId = sessionStorage.getItem('safebox_sub_module');
+    if (!currentSubPageModuleId) {
+        window.location.href = 'safebox.html';
+        return;
+    }
+
+    subPageTimeFilter = sessionStorage.getItem('safebox_time_filter') || '6m';
+    customDateStart = sessionStorage.getItem('safebox_custom_start') || '';
+    customDateEnd = sessionStorage.getItem('safebox_custom_end') || '';
+
+    const moduleDef = moduleData.find(x => x.id === currentSubPageModuleId);
+    document.getElementById('filterModuleLabel').textContent = moduleDef.name;
+
+    // Set quick filter buttons
+    const grid = document.getElementById('quickFilterGrid');
+    grid.children[0].classList.toggle('active', subPageTimeFilter === '6m');
+    grid.children[1].classList.toggle('active', subPageTimeFilter === '1y');
+    grid.children[2].classList.toggle('active', subPageTimeFilter === '3y');
+    grid.children[3].classList.toggle('active', subPageTimeFilter === 'custom');
+
+    document.getElementById('refStartDate').value = customDateStart || '';
+    document.getElementById('refEndDate').value = customDateEnd || '';
+    updateRefDateBoxes();
+    updateFilterDateRangeText();
+    updateRefConfirmBtn();
+    renderRefFilterList();
+}
+
+function quickSelect(key) {
+    subPageTimeFilter = key;
+    const grid = document.getElementById('quickFilterGrid');
+    for (let i = 0; i < 4; i++) grid.children[i].classList.remove('active');
+    grid.children[0].classList.toggle('active', key === '6m');
+    grid.children[1].classList.toggle('active', key === '1y');
+    grid.children[2].classList.toggle('active', key === '3y');
+    grid.children[3].classList.toggle('active', key === 'custom');
+
+    if (key !== 'custom') {
+        customDateStart = '';
+        customDateEnd = '';
+        document.getElementById('refStartDate').value = '';
+        document.getElementById('refEndDate').value = '';
+        updateRefDateBoxes();
+    }
+    updateFilterDateRangeText();
+    updateRefConfirmBtn();
+    renderRefFilterList();
+}
+
+function updateFilterDateRangeText() {
+    const el = document.getElementById('filterDateRangeText');
+    const now = new Date('2025-02-15');
+    if (subPageTimeFilter === 'all') {
+        el.textContent = '全部数据';
+        el.style.color = 'var(--text-tertiary)';
+    } else if (subPageTimeFilter === '6m') {
+        const c = new Date(now); c.setDate(c.getDate() - 183);
+        el.textContent = `${formatDate(c)}~${formatDate(now)}`;
+        el.style.color = 'var(--text-primary)';
+    } else if (subPageTimeFilter === '1y') {
+        const c = new Date(now); c.setDate(c.getDate() - 365);
+        el.textContent = `${formatDate(c)}~${formatDate(now)}`;
+        el.style.color = 'var(--text-primary)';
+    } else if (subPageTimeFilter === '3y') {
+        const c = new Date(now); c.setDate(c.getDate() - 1095);
+        el.textContent = `${formatDate(c)}~${formatDate(now)}`;
+        el.style.color = 'var(--text-primary)';
+    } else if (subPageTimeFilter === 'custom') {
+        const s = customDateStart || document.getElementById('refStartDate').value || '____-__-__';
+        const e = customDateEnd || document.getElementById('refEndDate').value || '____-__-__';
+        el.textContent = `${s}~${e}`;
+        el.style.color = (customDateStart && customDateEnd) ? 'var(--text-primary)' : 'var(--text-tertiary)';
+    }
+}
+
+function onRefDateChange() {
+    updateRefDateBoxes();
+    const startVal = document.getElementById('refStartDate').value;
+    const endVal = document.getElementById('refEndDate').value;
+    const hint = document.getElementById('refDateHint');
+    const endBox = document.getElementById('refEndDateBox');
+    if (startVal && endVal) {
+        if (new Date(endVal) < new Date(startVal)) {
+            hint.classList.add('show');
+            endBox.classList.add('error');
+        } else {
+            hint.classList.remove('show');
+            endBox.classList.remove('error');
+        }
+    } else {
+        hint.classList.remove('show');
+        endBox.classList.remove('error');
+    }
+    subPageTimeFilter = 'custom';
+    const grid = document.getElementById('quickFilterGrid');
+    for (let i = 0; i < 4; i++) grid.children[i].classList.remove('active');
+    grid.children[3].classList.add('active');
+    updateFilterDateRangeText();
+    updateRefConfirmBtn();
+}
+
+function updateRefDateBoxes() {
+    const s = document.getElementById('refStartDate').value;
+    const e = document.getElementById('refEndDate').value;
+    document.getElementById('refStartDateBox').classList.toggle('filled', !!s);
+    document.getElementById('refEndDateBox').classList.toggle('filled', !!e);
+    document.getElementById('refStartDateBox').classList.remove('error');
+    document.getElementById('refEndDateBox').classList.remove('error');
+}
+
+function updateRefConfirmBtn() {
+    const btn = document.getElementById('refConfirmBtn');
+    if (subPageTimeFilter === 'custom') {
+        const s = document.getElementById('refStartDate').value;
+        const e = document.getElementById('refEndDate').value;
+        btn.disabled = !(s && e && new Date(e) >= new Date(s));
+    } else {
+        btn.disabled = false;
+    }
+}
+
+function confirmTimeFilter() {
+    if (subPageTimeFilter === 'custom') {
+        const s = document.getElementById('refStartDate').value;
+        const e = document.getElementById('refEndDate').value;
+        if (!s || !e) { showToast('请选择开始和结束日期', 'warning'); return; }
+        if (new Date(e) < new Date(s)) { showToast('结束日期不能早于开始日期', 'warning'); return; }
+        customDateStart = s;
+        customDateEnd = e;
+    }
+    renderRefFilterList();
+    showToast(subPageTimeFilter === 'custom' ? `已按 ${customDateStart}~${customDateEnd} 筛选` : '筛选已更新');
+}
+
+function getFilteredItems() {
+    if (!currentSubPageModuleId) return [];
+    const md = moduleData.find(x => x.id === currentSubPageModuleId);
+    if (subPageTimeFilter === 'all') return md.subItems;
+    if (subPageTimeFilter === 'custom') {
+        if (!customDateStart || !customDateEnd) return md.subItems;
+        const s = new Date(customDateStart);
+        const e = new Date(customDateEnd);
+        e.setHours(23, 59, 59);
+        return md.subItems.filter(item => {
+            const d = new Date(item.date);
+            return d >= s && d <= e;
+        });
+    }
+    const now = new Date('2025-02-15');
+    const ranges = { '6m': 183, '1y': 365, '3y': 1095 };
+    const days = ranges[subPageTimeFilter];
+    if (!days) return md.subItems;
+    const cutoff = new Date(now);
+    cutoff.setDate(cutoff.getDate() - days);
+    return md.subItems.filter(item => new Date(item.date) >= cutoff);
+}
+
+function renderRefFilterList() {
+    if (!currentSubPageModuleId) return;
+    const state = loadState();
+    const state_m = state.modules[currentSubPageModuleId] || { mode: 'none', blockedItems: [] };
+    const blockedItems = Array.isArray(state_m.blockedItems) ? state_m.blockedItems : [];
+    const filteredItems = getFilteredItems();
+    const summary = document.getElementById('refResultSummary');
+
+    if (filteredItems.length === 0) {
+        summary.style.display = 'block';
+        summary.textContent = '暂无数据';
+        document.getElementById('refFilterList').innerHTML = '';
+        return;
+    }
+    summary.style.display = 'none';
+    document.getElementById('refFilterList').innerHTML = filteredItems.map(item => {
+        const checked = blockedItems.includes(item.id);
+        const tc = item.type || 'other';
+        const tn = item.typeName || '记录';
+        return `
+            <div class="ref-filter-item" onclick="toggleRefItem('${item.id}')">
+                <div class="ref-checkbox ${checked ? 'checked' : ''}" id="ref-check-${item.id}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <div class="ref-filter-item-content">
+                    <div class="ref-filter-item-title">${item.name}</div>
+                    <div class="ref-filter-item-meta">
+                        <span class="ref-filter-item-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            ${item.date}
+                        </span>
+                        <span class="ref-filter-item-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            ${item.doctor}
+                        </span>
+                        <span class="ref-filter-item-tag ${tc}">${tn}</span>
+                    </div>
+                </div>
+            </div>`;
+    }).join('');
+}
+
+function toggleRefItem(itemId) {
+    if (!currentSubPageModuleId) return;
+    const state = loadState();
+    const m = state.modules[currentSubPageModuleId];
+    if (!Array.isArray(m.blockedItems)) m.blockedItems = [];
+
+    if (m.blockedItems.includes(itemId)) {
+        m.blockedItems = m.blockedItems.filter(x => x !== itemId);
+    } else {
+        m.blockedItems.push(itemId);
+    }
+
+    const md = moduleData.find(x => x.id === currentSubPageModuleId);
+    if (m.blockedItems.length === 0) m.mode = 'none';
+    else if (m.blockedItems.length === md.subItems.length) m.mode = 'all';
+    else m.mode = 'partial';
+
+    saveState(state);
+    const check = document.getElementById('ref-check-' + itemId);
+    if (check) check.classList.toggle('checked');
+}
+
+function saveTimeFilter() {
+    // Save time filter settings to sessionStorage for safebox-sub to read
+    sessionStorage.setItem('safebox_time_filter', subPageTimeFilter);
+    sessionStorage.setItem('safebox_custom_start', customDateStart);
+    sessionStorage.setItem('safebox_custom_end', customDateEnd);
+
+    const state = loadState();
+    const m = state.modules[currentSubPageModuleId];
+    if (!Array.isArray(m.blockedItems)) m.blockedItems = [];
+    showToast(`已屏蔽 ${m.blockedItems.length} 项数据`);
+
+    setTimeout(() => { window.location.href = 'safebox-sub.html'; }, 1000);
+}
+
+function goBack() {
+    // Save time filter state before going back
+    sessionStorage.setItem('safebox_time_filter', subPageTimeFilter);
+    sessionStorage.setItem('safebox_custom_start', customDateStart);
+    sessionStorage.setItem('safebox_custom_end', customDateEnd);
+    window.location.href = 'safebox-sub.html';
+}
+
+function formatDate(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${dd}`;
+}
+
+function showToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    const icon = type === 'success' ? ICONS.successCircle : ICONS.warningCircle;
+    const iconColor = type === 'success' ? '#15CF6E' : '#FEA800';
+    toast.innerHTML = `<div class="toast-icon" style="color:${iconColor}">${icon}</div><div class="toast-text">${msg}</div>`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1800);
+}
+
+// 初始化
+init();
+</script>
+
+</body>
+</html>

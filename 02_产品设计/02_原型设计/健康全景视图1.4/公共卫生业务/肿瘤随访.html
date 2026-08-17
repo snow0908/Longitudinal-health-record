@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>肿瘤随访</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", "SimSun", "宋体", Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            font-size: 14px;
+            padding: 20px;
+        }
+        .layout {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            width: 1180px;
+            margin: 0 auto;
+        }
+        .container {
+            flex: 0 0 920px;
+            width: 920px;
+            background: #fff;
+        }
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            letter-spacing: 4px;
+        }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 4px 10px 4px;
+            font-size: 14px;
+            color: #333;
+        }
+        .header-row .left {
+            text-align: left;
+        }
+        .header-row .right {
+            text-align: right;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #b8d4ea;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid #b8d4ea;
+            padding: 10px 14px;
+            text-align: left;
+            vertical-align: middle;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+        .lbl {
+            background: #e6f1f9;
+            text-align: center;
+            color: #333;
+            font-weight: normal;
+        }
+        .val {
+            background: #fff;
+            color: #333;
+        }
+
+        /* 左侧时间轴样式 */
+        .timeline {
+            flex: 0 0 160px;
+            width: 160px;
+            padding: 50px 0 10px 0;
+        }
+        .timeline-list {
+            position: relative;
+            padding: 4px 0 4px 0;
+        }
+        .timeline-list::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 8px;
+            bottom: 12px;
+            width: 2px;
+            background: #d9d9d9;
+        }
+        .timeline-item {
+            position: relative;
+            padding: 0 0 14px 20px;
+        }
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        .timeline-item .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #007aff;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #007aff;
+        }
+        .timeline-date {
+            font-size: 12px;
+            color: #595959;
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+        .timeline-card {
+            background: #f9fafd;
+            border-radius: 6px;
+            padding: 8px 0px 0 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-align: center;
+            overflow: hidden;
+        }
+        .timeline-card.active {
+            background: #bfdeff;
+        }
+        .card-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: rgba(0, 122, 255, 1);
+            line-height: 1.2;
+        }
+        .card-label {
+            font-size: 12px;
+            color: rgba(0, 122, 255, 1);
+            line-height: 1.2;
+        }
+        .card-status {
+            font-size: 11px;
+            padding: 4px 0;
+            margin-top: 4px;
+            line-height: 1.5;
+            width: 100%;
+            align-self: stretch;
+        }
+        .card-status.warn {
+            background: #fde7d0;
+            color: #d9531e;
+        }
+        .card-status.good {
+            background: #d8efd9;
+            color: #2e8b57;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- 左侧时间轴列表 -->
+        <div class="timeline">
+            <div class="timeline-list">
+                <!-- Item 1 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-05-21</div>
+                    <div class="timeline-card active">
+                        <div class="card-value">60</div>
+                        <div class="card-label">卡氏评分</div>
+                        <div class="card-status good">稳定</div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-06-05</div>
+                    <div class="timeline-card">
+                        <div class="card-value">65</div>
+                        <div class="card-label">卡氏评分</div>
+                        <div class="card-status good">稳定</div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-06-20</div>
+                    <div class="timeline-card">
+                        <div class="card-value">68</div>
+                        <div class="card-label">卡氏评分</div>
+                        <div class="card-status good">稳定</div>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-07-21</div>
+                    <div class="timeline-card">
+                        <div class="card-value">70</div>
+                        <div class="card-label">卡氏评分</div>
+                        <div class="card-status good">稳定</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧表格 -->
+        <div class="container">
+            <h1 class="title">肿瘤随访</h1>
+            <div class="header-row">
+                <div class="left">姓名：自壹</div>
+                <div class="right">编号：11200056</div>
+            </div>
+
+            <table>
+                <colgroup>
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                </colgroup>
+
+                <!-- 基本随访信息：左侧标签 colspan=4 值 colspan=3，右侧标签 colspan=2 值 colspan=3 -->
+                <tr>
+                    <th class="lbl" colspan="4">随访日期</th>
+                    <td class="val" colspan="3">2026-07-21</td>
+                    <th class="lbl" colspan="2">随访方式</th>
+                    <td class="val" colspan="3">家庭</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">身高(cm)</th>
+                    <td class="val" colspan="3">177</td>
+                    <th class="lbl" colspan="2">体重(kg)</th>
+                    <td class="val" colspan="3">56</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">体质指数(kg/m²)</th>
+                    <td class="val" colspan="3">17.87</td>
+                    <th class="lbl" colspan="2">被动吸烟</th>
+                    <td class="val" colspan="3">工作场合</td>
+                </tr>
+                <!-- 生活方式指导：分组标签 colspan=2(rowspan=4)，每行并排2个字段 -->
+                <tr>
+                    <th class="lbl" colspan="2" rowspan="4">生活<br>方式<br>指导</th>
+                    <th class="lbl" colspan="2">日吸烟量</th>
+                    <td class="val" colspan="3">2 支 / 1 支</td>
+                    <th class="lbl" colspan="2">日饮酒量</th>
+                    <td class="val" colspan="3">2 两 / 1 两</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">运动</th>
+                    <td class="val" colspan="3">5次/周，30分钟/次</td>
+                    <th class="lbl" colspan="2">目标运动</th>
+                    <td class="val" colspan="3">5次/周，30分钟/次</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">饮食情况</th>
+                    <td class="val" colspan="3">良好</td>
+                    <th class="lbl" colspan="2">遵医行为</th>
+                    <td class="val" colspan="3">良好</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">心理调整</th>
+                    <td class="val" colspan="8">良好</td>
+                </tr>
+
+                <!-- 肿瘤四项检查：分组标签 colspan=2(rowspan=2)，每行并排2个字段 -->
+                <tr>
+                    <th class="lbl" colspan="2" rowspan="2">肿瘤<br>四项<br>检查</th>
+                    <th class="lbl" colspan="2">甲胎蛋白(AFP)</th>
+                    <td class="val" colspan="3">5.36 ng/ml</td>
+                    <th class="lbl" colspan="2">癌胚抗原(CEA)</th>
+                    <td class="val" colspan="3">5.2 ng/ml</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">糖类抗原125(CA125)</th>
+                    <td class="val" colspan="3">6.97 U/ml</td>
+                    <th class="lbl" colspan="2">组织多肽抗原(TPA)</th>
+                    <td class="val" colspan="3">6.2 U/L</td>
+                </tr>
+
+                <!-- 随访结论 -->
+                <tr>
+                    <th class="lbl" colspan="4">目前情况</th>
+                    <td class="val" colspan="3">稳定</td>
+                    <th class="lbl" colspan="2">卡氏评分</th>
+                    <td class="val" colspan="3">70</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">指导内容</th>
+                    <td class="val" colspan="8">督导随访、用药、饮食、康复、家床、住院、出诊</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">随访医生</th>
+                    <td class="val" colspan="3">夏夏</td>
+                    <th class="lbl" colspan="2">随访状态</th>
+                    <td class="val" colspan="3">正常</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">核查医师</th>
+                    <td class="val" colspan="3">夏夏</td>
+                    <th class="lbl" colspan="2">下次随访时间</th>
+                    <td class="val" colspan="3">2026-08-26</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>肺结核第一次入户随访</title>
+    <style>
+        /* ============================================================
+           样式严格按照《C端UED交互与视觉设计规范 v1.0》
+           参照 lanhu_gaoxueyaguanli3 布局与组件风格
+           基准宽度：375px
+           ============================================================ */
+
+        /* ---------- Reset & Base ---------- */
+        * {
+            box-sizing: border-box;
+            flex-shrink: 0;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+            background-color: #F3F5F7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+        }
+        .justify-between {
+            display: flex;
+            justify-content: space-between;
+        }
+        .align-center {
+            display: flex;
+            align-items: center;
+        }
+        .align-start {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        /* ---------- Page Container ---------- */
+        .page {
+            background-color: #F3F5F7;
+            position: relative;
+            width: 375px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-bottom: 24px;
+        }
+
+        /* ============================================================
+           导航栏（严格参照 gaoxueyaguanli3 .group_1）
+           ============================================================ */
+        .group_1 {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+        .box_1 {
+  display: flex; flex-direction: row; align-items: center;
+  margin: 0 10px 0 24px;
+}
+        .status-spacer { flex: 1; }
+        .text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+        .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0;
+}
+        .text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+        .image_1 {
+  width: 25px;
+  height: 13px;
+  margin: 5px 0 4px 6px;
+}
+
+        .box_2 {
+  margin-top: 15px;
+  display: flex; flex-direction: row;
+  align-items: center; flex-wrap: nowrap;
+}
+        .label_1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+          cursor: pointer;
+}
+        .text_3 {
+  flex: 1; min-width: 0;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+        .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+        /* ============================================================
+           白色内容卡片
+           ============================================================ */
+        .section-card {
+            background-color: #FFFFFF;
+            margin-top: 16px;
+            padding: 16px;
+        }
+
+        /* ---------- 分区标题 ---------- */
+        .section-title {
+            color: #333333;
+            font-size: 16px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 22px;
+        }
+        .divider {
+            width: 343px;
+            height: 1px;
+            background-color: #E5E5E5;
+        }
+        .divider--mt12 {
+            margin-top: 12px;
+        }
+        .divider--mt11 {
+            margin-top: 11px;
+        }
+
+        /* ============================================================
+           蓝色高亮信息卡片（严格参照 gaoxueyaguanli3 .group_3）
+           bg #F6FAFF, border 1px #AFCFFF, radius 8px, padding 15px
+           ============================================================ */
+        .highlight-card {
+            background-color: #F6FAFF;
+            border-radius: 8px;
+            border: 1px solid #AFCFFF;
+            padding: 15px;
+        }
+        .hl-row {
+            margin-top: 4px;
+        }
+        .hl-row--first {
+            margin-top: 0;
+        }
+        /* 蓝色圆点（参照 gaoxueyaguanli3 .group_4 / .box_6） */
+        .hl-dot {
+            background-color: #096AFF;
+            border-radius: 50%;
+            width: 4px;
+            height: 4px;
+            margin: 8px 8px 0 0;
+            flex-shrink: 0;
+        }
+        .hl-label {
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 20px;
+            flex-shrink: 0;
+        }
+        .hl-value {
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: left;
+            line-height: 20px;
+            word-break: break-all;
+        }
+
+        /* ---------- 高亮卡片内的标签 ---------- */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 4px;
+            padding: 2px 7px;
+            font-size: 12px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 14px;
+            border: 1px solid;
+            flex-shrink: 0;
+        }
+        .tag--orange {
+            background-color: #FEA800;
+            border-color: #FEA800;
+            color: #FFFFFF;
+            padding: 3px 8px;
+        }
+        .tag--blue {
+            border-color: #196DFF;
+            color: #096AFF;
+        }
+        .tag--red {
+            border-color: #F32929;
+            color: #F32929;
+        }
+        .tag--inline {
+            display: inline-flex;
+            margin-left: 4px;
+        }
+
+        /* ============================================================
+           常规列表行（参照 gaoxueyaguanli3 建档信息/用药情况区域）
+           每行使用 justify-between + 固定宽度，标签左对齐、值右对齐
+           ============================================================ */
+        .info-row {
+            margin-top: 4px;
+        }
+        .info-row--first {
+            margin-top: 8px;
+        }
+        .info-dot {
+            background-color: #666666;
+            border-radius: 50%;
+            width: 4px;
+            height: 4px;
+            margin: 8px 8px 0 0;
+            flex-shrink: 0;
+        }
+        .info-label {
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 20px;
+            flex-shrink: 0;
+        }
+        .info-row-inner {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            flex-shrink: 0;
+        }
+        .info-row-outer {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 4px;
+        }
+        .info-row-outer--first {
+            margin-top: 8px;
+        }
+        .info-value {
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: right;
+            line-height: 20px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .info-value--wrap {
+            white-space: normal;
+            word-break: break-all;
+            text-align: left;
+        }
+
+        /* ---------- 子分组标题（督导与评估下的子项） ---------- */
+        .sub-group-title {
+            margin-top: 8px;
+        }
+        .sub-dot {
+            background-color: #096AFF;
+            border-radius: 50%;
+            width: 4px;
+            height: 4px;
+            margin: 8px 8px 0 0;
+            flex-shrink: 0;
+        }
+        .sub-title-text {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 20px;
+        }
+
+        /* ---------- 缩进列表项 ---------- */
+        .indent-row {
+            margin: 4px 0 0 14px;
+        }
+        .indent-dot {
+            background-color: #666666;
+            border-radius: 50%;
+            width: 4px;
+            height: 4px;
+            margin: 8px 8px 0 0;
+            flex-shrink: 0;
+        }
+        .indent-label {
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 20px;
+            flex-shrink: 0;
+        }
+        .indent-value {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: left;
+            line-height: 20px;
+            margin-left: 8px;
+        }
+
+        /* ============================================================
+           督导评估项（master/unmaster 标签行）
+           ============================================================ */
+        .supervise-row {
+            margin-top: 4px;
+        }
+        .supervise-dot {
+            background-color: #096AFF;
+            border-radius: 50%;
+            width: 4px;
+            height: 4px;
+            margin: 8px 8px 0 0;
+            flex-shrink: 0;
+        }
+        .supervise-label {
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            line-height: 20px;
+            flex: 1;
+        }
+        .supervise-status {
+            font-size: 12px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            padding: 2px 12px;
+            border-radius: 12px;
+            line-height: 18px;
+            border: 1px solid;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .supervise-status--master {
+            color: #096AFF;
+            border-color: #096AFF;
+            background-color: #F6FAFF;
+        }
+        .supervise-status--unmaster {
+            color: #999999;
+            border-color: #E5E5E5;
+            background-color: #F5F5F5;
+        }
+
+        /* ============================================================
+           患者体征卡片（严格参照 gaoxueyaguanli3 .group_15）
+           ============================================================ */
+        .vitals-card {
+            background-color: #FFFFFF;
+            margin-top: 16px;
+            padding: 16px;
+        }
+        .vitals-name-row {
+            margin-right: auto;
+        }
+        .vitals-name {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 20px;
+        }
+        .vitals-gender {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 20px;
+            margin-left: 8px;
+        }
+        .vitals-age {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 20px;
+            margin-left: 8px;
+        }
+        .vitals-dual-list {
+            margin: 11px 0 0 0;
+        }
+        .vitals-dual-left {
+            margin-right: 80px;
+        }
+        .vitals-dual-label {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 20px;
+        }
+        .vitals-dual-value {
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 20px;
+        }
+        .vitals-dual-gap {
+            margin-top: 8px;
+        }
+        .vitals-single-row {
+            margin-top: 8px;
+        }
+        .vitals-single-label {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 20px;
+        }
+        .vitals-single-value {
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 20px;
+            margin-left: 8px;
+        }
+
+        /* ============================================================
+           底部脚注
+           ============================================================ */
+        .footer-note {
+            padding: 16px 16px 0 16px;
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+        }
+
+        /* ---------- 随访信息症状标签内联修正 ---------- */
+        .symptom-tag-wrap {
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-left: 4px;
+        }
+        .symptom-tag-wrap .tag {
+            display: inline-flex;
+        }
+    </style>
+</head>
+<body>
+    <div class="page flex-col">
+
+        <!-- ==================== 导航栏（参照 gaoxueyaguanli3） ==================== -->
+        <div class="group_1 flex-col">
+  <div class="box_1">
+    <span class="text_1">10:19</span>
+    <span class="status-spacer"></span>
+    <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+    <span class="text_2">5G</span>
+    <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+  </div>
+  <div class="box_2 flex-row">
+    <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+    <span class="text_3">专项信息</span>
+    <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+  </div>
+</div>
+
+        <!-- ==================== 卡片1：基本信息 + 随访信息（参照 gaoxueyaguanli3 .group_2 整体卡片结构） ==================== -->
+        <div class="section-card flex-col">
+            <!-- 诊断名称 + 标签 -->
+            <div class="flex-row align-center">
+                <span class="section-title" style="margin-right:8px;">肺结核</span>
+                <span class="tag tag--orange" style="margin-right:4px;">初治</span>
+                <span class="tag tag--blue">门诊</span>
+            </div>
+
+            <!-- 蓝色高亮：基本信息（参照 gaoxueyaguanli3 .group_3） -->
+            <div class="highlight-card flex-col" style="margin-top: 8px;">
+                <div class="hl-row hl-row--first flex-row align-start">
+                    <div class="hl-dot"></div>
+                    <span class="hl-label">痰菌情况：</span>
+                    <span class="hl-value"><span class="tag tag--red">阳性</span></span>
+                    <span class="hl-label" style="margin-left:16px;">耐药情况：</span>
+                    <span class="hl-value"><span class="tag tag--red">耐药</span></span>
+                </div>
+                <div class="hl-row flex-row align-start">
+                    <div class="hl-dot"></div>
+                    <span class="hl-label">随访日期：</span>
+                    <span class="hl-value">2025-01-10</span>
+                </div>
+               
+                <div class="hl-row flex-row align-start">
+                    <div class="hl-dot"></div>
+                    <span class="hl-label">症状：</span>
+                    <span class="symptom-tag-wrap">
+                        <span class="tag tag--blue">咳嗽咳痰</span>
+                        <span class="tag tag--blue">咳血或血痰</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- 用药 —— 已参照「用药情况」整改文本展示效果 -->
+            <span class="section-title" style="margin-top:16px;">用药</span>
+            <div class="info-row-outer info-row-outer--first" style="width: 196px;">
+                <div class="info-row-inner">
+                    <div class="info-dot"></div>
+                    <span class="info-label">化疗方案：—</span>
+                </div>
+            </div>
+            <div class="info-row-outer" style="width: 180px;">
+                <div class="info-row-inner">
+                    <div class="info-dot"></div>
+                    <span class="info-label">用法：每日</span>
+                </div>
+            </div>
+            <div class="info-row-outer" style="width: 228px;">
+                <div class="info-row-inner">
+                    <div class="info-dot"></div>
+                    <span class="info-label">药品剂型：散装药</span>
+                </div>
+            </div>
+            <!-- 督导 —— 已参照「用药情况」整改文本展示效果 -->
+            <span class="section-title" style="margin-top:16px;">督导</span>
+            <div class="info-row-outer info-row-outer--first" style="width: 196px;">
+                <div class="info-row-inner">
+                    <div class="info-dot"></div>
+                    <span class="info-label">督导人员：家属</span>
+                </div>
+            </div>
+             <!-- 家庭居住环境 —— 已参照「用药情况」整改文本展示效果 -->
+            <span class="section-title" style="margin-top:16px;">家庭居住环境</span>
+            <div class="info-row-outer" style="width: 180px;">
+                <div class="info-row-inner">
+                    <div class="info-dot"></div>
+                    <span class="info-label">单独居室：有</span>
+                </div>
+            </div>
+            <div class="info-row-outer" style="width: 228px;">
+                <div class="info-row-inner">
+                    <div class="info-dot"></div>
+                    <span class="info-label">通风情况：良好</span>
+                </div>
+            </div>
+            <!-- 生活方式 —— 已参照「用药情况」整改文本展示效果 -->
+            <span class="section-title" style="margin-top:16px;">生活方式</span>
+            <div class="info-row-outer" style="width: 180px;">
+                <div class="info-row-inner">
+                    <div class="info-dot"></div>
+                    <span class="info-label">吸烟：5支/天</span>
+                </div>
+            </div>
+            <div class="info-row-outer" style="width: 228px;">
+                <div class="info-row-inner">
+                    <div class="info-dot"></div>
+                    <span class="info-label">目标吸烟：2支</span>
+                </div>
+            </div>
+            <div class="info-row-outer" style="width: 228px;">
+                <div class="info-row-inner">
+                    <div class="info-dot"></div>
+                    <span class="info-label">饮酒：—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 卡片4：健康及培训 ==================== -->
+        <div class="section-card flex-col">
+            <span class="section-title">健康及培训</span>
+
+            <div class="info-row-outer info-row-outer--first">
+                <div class="info-row-inner">
+                    <div class="info-dot"></div>
+                    <span class="info-label">取药地点：XXXXXXXXXXXXX医院</span>
+                </div>
+
+            </div>
+            <div class="info-row-outer">
+                <div class="info-row-inner">
+                    <div class="info-dot"></div>
+                    <span class="info-label">取药时间：2025年3月26日</span>
+                </div>
+
+            </div>
+
+            <!-- 分割线 -->
+            <div class="divider divider--mt12"></div>
+
+            <!-- 督导评估项 -->
+            <div style="margin-top: 4px;">
+                <div class="supervise-row flex-row align-center justify-between">
+                    <div class="flex-row align-start" style="flex:1;">
+                        <div class="supervise-dot"></div>
+                        <span class="supervise-label">服药记录卡的填写</span>
+                    </div>
+                    <span class="supervise-status supervise-status--master">掌握</span>
+                </div>
+                <div class="supervise-row flex-row align-center justify-between">
+                    <div class="flex-row align-start" style="flex:1;">
+                        <div class="supervise-dot"></div>
+                        <span class="supervise-label">服药方法及药品存放</span>
+                    </div>
+                    <span class="supervise-status supervise-status--master">掌握</span>
+                </div>
+                <div class="supervise-row flex-row align-center justify-between">
+                    <div class="flex-row align-start" style="flex:1;">
+                        <div class="supervise-dot"></div>
+                        <span class="supervise-label">肺结核治疗疗程</span>
+                    </div>
+                    <span class="supervise-status supervise-status--master">掌握</span>
+                </div>
+                <div class="supervise-row flex-row align-center justify-between">
+                    <div class="flex-row align-start" style="flex:1;">
+                        <div class="supervise-dot"></div>
+                        <span class="supervise-label">不规律服药危害</span>
+                    </div>
+                    <span class="supervise-status supervise-status--unmaster">未掌握</span>
+                </div>
+                <div class="supervise-row flex-row align-center justify-between">
+                    <div class="flex-row align-start" style="flex:1;">
+                        <div class="supervise-dot"></div>
+                        <span class="supervise-label">服药后不良反应及处理</span>
+                    </div>
+                    <span class="supervise-status supervise-status--unmaster">未掌握</span>
+                </div>
+                <div class="supervise-row flex-row align-center justify-between">
+                    <div class="flex-row align-start" style="flex:1;">
+                        <div class="supervise-dot"></div>
+                        <span class="supervise-label">治疗期间复诊查痰</span>
+                    </div>
+                    <span class="supervise-status supervise-status--master">掌握</span>
+                </div>
+                <div class="supervise-row flex-row align-center justify-between">
+                    <div class="flex-row align-start" style="flex:1;">
+                        <div class="supervise-dot"></div>
+                        <span class="supervise-label">外出期间如何坚持服药</span>
+                    </div>
+                    <span class="supervise-status supervise-status--unmaster">未掌握</span>
+                </div>
+                <div class="supervise-row flex-row align-center justify-between">
+                    <div class="flex-row align-start" style="flex:1;">
+                        <div class="supervise-dot"></div>
+                        <span class="supervise-label">生活习惯及注意事项</span>
+                    </div>
+                    <span class="supervise-status supervise-status--master">掌握</span>
+                </div>
+                <div class="supervise-row flex-row align-center justify-between">
+                    <div class="flex-row align-start" style="flex:1;">
+                        <div class="supervise-dot"></div>
+                        <span class="supervise-label">密切接触者检查</span>
+                    </div>
+                    <span class="supervise-status supervise-status--unmaster">未掌握</span>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== 卡片6：患者体征（严格参照 gaoxueyaguanli3 .group_15） ==================== -->
+        <div class="vitals-card flex-col">
+            <!-- 姓名行 -->
+            <div class="vitals-name-row flex-row">
+                <span class="vitals-name">张子强</span>
+                <span class="vitals-gender">男</span>
+                <span class="vitals-age">25岁</span>
+            </div>
+            <div class="divider divider--mt12"></div>
+
+            <!-- 身高 / 体重 -->
+            <div class="vitals-dual-list flex-row">
+                <div class="vitals-dual-left flex-col">
+                    <span class="vitals-dual-label">下次随访日期</span>
+                    <span class="vitals-dual-label vitals-dual-gap">评估医生</span>
+                </div>
+                <div class="flex-col">
+                    <span class="vitals-dual-value" style="color:#096AFF;font-family:PingFangSC-Medium;font-weight:500;">2025-05-20</span>
+                    <span class="vitals-dual-value vitals-dual-gap">陈友谅</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 底部脚注 ==================== -->
+        <div class="footer-note">
+            档案编号 00100210 · 随访日期 2025-03-20
+        </div>
+
+    </div>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '肺结核列表.html';
+  });
+</script>
+
+</body>
+</html>

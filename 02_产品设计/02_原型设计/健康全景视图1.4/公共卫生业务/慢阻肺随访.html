@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>慢阻肺患者随访表</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", "SimSun", "宋体", Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            font-size: 14px;
+            padding: 20px;
+        }
+        .layout {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            width: 1180px;
+            margin: 0 auto;
+        }
+        .container {
+            flex: 0 0 920px;
+            width: 920px;
+            background: #fff;
+        }
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            letter-spacing: 4px;
+        }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 4px 10px 4px;
+            font-size: 14px;
+            color: #333;
+        }
+        .header-row .left {
+            text-align: left;
+        }
+        .header-row .right {
+            text-align: right;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #b8d4ea;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid #b8d4ea;
+            padding: 10px 14px;
+            text-align: left;
+            vertical-align: middle;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+        .lbl {
+            background: #e6f1f9;
+            text-align: center;
+            color: #333;
+            font-weight: normal;
+        }
+        .val {
+            background: #fff;
+            color: #333;
+        }
+        .diagnosis-content {
+            padding: 12px 14px;
+            line-height: 2;
+            font-size: 14px;
+        }
+        .diagnosis-content .row {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* 左侧时间轴样式 */
+        .timeline {
+            flex: 0 0 160px;
+            width: 160px;
+            padding: 50px 0 10px 0;
+        }
+        .timeline-list {
+            position: relative;
+            padding: 4px 0 4px 0;
+        }
+        .timeline-list::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 8px;
+            bottom: 12px;
+            width: 2px;
+            background: #d9d9d9;
+        }
+        .timeline-item {
+            position: relative;
+            padding: 0 0 14px 20px;
+        }
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        .timeline-item .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #007aff;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #007aff;
+        }
+        .timeline-date {
+            font-size: 12px;
+            color: #595959;
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+        .timeline-card {
+            background: #f9fafd;
+            border-radius: 6px;
+            padding: 8px 0px 0 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-align: center;
+            overflow: hidden;
+        }
+        .timeline-card.active {
+            background: #bfdeff;
+        }
+        .card-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: rgba(0, 122, 255, 1);
+            line-height: 1.2;
+        }
+        .card-label {
+            font-size: 12px;
+            color: rgba(0, 122, 255, 1);
+            line-height: 1.2;
+        }
+        .card-status {
+            font-size: 11px;
+            padding: 4px 0;
+            margin-top: 4px;
+            line-height: 1.5;
+            width: 100%;
+            align-self: stretch;
+        }
+        .card-status.warn {
+            background: #fde7d0;
+            color: #d9531e;
+        }
+        .card-status.good {
+            background: #d8efd9;
+            color: #2e8b57;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- 左侧时间轴列表 -->
+        <div class="timeline">
+            <div class="timeline-list">
+                <!-- Item 1 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-05-20</div>
+                    <div class="timeline-card active">
+                        <div class="card-value">58%</div>
+                        <div class="card-label">FEV1/FVC</div>
+                        <div class="card-status warn">控制不满意</div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-06-15</div>
+                    <div class="timeline-card">
+                        <div class="card-value">60%</div>
+                        <div class="card-label">FEV1/FVC</div>
+                        <div class="card-status warn">控制不满意</div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-07-10</div>
+                    <div class="timeline-card">
+                        <div class="card-value">61%</div>
+                        <div class="card-label">FEV1/FVC</div>
+                        <div class="card-status warn">控制不满意</div>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2026-07-29</div>
+                    <div class="timeline-card">
+                        <div class="card-value">62%</div>
+                        <div class="card-label">FEV1/FVC</div>
+                        <div class="card-status warn">控制不满意</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧表格 -->
+        <div class="container">
+            <h1 class="title">慢阻肺患者随访表</h1>
+            <div class="header-row">
+                <div class="left">姓名：自壹</div>
+                <div class="right">编号：11200056</div>
+            </div>
+
+            <table>
+                <colgroup>
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                    <col style="width:8.333%">
+                </colgroup>
+
+                <!-- 基本随访信息 -->
+                <tr>
+                    <th class="lbl" colspan="4">随访日期</th>
+                    <td class="val" colspan="3">2026-07-29</td>
+                    <th class="lbl" colspan="2">随访方式</th>
+                    <td class="val" colspan="3">家庭、门诊</td>
+                </tr>
+
+                <!-- 症状与体征：分组标签 colspan=2(rowspan=2) -->
+                <tr>
+                    <th class="lbl" colspan="2" rowspan="2">症状<br>与<br>体征</th>
+                    <th class="lbl" colspan="2">症状</th>
+                    <td class="val" colspan="8">咳嗽：轻度（间断咳嗽，不咳痰）<br>咳痰：中度（昼夜咳痰量约10～50 ml）<br>呼吸困难：平地正常速度行走约100米后出现气促<br>其他：无</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">体征</th>
+                    <td class="val" colspan="8">口唇紫绀、哮鸣音/湿啰音</td>
+                </tr>
+
+                <!-- 生活方式指导：分组标签 colspan=2(rowspan=4) -->
+                <tr>
+                    <th class="lbl" colspan="2" rowspan="4">生活<br>方式<br>指导</th>
+                    <th class="lbl" colspan="2">日吸烟量（支）</th>
+                    <td class="val" colspan="3">10</td>
+                    <th class="lbl" colspan="2">目标日吸烟量</th>
+                    <td class="val" colspan="3">5</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">运动</th>
+                    <td class="val" colspan="8">3 次/周，30 分钟/次</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">目标运动</th>
+                    <td class="val" colspan="8">5 次/周，45 分钟/次</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">呼吸锻炼</th>
+                    <td class="val" colspan="3">是（已指导）</td>
+                    <th class="lbl" colspan="2">心理调整</th>
+                    <td class="val" colspan="3">良好</td>
+                </tr>
+
+                <!-- 实验室检查：分组标签 colspan=2(rowspan=2) -->
+                <tr>
+                    <th class="lbl" colspan="2" rowspan="2">实验<br>室检<br>查</th>
+                    <th class="lbl" colspan="2">血常规</th>
+                    <td class="val" colspan="8">白细胞 8.5×10⁹/L，中性粒细胞 65%</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">其他检查</th>
+                    <td class="val" colspan="8">肺功能 FEV1/FVC 62%</td>
+                </tr>
+
+                <!-- 用药与依从性：分组标签 colspan=2(rowspan=4) -->
+                <tr>
+                    <th class="lbl" colspan="2" rowspan="4">用药<br>与依<br>从性</th>
+                    <th class="lbl" colspan="2">药物不良反应</th>
+                    <td class="val" colspan="8">无</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">服药依从性</th>
+                    <td class="val" colspan="8">规律</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">此次随访分类</th>
+                    <td class="val" colspan="8">控制不满意</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="2">用药情况</th>
+                    <td class="val" colspan="8">药物1：布地奈德福莫特罗粉吸入剂，每次1吸，每日2次<br>药物2：噻托溴铵粉雾剂，每次1粒，每日1次<br>药物3：无<br>其他药物：无</td>
+                </tr>
+
+                <!-- 随访结论 -->
+                <tr>
+                    <th class="lbl" colspan="4">转诊原因</th>
+                    <td class="val" colspan="8">无</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">随访结果</th>
+                    <td class="val" colspan="8">患者仍间断咳嗽、咳痰，活动后气促较前无明显改善，肺功能提示中度阻塞性通气功能障碍，建议规律吸入药物，加强呼吸锻炼，下月复查。</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">随访医生签名</th>
+                    <td class="val" colspan="3">夏嘉</td>
+                    <th class="lbl" colspan="2">下次随访日期</th>
+                    <td class="val" colspan="3">2026-08-28</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">建档机构</th>
+                    <td class="val" colspan="3">青羊人民医院</td>
+                    <th class="lbl" colspan="2">随访状态</th>
+                    <td class="val" colspan="3">正常</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">失访日期 / 死亡日期</th>
+                    <td class="val" colspan="8">无</td>
+                </tr>
+                <tr>
+                    <th class="lbl" colspan="4">失访原因 / 死亡原因</th>
+                    <td class="val" colspan="8">无</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

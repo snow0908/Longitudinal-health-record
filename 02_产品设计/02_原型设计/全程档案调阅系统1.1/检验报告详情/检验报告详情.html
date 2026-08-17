@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>检验报告详情</title>
+    <script src="./flexible.js"></script>
+    <link rel="stylesheet" type="text/css" href="./common.css" />
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+    <style>
+      /* ===== AI入口卡片 ===== */
+      .ai-entry{
+        display:flex;align-items:center;gap:12px;
+        margin:10px 12px 0 12px;padding:16px;
+        background:#fff;border-radius:10px;
+        cursor:pointer;transition:opacity .2s;
+        box-shadow:0 1px 3px rgba(0,0,0,0.04);
+      }
+      .ai-entry:active{opacity:.85;}
+      .ai-entry-icon{
+        width:36px;height:36px;border-radius:8px;
+        background:linear-gradient(135deg,#007AFF,#4A9AFF);
+        display:flex;align-items:center;justify-content:center;
+        font-size:14px;color:#fff;font-weight:700;flex-shrink:0;
+        box-shadow:0 2px 8px rgba(0,122,255,0.25);
+      }
+      .ai-entry-info{flex:1;display:flex;flex-direction:column;gap:2px;}
+      .ai-entry-title{font-size:15px;font-weight:600;color:#1A1A1A;line-height:21px;}
+      .ai-entry-desc{font-size:12px;color:#999;line-height:17px;}
+      .ai-entry-arrow{font-size:16px;color:#ccc;flex-shrink:0;}
+    </style>
+  </head>
+  <body>
+    <div class="page flex-col">
+      <!-- 状态栏 + 标题栏 -->
+      <div class="section_1 flex-col">
+        <div class="block_1 flex-row">
+          <span class="text_1">10:19</span>
+          <img
+            class="thumbnail_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng704147f8b978587e16053c0aff2e7a89010fce4b1451e830bc244c0f5237adc5.png"
+          />
+          <span class="text_2">5G</span>
+          <img
+            class="image_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPngb44e7965ccfb0dcdb8b19278c26b84b1f1e92d5ae3c4c02730dc831e2478c8ee.png"
+          />
+        </div>
+        <div class="block_2 flex-row">
+          <img
+            class="label_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng1f264f6d2d7519387132cd8cedd70f26e20a37499e604d10ad41e07e06c00a98.png"
+            onclick="window.location.href='../检验报告列表/检验报告列表.html'"
+            style="cursor:pointer;"
+          />
+          <span class="text_3">检验报告</span>
+          <img
+            class="image_2"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng1351788870940f46d7266f53b69d89b18357240c5dc52af155ce338c959c0152.png"
+          />
+        </div>
+      </div>
+
+      <!-- 患者信息 -->
+      <div class="section_2 flex-col">
+        <div class="text-wrapper_1 flex-row">
+          <span class="text_4">张子强</span>
+          <span class="text_5">男</span>
+          <span class="text_6">25岁</span>
+          <span class="text_7">就诊号：000036556</span>
+        </div>
+        <img
+          class="image_3"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng00abe6df26e504b5ae94bed18740a15bbd7cd7fb735a1bebb861e0416cb831b3.png"
+        />
+        <div class="list_1 flex-row">
+          <div class="text-wrapper_2-0 flex-col">
+            <span class="text_8-0">开方医院</span>
+            <span class="text_9-0">检验类型</span>
+          </div>
+          <div class="text-wrapper_2-1 flex-col">
+            <span class="text_8-1">内蒙古国际蒙医医院</span>
+            <span class="text_9-1">输血传染病八项监测</span>
+          </div>
+        </div>
+        <div class="text-wrapper_3 flex-row justify-between">
+          <span class="text_10">开方医生</span>
+          <span class="text_11">侯登国</span>
+        </div>
+        <div class="text-wrapper_4 flex-row justify-between">
+          <span class="text_12">开方科室</span>
+          <span class="text_13">血管外科</span>
+        </div>
+        <div class="text-wrapper_5 flex-row justify-between">
+          <span class="text_14">报告时间</span>
+          <span class="text_15">2023-11-24&nbsp;18:00:30</span>
+        </div>
+      </div>
+
+      <!-- 检验结果 -->
+      <div class="section_3 flex-col">
+        <span class="text_16">检验结果</span>
+        <img
+          class="image_4"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng00abe6df26e504b5ae94bed18740a15bbd7cd7fb735a1bebb861e0416cb831b3.png"
+        />
+        <div class="section_4 flex-row justify-between">
+          <span class="text_17">谷胱肝肽还原酶</span>
+          <div class="text-group_1 flex-col">
+            <div class="text-wrapper_6">
+              <span class="text_18">44.10</span>
+              <span class="text_19">/ul</span>
+            </div>
+            <span class="text_20">正常值范围：33-73</span>
+          </div>
+        </div>
+        <img
+          class="image_5"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng941fc9ec50b0cdad8e1eeb8ac7e8a85326a7f30dde675e418fb66903210c4a43.png"
+        />
+        <div class="section_5 flex-row justify-between">
+          <span class="text_21">葡萄糖</span>
+          <div class="group_1 flex-col">
+            <div class="block_3 flex-row justify-between">
+              <div class="text-wrapper_7">
+                <span class="text_22">3.88</span>
+                <span class="text_23">mmol/L</span>
+              </div>
+              <img
+                class="thumbnail_2"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPng361aa31ac460747d50ac705034ab3d6e909198539f4e4007e8e612ac2b3873a1.png"
+              />
+            </div>
+            <span class="text_24">正常值范围：4.1-16.38</span>
+          </div>
+        </div>
+        <img
+          class="image_6"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng36776a7daedb3beba1ce82cf356762df8cd1a8a8de87bc14c889ba05719371cf.png"
+        />
+        <div class="section_6 flex-row justify-between">
+          <span class="text_25">尿素</span>
+          <div class="text-group_2 flex-col">
+            <div class="text-wrapper_8">
+              <span class="text_26">5.92</span>
+              <span class="text_27">mmol/L</span>
+            </div>
+            <span class="text_28">正常值范围：3.1-9.6</span>
+          </div>
+        </div>
+        <img
+          class="image_7"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng941fc9ec50b0cdad8e1eeb8ac7e8a85326a7f30dde675e418fb66903210c4a43.png"
+        />
+        <div class="section_7 flex-row justify-between">
+          <span class="text_29">尿酸</span>
+          <div class="text-group_3 flex-col">
+            <div class="text-wrapper_9">
+              <span class="text_30">406.00</span>
+              <span class="text_31">umol/L</span>
+            </div>
+            <span class="text_32">正常值范围：202.3-416.5</span>
+          </div>
+        </div>
+        <img
+          class="image_8"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng36776a7daedb3beba1ce82cf356762df8cd1a8a8de87bc14c889ba05719371cf.png"
+        />
+        <div class="section_8 flex-row justify-between">
+          <span class="text_33">肌酐</span>
+          <div class="text-group_4 flex-col">
+            <div class="text-wrapper_10">
+              <span class="text_34">99.00</span>
+              <span class="text_35">umol/L</span>
+            </div>
+            <span class="text_36">正常值范围：59-10.4</span>
+          </div>
+        </div>
+        <img
+          class="image_9"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng941fc9ec50b0cdad8e1eeb8ac7e8a85326a7f30dde675e418fb66903210c4a43.png"
+        />
+        <div class="section_9 flex-row justify-between">
+          <span class="text_37">肾小球滤过率</span>
+          <div class="text-group_5 flex-col">
+            <div class="text-wrapper_11">
+              <span class="text_38">84.30</span>
+              <span class="text_39">ml/min</span>
+            </div>
+            <span class="text_40">正常值范围：&gt;80</span>
+          </div>
+        </div>
+        <img
+          class="image_10"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng36776a7daedb3beba1ce82cf356762df8cd1a8a8de87bc14c889ba05719371cf.png"
+        />
+        <div class="section_10 flex-row justify-between">
+          <span class="text_41">谷丙转氨酶</span>
+          <div class="text-group_6 flex-col">
+            <div class="text-wrapper_12">
+              <span class="text_42">257.80</span>
+              <span class="text_43">U/L</span>
+            </div>
+            <span class="text_44">正常值范围：9-50</span>
+          </div>
+        </div>
+        <img
+          class="image_11"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng941fc9ec50b0cdad8e1eeb8ac7e8a85326a7f30dde675e418fb66903210c4a43.png"
+        />
+        <div class="section_11 flex-row justify-between">
+          <span class="text_45">谷草转氨酶</span>
+          <div class="text-group_7 flex-col">
+            <div class="text-wrapper_13">
+              <span class="text_46">192.80</span>
+              <span class="text_47">U/L</span>
+            </div>
+            <span class="text_48">正常值范围：15-40</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== AI入口卡片 ===== -->
+      <div class="ai-entry" onclick="window.location.href='./检验报告AI分析.html'">
+        <span class="ai-entry-icon">AI</span>
+        <div class="ai-entry-info">
+          <span class="ai-entry-title">AI报告分析</span>
+          <span class="ai-entry-desc">智能解读检验指标 · 异常项预警 · 健康建议</span>
+        </div>
+        <span class="ai-entry-arrow">›</span>
+      </div>
+
+      <div class="bottom-spacer"></div>
+    </div>
+  </body>
+</html>

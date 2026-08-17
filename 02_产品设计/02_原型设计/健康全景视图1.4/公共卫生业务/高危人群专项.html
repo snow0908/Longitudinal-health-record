@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>高危人群专项</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", "SimSun", "宋体", Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            font-size: 14px;
+            padding: 20px;
+        }
+        .container {
+            width: 920px;
+            margin: 0 auto;
+            background: #fff;
+        }
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            letter-spacing: 4px;
+        }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 4px 10px 4px;
+            font-size: 14px;
+            color: #333;
+        }
+        .header-row .left {
+            text-align: left;
+        }
+        .header-row .right {
+            text-align: right;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #b8d4ea;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid #b8d4ea;
+            padding: 10px 14px;
+            text-align: left;
+            vertical-align: middle;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+        .lbl {
+            background: #e6f1f9;
+            text-align: center;
+            color: #333;
+            font-weight: normal;
+        }
+        .val {
+            background: #fff;
+            color: #333;
+        }
+        .diagnosis-content {
+            padding: 12px 14px;
+            line-height: 2;
+            font-size: 14px;
+        }
+        .diagnosis-content .row {
+            display: block;
+            margin-bottom: 2px;
+        }
+        .diagnosis-content .row strong {
+            font-weight: bold;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">高危人群专项</h1>
+        <div class="header-row">
+            <div class="left">姓名：自壹</div>
+            <div class="right">编号：11200056</div>
+        </div>
+
+        <table>
+            <colgroup>
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+                <col style="width:8.333%">
+            </colgroup>
+
+            <!-- 基本健康信息：左侧标签 colspan=4 值 colspan=3，右侧标签 colspan=2 值 colspan=3 -->
+            <tr>
+                <th class="lbl" colspan="4">性别</th>
+                <td class="val" colspan="3">女</td>
+                <th class="lbl" colspan="2">出生年月</th>
+                <td class="val" colspan="3">1964-06-17</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="4">身高</th>
+                <td class="val" colspan="3">177 cm</td>
+                <th class="lbl" colspan="2">体重</th>
+                <td class="val" colspan="3">59 kg</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="4">体质指数</th>
+                <td class="val" colspan="3">18.83 kg/m²</td>
+                <th class="lbl" colspan="2">腰围</th>
+                <td class="val" colspan="3">55 cm</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="4">血压</th>
+                <td class="val" colspan="3">176 mmHg / 98 mmHg</td>
+                <th class="lbl" colspan="2">空腹血糖</th>
+                <td class="val" colspan="3">5.8 mmol/L</td>
+            </tr>
+
+            <!-- 高危类型 -->
+            <tr>
+                <th class="lbl" colspan="4">高危类型</th>
+                <td class="val" colspan="8">高血压高危</td>
+            </tr>
+
+            <!-- 高血压高危异常指标 -->
+            <tr>
+                <th class="lbl" colspan="4">高血压高危异常指标</th>
+                <td class="diagnosis-content" colspan="8">
+                    <span class="row">• 高血压家族史（一、二级亲属）</span>
+                    <span class="row">• 长期膳食高盐</span>
+                    <span class="row">• 长期过量饮酒（每日饮酒≥100ml）</span>
+                </td>
+            </tr>
+
+            <!-- 糖尿病高危异常指标 -->
+            <tr>
+                <th class="lbl" colspan="4">糖尿病高危异常指标</th>
+                <td class="diagnosis-content" colspan="8">
+                    <span class="row">• 有高密度脂蛋白胆固醇降低（≤35mg/dl，即0.91mmol/L）和（或）高甘油三脂血症（≥250mg/dl，即2.75mmol/L）者</span>
+                    <span class="row">• 年龄≥45岁且常年不参加体力活动者 —— 年龄62岁，但"常年不参加体力活动"</span>
+                </td>
+            </tr>
+
+            <!-- 建档信息 -->
+            <tr>
+                <th class="lbl" colspan="4">建档机构</th>
+                <td class="val" colspan="3">青羊人民医院</td>
+                <th class="lbl" colspan="2">建档医生</th>
+                <td class="val" colspan="3">夏高</td>
+            </tr>
+            <tr>
+                <th class="lbl" colspan="4">建档日期</th>
+                <td class="val" colspan="3">2026-07-21</td>
+                <th class="lbl" colspan="2">数据来源</th>
+                <td class="val" colspan="3">问卷</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>医域边界设置</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+<!-- 状态栏 -->
+<div class="status-bar">
+    <span>9:41</span>
+    <div class="status-bar-icons">
+        <div class="signal-bars">
+            <span></span><span></span><span></span><span></span>
+        </div>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000000">
+            <path d="M8 2.5C10.5 2.5 12.8 3.5 14.5 5.2L13.5 6.2C12.1 4.9 10.1 4 8 4C5.9 4 3.9 4.9 2.5 6.2L1.5 5.2C3.2 3.5 5.5 2.5 8 2.5Z" fill="currentColor"/>
+            <path d="M8 6C9.4 6 10.7 6.5 11.7 7.5L10.7 8.5C10 7.8 9 7.5 8 7.5C7 7.5 6 7.8 5.3 8.5L4.3 7.5C5.3 6.5 6.6 6 8 6Z" fill="currentColor"/>
+            <circle cx="8" cy="10" r="1.5" fill="currentColor"/>
+        </svg>
+        <div class="battery">
+            <div class="battery-fill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<div class="nav-bar">
+    <div class="nav-back" onclick="goBack()">
+        <img src="../img/返回.png" alt="返回" style="width:24px;height:24px">
+    </div>
+    <span class="nav-title">医域边界</span>
+    <div class="nav-action" onclick="openSettings()">
+        <img src="../img/设置.png" alt="设置" style="width: 62px;height:24px">
+    </div>
+</div>
+
+<!-- 页面内容 -->
+<div class="page">
+    <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18M3 7l1-4h16l1 4M3 7v14M21 7v14M8 11h8M8 15h8"/>
+        </svg>
+        医域边界设置
+    </div>
+    <div class="section-desc">选择不允许查看您健康档案的医疗机构，被选中的机构将无法调阅您的任何健康档案数据。</div>
+
+    <div class="info-banner blue">
+        <span class="banner-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+        </span>
+        <span>已选中的机构将无法查看您的健康档案，包括诊疗记录、检验报告、随访记录等全部数据。</span>
+    </div>
+
+    <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" placeholder="搜索机构名称" id="orgSearch" oninput="filterOrgs()">
+    </div>
+
+    <div class="selection-bar" id="selectionBar">
+        <span id="selectionText">已选择 0 家机构</span>
+        <span class="clear-btn" onclick="resetBoundary()">清除</span>
+    </div>
+
+    <div class="org-list" id="orgList"></div>
+</div>
+
+<div class="bottom-bar">
+    <button class="btn btn-secondary" onclick="resetBoundary()">重置</button>
+    <button class="btn btn-primary" onclick="saveBoundary()">保存</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const APP_STATE_KEY = 'privacy_app_state';
+
+const ICONS = {
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+    successCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+    warningCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    emptySearch: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'
+};
+
+// 机构数据
+const orgData = [
+    { id: 1, name: '市第一人民医院', type: '三甲综合医院', tag: '三甲', tagColor: '' },
+    { id: 2, name: '市第二人民医院', type: '三甲综合医院', tag: '三甲', tagColor: '' },
+    { id: 3, name: '市中医院', type: '三甲中医医院', tag: '三甲', tagColor: '' },
+    { id: 4, name: '区中心医院', type: '二级综合医院', tag: '二甲', tagColor: 'green' },
+    { id: 5, name: '社区卫生服务中心（城南）', type: '基层医疗机构', tag: '社区', tagColor: 'orange' },
+    { id: 6, name: '社区卫生服务中心（城北）', type: '基层医疗机构', tag: '社区', tagColor: 'orange' },
+    { id: 7, name: '市妇幼保健院', type: '专科医院', tag: '妇幼', tagColor: 'green' },
+    { id: 8, name: '市第三人民医院', type: '精神专科医院', tag: '专科', tagColor: '' },
+    { id: 9, name: '乡镇卫生院（东郊）', type: '基层医疗机构', tag: '乡镇', tagColor: 'orange' },
+    { id: 10, name: '市口腔医院', type: '专科医院', tag: '专科', tagColor: '' },
+];
+
+function loadState() {
+    try {
+        const raw = localStorage.getItem(APP_STATE_KEY);
+        if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    return { blockedOrgs: [], modules: {}, lockEnabled: false, lockPassword: '', imEnabled: false };
+}
+
+function saveState(state) {
+    localStorage.setItem(APP_STATE_KEY, JSON.stringify(state));
+}
+
+let blockedOrgs = new Set();
+
+function init() {
+    const state = loadState();
+    blockedOrgs = new Set(state.blockedOrgs || []);
+    renderOrgList();
+    updateSelectionBar();
+}
+
+function updateSelectionBar() {
+    const count = blockedOrgs.size;
+    const bar = document.getElementById('selectionBar');
+    const text = document.getElementById('selectionText');
+    if (count > 0) {
+        bar.classList.add('show');
+        text.textContent = `已选择 ${count} 家机构`;
+    } else {
+        bar.classList.remove('show');
+    }
+}
+
+function renderOrgList(filter = '') {
+    const list = document.getElementById('orgList');
+    const filtered = orgData.filter(o => o.name.includes(filter) || o.type.includes(filter));
+
+    if (filtered.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.emptySearch}</div><div>未找到相关机构</div></div>`;
+        return;
+    }
+
+    list.innerHTML = filtered.map(org => `
+        <div class="org-item" onclick="toggleOrg(${org.id})">
+            <div class="org-checkbox ${blockedOrgs.has(org.id) ? 'checked' : ''}" id="org-check-${org.id}">
+                ${ICONS.check}
+            </div>
+            <div class="org-info">
+                <div class="org-name">${org.name}</div>
+                <div class="org-type">${org.type}</div>
+            </div>
+            <span class="org-tag ${org.tagColor}">${org.tag}</span>
+        </div>
+    `).join('');
+}
+
+function toggleOrg(id) {
+    if (blockedOrgs.has(id)) {
+        blockedOrgs.delete(id);
+    } else {
+        blockedOrgs.add(id);
+    }
+    const check = document.getElementById('org-check-' + id);
+    if (check) check.classList.toggle('checked');
+    updateSelectionBar();
+}
+
+function filterOrgs() {
+    renderOrgList(document.getElementById('orgSearch').value);
+}
+
+function resetBoundary() {
+    blockedOrgs.clear();
+    renderOrgList();
+    updateSelectionBar();
+    showToast('已重置');
+}
+
+function saveBoundary() {
+    const state = loadState();
+    state.blockedOrgs = Array.from(blockedOrgs);
+    saveState(state);
+
+    const count = blockedOrgs.size;
+    showToast(`已保存，屏蔽${count}家机构`);
+    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+}
+
+function goBack() {
+    window.location.href = 'index.html';
+}
+
+// ====== Toast ======
+function showToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    const icon = type === 'success' ? ICONS.successCircle : ICONS.warningCircle;
+    const iconColor = type === 'success' ? '#15CF6E' : '#FEA800';
+    toast.innerHTML = `<div class="toast-icon" style="color:${iconColor}">${icon}</div><div class="toast-text">${msg}</div>`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1800);
+}
+
+// 初始化
+init();
+</script>
+
+</body>
+</html>

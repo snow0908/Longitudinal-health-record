@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+/* ============================================================
+   公共基础样式 —— 所有模块共享
+   包含：全局重置、Flex 布局工具类、按钮/输入框重置
+   参照：C端UED交互与视觉设计规范 v1.0
+   基准宽度：375px
+   ============================================================ */
+
+/* ---------- 全局重置 ---------- */
+body * {
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+body {
+  font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma,
+    Arial, PingFang SC-Light, Microsoft YaHei;
+}
+input {
+  background-color: transparent;
+  border: 0;
+}
+button {
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  outline: none;
+  background-color: transparent;
+}
+button:active {
+  opacity: 0.6;
+}
+
+/* ---------- Flex 方向 ---------- */
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+/* ---------- 主轴对齐 ---------- */
+.justify-start {
+  display: flex;
+  justify-content: flex-start;
+}
+.justify-center {
+  display: flex;
+  justify-content: center;
+}
+.justify-end {
+  display: flex;
+  justify-content: flex-end;
+}
+.justify-evenly {
+  display: flex;
+  justify-content: space-evenly;
+}
+.justify-around {
+  display: flex;
+  justify-content: space-around;
+}
+.justify-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ---------- 交叉轴对齐 ---------- */
+.align-start {
+  display: flex;
+  align-items: flex-start;
+}
+.align-center {
+  display: flex;
+  align-items: center;
+}
+.align-end {
+  display: flex;
+  align-items: flex-end;
+}
+.page {
+  background-color: rgba(243, 245, 247, 1);
+  position: relative;
+  width: 375px;
+  margin: 0 auto; min-height: 100vh;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 16px;
+}
+
+.group_1 {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+
+.box_1 {
+  margin: 0 10px 0 24px;
+}
+
+.text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+
+.thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0 5px 191px;
+}
+
+.text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+
+.image_1 {
+  width: 25px;
+  height: 13px;
+  margin: 5px 0 4px 6px;
+}
+
+.box_2 {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.label_1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+          cursor: pointer;
+}
+
+.text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+
+.image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+.group_2 {
+  background-color: rgba(255, 255, 255, 1);
+  margin-top: 16px;
+  padding: 16px 16px 16px 16px;
+}
+
+.group_3 {
+  background-color: rgba(246, 250, 255, 1);
+  border-radius: 8px;
+  border: 1px solid rgba(175, 207, 255, 1);
+  padding: 15px 15px 15px 15px;
+}
+
+.box_3 {
+  margin-right: 123px;
+}
+
+.text_4 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 22px;
+}
+
+.text-wrapper_1 {
+  background-color: rgba(254, 168, 0, 1);
+  border-radius: 4px;
+  margin: 1px 0 1px 8px;
+  padding: 3px 8px 3px 8px;
+}
+
+.text_5 {
+  overflow-wrap: break-word;
+  color: rgba(255, 255, 255, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 14px;
+}
+
+.text-wrapper_2 {
+  border-radius: 4px;
+  border: 1px solid rgba(25, 109, 255, 1);
+  margin: 1px 0 1px 4px;
+  padding: 2px 7px 2px 7px;
+}
+
+.text_6 {
+  overflow-wrap: break-word;
+  color: rgba(9, 106, 255, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 14px;
+}
+
+.box_4 {
+  width: 306px;
+  margin: 8px 5px 0 0;
+}
+
+.group_4 {
+  background-color: rgba(9, 106, 255, 1);
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  margin: 8px 0 8px 0;
+}
+
+.text-wrapper_3 {
+  width: 294px;
+  height: 20px;
+  overflow-wrap: break-word;
+  font-size: 0;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.text_7 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.text_8 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.box_5 {
+  margin-top: 4px;
+}
+
+.box_6 {
+  background-color: rgba(9, 106, 255, 1);
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  margin: 8px 0 28px 0;
+}
+
+.text_9 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-left: 8px;
+}
+
+.text_10 {
+  width: 244px;
+  height: 40px;
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  line-height: 20px;
+  margin-left: -1px;
+}
+
+.box_7 {
+  margin: 4px 145px 0 0;
+}
+
+.section_1 {
+  background-color: rgba(9, 106, 255, 1);
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  margin: 8px 0 8px 0;
+}
+
+.text_11 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-left: 8px;
+}
+
+.text_12 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-left: 2px;
+}
+
+.box_8 {
+  margin: 4px 156px 0 0;
+}
+
+.block_1 {
+  background-color: rgba(9, 106, 255, 1);
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  margin: 8px 0 8px 0;
+}
+
+.text_13 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-left: 8px;
+}
+
+.text_14 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.text_15 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 16px 279px 0 0;
+}
+
+.group_5 {
+  width: 208px;
+  margin: 8px 135px 0 0;
+}
+
+.group_6 {
+  background-color: rgba(102, 102, 102, 1);
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  margin: 8px 0 8px 0;
+}
+
+.text_16 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.group_7 {
+  width: 124px;
+  margin: 4px 219px 0 0;
+}
+
+.group_8 {
+  background-color: rgba(102, 102, 102, 1);
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  margin: 8px 0 8px 0;
+}
+
+.text_17 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.group_9 {
+  width: 164px;
+  margin: 4px 179px 0 0;
+}
+
+.group_10 {
+  background-color: rgba(102, 102, 102, 1);
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  margin: 8px 0 8px 0;
+}
+
+.text_18 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.text_19 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 16px 279px 0 0;
+}
+
+.group_11 {
+  width: 138px;
+  margin: 8px 205px 0 0;
+}
+
+.section_2 {
+  background-color: rgba(102, 102, 102, 1);
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  margin: 8px 0 8px 0;
+}
+
+.text_20 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.group_12 {
+  width: 211px;
+  margin: 4px 132px 0 0;
+}
+
+.box_9 {
+  background-color: rgba(102, 102, 102, 1);
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  margin: 8px 0 8px 0;
+}
+
+.text_21 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.group_13 {
+  width: 124px;
+  margin: 4px 219px 0 0;
+}
+
+.block_2 {
+  background-color: rgba(102, 102, 102, 1);
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  margin: 8px 0 8px 0;
+}
+
+.text_22 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.group_14 {
+  width: 306px;
+  margin: 4px 37px 0 0;
+}
+
+.box_10 {
+  background-color: rgba(102, 102, 102, 1);
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  margin: 8px 0 8px 0;
+}
+
+.text_23 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.group_15 {
+  background: url(./img/SketchPng5e293a93a5bd43f38867175f3cf537611395f8f7a9d17744e9f057f2c35ba073.png)
+    100% no-repeat;
+  background-size: 100% 100%;
+  margin-top: 16px;
+  padding: 16px 16px 16px 16px;
+}
+
+.text-wrapper_4 {
+  width: 103px;
+  margin-right: 240px;
+}
+
+.text_24 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.text_25 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.text_26 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.image_3 {
+  width: 343px;
+  height: 1px;
+  margin-top: 12px;
+}
+
+.list_1 {
+  width: 125px;
+  height: 48px;
+  justify-content: space-between;
+  margin: 11px 218px 0 0;
+}
+
+.text-wrapper_5-0 {
+  margin-right: 52px;
+}
+
+.text_27-0 {
+  width: 43px;
+  overflow-wrap: break-word;
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  color: rgba(51, 51, 51, 1);
+}
+
+.text_28-0 {
+  width: 45px;
+  overflow-wrap: break-word;
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+  color: rgba(51, 51, 51, 1);
+}
+
+.text-wrapper_5-1 {
+  margin-right: 52px;
+}
+
+.text_27-1 {
+  width: 43px;
+  overflow-wrap: break-word;
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  color: rgba(102, 102, 102, 1);
+}
+
+.text_28-1 {
+  width: 45px;
+  overflow-wrap: break-word;
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+  color: rgba(102, 102, 102, 1);
+}
+
+.text-wrapper_6 {
+  width: 134px;
+  margin: 8px 209px 0 0;
+}
+
+.text_29 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.text_30 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.text-wrapper_7 {
+  width: 166px;
+  margin: 8px 177px 0 0;
+}
+
+.text_31 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.text_32 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+    </style>
+    <script>
+/**
+ * 移动端 rem 自适应脚本 —— 所有模块共享
+ * 设计基准：375px 宽度 → 1rem = 37.5px
+ * 参照：C端UED交互与视觉设计规范 v1.0
+ */
+(function flexible(window, document) {
+  function resetFontSize() {
+    const size = (document.documentElement.clientWidth / 375) * 37.5;
+    document.documentElement.style.fontSize = size + 'px';
+  }
+
+  // reset root font size on page show or resize
+  window.addEventListener('pageshow', resetFontSize);
+  window.addEventListener('resize', resetFontSize);
+})(window, document);
+    </script>  </head>
+  <body>
+    <div class="page flex-col">
+      <div class="group_1 flex-col">
+        <div class="box_1 flex-row">
+          <span class="text_1">10:19</span>
+          <img
+            class="thumbnail_1"
+            referrerpolicy="no-referrer"
+            src="../img/信号.png"
+          />
+          <span class="text_2">5G</span>
+          <img
+            class="image_1"
+            referrerpolicy="no-referrer"
+            src="../img/电量.png"
+          />
+        </div>
+        <div class="box_2 flex-row">
+          <img
+            class="label_1"
+            referrerpolicy="no-referrer"
+            src="../img/返回.png"
+          />
+          <span class="text_3">专项信息</span>
+          <img
+            class="image_2"
+            referrerpolicy="no-referrer"
+            src="../img/设置.png"
+          />
+        </div>
+      </div>
+      <div class="group_2 flex-col">
+        <div class="group_3 flex-col">
+          <div class="box_3 flex-row">
+            <span class="text_4">继发性高血压</span>
+            <div class="text-wrapper_1 flex-col">
+              <span class="text_5">二级</span>
+            </div>
+            <div class="text-wrapper_2 flex-col">
+              <span class="text_6">门诊</span>
+            </div>
+          </div>
+          <div class="box_4 flex-row justify-between">
+            <div class="group_4 flex-col"></div>
+            <div class="text-wrapper_3">
+              <span class="text_7">确诊机构：</span>
+              <span class="text_8">北京大学第一医院宁夏妇女儿童医院</span>
+            </div>
+          </div>
+          <div class="box_5 flex-row">
+            <div class="box_6 flex-col"></div>
+            <span class="text_9">并发症：</span>
+            <span class="text_10">
+              肾功能衰竭/冠状动脉血运重建史/外周血管疾病/慢性心力衰竭
+            </span>
+          </div>
+          <div class="box_7 flex-row">
+            <div class="section_1 flex-col"></div>
+            <span class="text_11">确诊日期：</span>
+            <span class="text_12">2016-05-23</span>
+          </div>
+          <div class="box_8 flex-row">
+            <div class="block_1 flex-col"></div>
+            <span class="text_13">糖化血红蛋白值：</span>
+            <span class="text_14">24%</span>
+          </div>
+        </div>
+        <span class="text_15">建档信息</span>
+        <div class="group_5 flex-row justify-between">
+          <div class="group_6 flex-col"></div>
+          <span class="text_16">建档机构：医疗机构乡镇卫生院</span>
+        </div>
+        <div class="group_7 flex-row justify-between">
+          <div class="group_8 flex-col"></div>
+          <span class="text_17">建档医生：孙思邈</span>
+        </div>
+        <div class="group_9 flex-row justify-between">
+          <div class="group_10 flex-col"></div>
+          <span class="text_18">建档日期：2018-05-23</span>
+        </div>
+        <span class="text_19">用药情况</span>
+        <div class="group_11 flex-row justify-between">
+          <div class="section_2 flex-col"></div>
+          <span class="text_20">是否服用降压药：是</span>
+        </div>
+        <div class="group_12 flex-row justify-between">
+          <div class="box_9 flex-col"></div>
+          <span class="text_21">每月用于降压药物费用：1500元</span>
+        </div>
+        <div class="group_13 flex-row justify-between">
+          <div class="block_2 flex-col"></div>
+          <span class="text_22">服药依从性：间断</span>
+        </div>
+        <div class="group_14 flex-row justify-between">
+          <div class="box_10 flex-col"></div>
+          <span class="text_23">
+            不服药或不规则服药原因：不知道怎么总是忘记
+          </span>
+        </div>
+      </div>
+      <div class="group_15 flex-col">
+        <div class="text-wrapper_4 flex-row justify-between">
+          <span class="text_24">张子强</span>
+          <span class="text_25">男</span>
+          <span class="text_26">25岁</span>
+        </div>
+        <img
+          class="image_3"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng00abe6df26e504b5ae94bed18740a15bbd7cd7fb735a1bebb861e0416cb831b3.png"
+        />
+        <div class="list_1 flex-row">
+          <div class="text-wrapper_5-0 flex-col">
+            <span class="text_27-0">身高</span>
+            <span class="text_28-0">体重</span>
+          </div>
+          <div class="text-wrapper_5-1 flex-col">
+            <span class="text_27-1">168cm</span>
+            <span class="text_28-1">68.4kg</span>
+          </div>
+        </div>
+        <div class="text-wrapper_6 flex-row justify-between">
+          <span class="text_29">体质指数</span>
+          <span class="text_30">54kg/㎡</span>
+        </div>
+        <div class="text-wrapper_7 flex-row justify-between">
+          <span class="text_31">血压</span>
+          <span class="text_32">121/92mmHg</span>
+        </div>
+      </div>
+    </div>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '../index.html';
+  });
+</script>
+
+  </body>
+</html>

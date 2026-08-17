@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>首页</title>
+    <style>
+/* ============================================================
+   公共基础样式 —— 所有模块共享
+   包含：全局重置、Flex 布局工具类、按钮/输入框重置
+   参照：C端UED交互与视觉设计规范 v1.0
+   基准宽度：375px
+   ============================================================ */
+
+/* ---------- 全局重置 ---------- */
+body * {
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+body {
+  font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma,
+    Arial, PingFang SC-Light, Microsoft YaHei;
+}
+input {
+  background-color: transparent;
+  border: 0;
+}
+button {
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  outline: none;
+  background-color: transparent;
+}
+button:active {
+  opacity: 0.6;
+}
+
+/* ---------- Flex 方向 ---------- */
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+/* ---------- 主轴对齐 ---------- */
+.justify-start {
+  display: flex;
+  justify-content: flex-start;
+}
+.justify-center {
+  display: flex;
+  justify-content: center;
+}
+.justify-end {
+  display: flex;
+  justify-content: flex-end;
+}
+.justify-evenly {
+  display: flex;
+  justify-content: space-evenly;
+}
+.justify-around {
+  display: flex;
+  justify-content: space-around;
+}
+.justify-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ---------- 交叉轴对齐 ---------- */
+.align-start {
+  display: flex;
+  align-items: flex-start;
+}
+.align-center {
+  display: flex;
+  align-items: center;
+}
+.align-end {
+  display: flex;
+  align-items: flex-end;
+}
+.page {
+  background-color: rgba(243, 245, 247, 1);
+  position: relative;
+  width: 375px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.section_1 {
+  background: url(./img/SketchPngc3bd72a53b04c3db0b66e1ac64fdf8df2769ea94fa0badcc86fc255a3a434fcf.png)
+    100% no-repeat;
+  background-size: 100% 100%;
+  padding: 14px 16px 16px 16px;
+}
+
+.block_7 {
+  margin: 0 10px 0 24px;
+}
+
+.text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+
+.thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0 5px 191px;
+}
+
+.text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+
+.image_1 {
+  width: 25px;
+  height: 13px;
+  margin: 5px 0 4px 6px;
+}
+
+.block_8 {
+  width: 203px;
+  margin: 15px 0 0 140px;
+}
+
+.text_3 {
+  overflow-wrap: break-word;
+  color: rgba(255, 255, 255, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 22px;
+  margin-top: 4px;
+}
+
+.applet-top-bar_1 {
+  width: 78px;
+  height: 30px;
+}
+
+.section_3 {
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 12px;
+  margin-top: 23px;
+  padding-top: 16px;
+  overflow: hidden;
+}
+
+.group_23 {
+  position: relative;
+  width: 315px;
+  margin: 0 12px 0 16px;
+  padding: 4px 0 0 64px;
+}
+
+.image-text_83 {
+  width: 103px;
+  margin-top: 33px;
+}
+
+.icon_1 {
+  width: 14px;
+  height: 14px;
+  margin: 3px 0 3px 0;
+}
+
+.text-group_1 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.tag_1 {
+  border-radius: 4px;
+  border: 1px solid rgba(25, 109, 255, 1);
+  margin: 3px 0 30px -23px;
+  padding: 2px 7px 2px 7px;
+}
+
+.text_4 {
+  overflow-wrap: break-word;
+  color: rgba(9, 106, 255, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 14px;
+}
+
+.tag_2 {
+  border-radius: 4px;
+  border: 1px solid rgba(21, 207, 110, 1);
+  margin: 3px 0 30px 4px;
+  padding: 2px 7px 2px 7px;
+}
+
+.text_5 {
+  overflow-wrap: break-word;
+  color: rgba(21, 207, 110, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 14px;
+}
+
+.button_1 {
+  background-color: rgba(228, 238, 255, 1);
+  border-radius: 4px;
+  margin: 0 0 5px 27px;
+  padding: 7px 12px 7px 12px;
+}
+
+.image-text_84 {
+}
+
+.icon_2 {
+  width: 12px;
+  height: 13px;
+  align-self: center;
+}
+
+.text-group_2 {
+  overflow-wrap: break-word;
+  color: rgba(9, 106, 255, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 17px;
+  margin-top: 4px;
+}
+
+.image-text_85 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 136px;
+  height: 56px;
+}
+
+.single-avatar_1 {
+  background: url(./img/5c4288b73f164a5a86b076d217235e7f_mergeImage.png)
+    100% no-repeat;
+  background-size: 100% 100%;
+  padding: 38px 0 0 38px;
+}
+
+.icon_3 {
+  width: 18px;
+  height: 18px;
+}
+
+.text-group_3 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 24px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 33px;
+}
+
+.text-wrapper_1 {
+  background: url(./img/SketchPng271ea8a8aaeb3057d93bfb565289a9037612c2df9cb9d9e17cea41c3ce9eb8f7.png)
+    100% no-repeat;
+  background-size: 100% 100%;
+  margin-top: 11px;
+  padding: 8px 99px 8px 16px;
+}
+
+.text_6 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin-right: 100px;
+}
+
+.text_7 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 4px 48px 0 0;
+}
+
+.text_8 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 4px 73px 0 0;
+}
+
+.text_9 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin-top: 4px;
+}
+
+.section_4 {
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 8px;
+  align-self: center;
+  width: 343px;
+  padding: 16px 16px 16px 16px;
+}
+
+.text-wrapper_10 {
+  margin-right: 247px;
+}
+
+.text_10 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 22px;
+}
+
+.group_24 {
+  width: 311px;
+  margin-top: 12px;
+}
+
+.group_3 {
+  background-color: #FFF2ED;
+  border-radius: 8px;
+  padding: 12px 19px 12px 20px;
+}
+
+.image-text_86 {
+}
+
+.icon_4 {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+}
+
+.text-group_4 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.group_4 {
+  background: url(./img/SketchPngafb46ed2a593548b6cdf7f69cca7b212dd533a929b79b9f297c9d8b18650fbfb.png)
+    100% no-repeat;
+  background-size: 100% 100%;
+  padding: 12px 20px 12px 19px;
+}
+
+.image-text_87 {
+}
+
+.icon_5 {
+  width: 28px;
+  height: 28px;
+  margin: 0 13px 0 15px;
+}
+
+.text-group_5 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.group_5 {
+  background-color: rgba(230, 254, 245, 1);
+  border-radius: 8px;
+  padding: 8px 19px 12px 20px;
+}
+
+.image-text_88 {
+}
+
+.icon_6 {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+}
+
+.text-group_6 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 12px;
+}
+
+.group_25 {
+  width: 311px;
+  margin-top: 12px;
+}
+
+.section_5 {
+  background-color: rgba(245, 242, 255, 1);
+  border-radius: 8px;
+  padding: 12px 19px 12px 20px;
+}
+
+.image-text_89 {
+}
+
+.icon_7 {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+}
+
+.text-group_7 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.block_5 {
+  background-color: #E6F7FB;
+  border-radius: 8px;
+  padding: 12px 12px 12px 13px;
+}
+
+.image-text_90 {
+}
+
+.label_3 {
+  width: 28px;
+  height: 28px;
+  margin: 0 22px 0 20px;
+}
+
+.text-group_19 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.block_6 {
+  background-color: rgba(234, 245, 255, 1);
+  border-radius: 8px;
+  padding: 12px 19px 12px 20px;
+}
+
+.image-text_91 {
+}
+
+.label_2 {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+}
+
+.text-group_20 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.text-wrapper_11 {
+  margin: 24px 247px 0 0;
+}
+
+.text_11 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 22px;
+}
+
+.group_26 {
+  width: 311px;
+  margin-top: 12px;
+}
+
+.box_1 {
+  background: url(./img/SketchPng4c75839a3ba9ead969c65eee1ed8ff4c80e3a37b7bee03479acad00b1753b5be.png)
+    100% no-repeat;
+  background-size: 100% 100%;
+  padding: 12px 19px 12px 20px;
+}
+
+.image-text_92 {
+}
+
+.icon_9 {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+}
+
+.text-group_9 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.box_2 {
+  background: url(./img/SketchPngafb46ed2a593548b6cdf7f69cca7b212dd533a929b79b9f297c9d8b18650fbfb.png)
+    100% no-repeat;
+  background-size: 100% 100%;
+  padding: 12px 20px 12px 19px;
+}
+
+.image-text_93 {
+}
+
+.icon_10 {
+  width: 28px;
+  height: 28px;
+  margin: 0 13px 0 15px;
+}
+
+.text-group_10 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.box_3 {
+  background-color: rgba(245, 242, 255, 1);
+  border-radius: 8px;
+  padding: 12px 12px 12px 13px;
+}
+
+.image-text_94 {
+}
+
+.icon_11 {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+}
+
+.text-group_11 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.group_27 {
+  width: 311px;
+  margin-top: 12px;
+}
+
+.box_4 {
+  background-color: rgba(230, 254, 245, 1);
+  border-radius: 8px;
+  padding: 14px 12px 12px 13px;
+}
+
+.image-text_95 {
+}
+
+.icon_12 {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+}
+
+.text-group_12 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 6px;
+}
+
+.box_6 {
+  background-color: rgba(255, 247, 237, 1);
+  border-radius: 8px;
+  padding: 12px 19px 12px 20px;
+}
+
+.image-text_96 {
+}
+
+.icon_14 {
+  width: 28px;
+  height: 28px;
+  margin: 0 15px 0 13px;
+}
+
+.text-group_14 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.box_5 {
+  background-color: rgba(255, 247, 237, 1);
+  border-radius: 8px;
+  padding: 12px 20px 12px 19px;
+}
+
+.image-text_97 {
+}
+
+.icon_13 {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+}
+
+.text-group_13 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.group_28 {
+  width: 311px;
+  margin-top: 12px;
+}
+
+.box_7 {
+  background-color: rgba(255, 244, 244, 1);
+  border-radius: 8px;
+  padding: 12px 19px 12px 20px;
+}
+
+.image-text_98 {
+}
+
+.icon_15 {
+  width: 28px;
+  height: 28px;
+  margin: 0 16px 0 12px;
+}
+
+.text-group_15 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.box_8 {
+  background-color: rgba(255, 247, 237, 1);
+  border-radius: 8px;
+  padding: 12px 19px 12px 20px;
+}
+
+.image-text_99 {
+}
+
+.icon_16 {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+}
+
+.text-group_16 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.box_9 {
+  background-color: rgba(230, 254, 245, 1);
+  border-radius: 8px;
+  padding: 12px 20px 12px 19px;
+}
+
+.image-text_100 {
+}
+
+.icon_17 {
+  width: 28px;
+  height: 28px;
+  margin: 0 13px 0 15px;
+}
+
+.text-group_17 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.group_29 {
+  width: 311px;
+  margin-top: 12px;
+  justify-content: flex-start;
+  gap: 11px;
+}
+
+.box_10 {
+  background-color: rgba(245, 242, 255, 1);
+  border-radius: 8px;
+  padding: 12px 12px 12px 13px;
+}
+
+.image-text_101 {
+}
+
+.icon_18 {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+}
+
+.text-group_18 {
+  width: 70px;
+  height: 40px;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: center;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.group_31 {
+  margin: 12px 2px 0 0;
+}
+
+.box_12 {
+  background-color: rgba(230, 250, 245, 1);
+  border-radius: 8px;
+  padding: 12px 19px 12px 20px;
+}
+.box_13 {
+  background-color: rgba(255, 247, 237, 1);
+  border-radius: 8px;
+  padding: 12px 19px 12px 20px;
+}
+.box_14 {
+  background-color: rgba(235, 245, 255, 1);
+  border-radius: 8px;
+  margin-left: 11px;
+  padding: 12px 20px 12px 19px;
+}
+
+.box_15 {
+  background-color: rgba(255, 245, 238, 1);
+  border-radius: 8px;
+  padding: 12px 19px 12px 20px;
+}
+
+.image-text_105 {
+}
+.image-text_106 {
+}
+.image-text_107 {
+}
+.image-text_108 {
+}
+
+.icon_22 {
+  width: 28px;
+  height: 28px;
+  margin: 0 16px 0 12px;
+}
+.icon_23 {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+}
+.icon_24 {
+  width: 28px;
+  height: 28px;
+  margin: 0 13px 0 15px;
+}
+.icon_25 {
+  width: 28px;
+  height: 28px;
+  margin: 0 16px 0 12px;
+}
+
+.text-group_21 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+.text-group_22 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+.text-group_23 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+.text-group_24 {
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.block_9 {
+  padding: 24px 15px 17px 16px;
+}
+
+.group_30 {
+  width: 344px;
+}
+
+.image_2 {
+  width: 136px;
+  height: 1px;
+  margin: 10px 0 9px 0;
+}
+
+.text_12 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: justify;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.image_3 {
+  width: 136px;
+  height: 1px;
+  margin: 10px 0 9px 0;
+}
+
+.paragraph_1 {
+  width: 343px;
+  height: 170px;
+  overflow-wrap: break-word;
+  color: rgba(153, 153, 153, 1);
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: justify;
+  line-height: 17px;
+  margin: 8px 1px 0 0;
+}
+
+/* ============================================================
+   核心功能入口：我的档案 | 健康摘要
+   - 内嵌于基本信息卡片底部，融入白色背景
+   - 仅靠图标容器颜色做视觉点缀，无额外背景/分隔线
+   ============================================================ */
+.summary-archive-card {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  margin-top: 16px;
+  padding: 4px 16px 18px 16px;
+}
+.summary-archive-half {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.summary-archive-half:active { opacity: 0.7; }
+.summary-archive-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.summary-archive-icon-wrap--green {
+  background: linear-gradient(135deg, #E6FEF5 0%, #D1F5E8 100%);
+}
+.summary-archive-icon-wrap--blue {
+  background: linear-gradient(135deg, #E3EEFF 0%, #D0E2FF 100%);
+}
+.summary-archive-icon {
+  width: 22px;
+  height: 22px;
+}
+.summary-archive-text-group {
+  display: flex;
+  flex-direction: column;
+}
+.summary-archive-text {
+  color: #333333;
+  font-size: 14px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+.summary-archive-subtext {
+  color: #AAAAAA;
+  font-size: 11px;
+  font-family: PingFangSC-Regular;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 15px;
+  margin-top: 2px;
+}
+.summary-archive-divider {
+  width: 1px;
+  align-self: center;
+  height: 32px;
+  background: #F0F0F0;
+  flex-shrink: 0;
+}
+
+/* 模块卡片可点击 */
+.group_3, .group_4, .group_5, .section_5, .block_5, .block_6,
+.box_1, .box_2, .box_3, .box_4, .box_5, .box_6, .box_7, .box_8, .box_9, .box_10,
+.box_11, .box_12, .box_13, .box_14, .box_15 {
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.group_3:active, .group_4:active, .group_5:active, .section_5:active,
+.block_5:active, .block_6:active, .box_1:active, .box_2:active, .box_3:active,
+.box_4:active, .box_5:active, .box_6:active, .box_7:active, .box_8:active,
+.box_9:active, .box_10:active, .box_12:active, .box_13:active, .box_14:active,
+.box_15:active {
+  opacity: 0.7;
+}
+
+/* ============================================================
+   公共卫生模块统一排版（参照第一排 group_24 / 第二排 group_25）
+   - 每行等宽三列，卡片间距一致
+   - 卡片内容垂直居中
+   - 图标/文字间距统一
+   ============================================================ */
+.group_26,
+.group_27,
+.group_28,
+.group_31 {
+  width: 311px;
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.group_26 .box_1,
+.group_26 .box_2,
+.group_26 .box_3,
+.group_27 .box_4,
+.group_27 .box_6,
+.group_27 .box_5,
+.group_28 .box_7,
+.group_28 .box_8,
+.group_28 .box_9,
+.group_28 .box_10,
+.group_28 .box_11,
+.group_28 .box_12,
+.group_29 .box_11,
+.group_29 .box_12,
+.group_29 .box_13,
+.group_29 .box_14,
+.group_31 .box_15,
+.group_31 .box_10 {
+  width: 95px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 12px 8px;
+  min-height: 72px;
+  border: 1px solid rgba(238, 238, 238, 1);
+  border-radius: 8px;
+}
+
+/* 各模块独立背景色 */
+.group_26 .box_1 { background-color: rgba(235, 245, 255, 1); }
+.group_26 .box_2 { background-color: rgba(230, 254, 245, 1); }
+.group_26 .box_3 { background-color: #F5F2FF; }
+.group_27 .box_4 { background-color: #E6FEF5;}
+.group_27 .box_6 { background-color: #FFF7ED }
+.group_27 .box_5 { background-color: #E8F0FE; }
+.group_28 .box_7 { background-color: #f4f4f4; }
+.group_28 .box_8 { background-color: #E6F7FB; }
+.group_28 .box_9 { background-color: #FFFBEB; }
+.group_28 .box_10 { background-color: #FFF2ED; }
+.group_28 .box_11 { background-color: #F3EEFF; }
+.group_28 .box_12 { background-color: #fff4f4; }
+.group_29 .box_10 { background-color: #EEF2FF; }
+.group_29 .box_11 { background-color: #ECFDF5; }
+.group_29 .box_12 { background-color: #E0F7FA; }
+.group_29 .box_13 { background-color: #FADBD8; }
+.group_29 .box_14 { background-color: #F0E6F6; }
+.group_31 .box_15 { background-color: #F5B785; }
+.group_31 .box_10 { background-color: #FDEBD0; margin-left: 0; }
+.group_31 .box_11 { background-color: #E0F2F1; margin-left: 0; }
+
+/* 公共卫生卡片内图标统一：居中、无额外 margin */
+.group_26 .icon_9,
+.group_26 .icon_10,
+.group_26 .icon_11,
+.group_27 .icon_12,
+.group_27 .icon_14,
+.group_27 .icon_13,
+.group_28 .icon_15,
+.group_28 .icon_16,
+.group_28 .icon_17,
+.group_29 .icon_22,
+.group_29 .icon_23,
+.group_29 .icon_24,
+.group_31 .icon_25,
+.group_31 .icon_18
+ {
+  width: 28px;
+  height: 28px;
+  margin: 0 auto;
+  align-self: center;
+}
+
+/* 公共卫生卡片内文字统一：居中对齐、统一顶间距、统一行高 */
+.group_26 .text-group_9,
+.group_26 .text-group_10,
+.group_26 .text-group_11,
+.group_27 .text-group_12,
+.group_27 .text-group_14,
+.group_27 .text-group_13,
+.group_28 .text-group_15,
+.group_28 .text-group_16,
+.group_28 .text-group_17,
+.group_29 .text-group_21,
+.group_29 .text-group_22,
+.group_29 .text-group_23,
+.group_31 .text-group_24,
+.group_31 .text-group_18 {
+  margin-top: 8px;
+  text-align: center;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+/* 老年人自理能力评估：取消固定宽高，避免换行后高度塌陷 */
+.group_31 .text-group_18 {
+  width: auto;
+  height: auto;
+  white-space: normal;
+}
+
+.tab-bar_1 {
+  background-color: rgba(255, 255, 255, 1);
+  width: 375px;
+  margin-top: -1px;
+  padding: 5px 36px 6px 35px;
+}
+
+.image-text_102 {
+}
+
+.icon_19 {
+  width: 24px;
+  height: 24px;
+}
+
+.text_13 {
+  overflow-wrap: break-word;
+  color: rgba(9, 106, 255, 1);
+  font-size: 10px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 10px;
+  align-self: center;
+  margin-top: 4px;
+}
+
+.icon_20 {
+  width: 24px;
+  height: 24px;
+}
+
+.text_14 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 10px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 10px;
+  align-self: center;
+  margin-top: 4px;
+}
+
+.image-text_104 {
+}
+
+.icon_21 {
+  width: 24px;
+  height: 24px;
+}
+
+.text_15 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 10px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 10px;
+  align-self: center;
+  margin-top: 4px;
+}
+    </style>
+    <script>
+/**
+ * 移动端 rem 自适应脚本 —— 所有模块共享
+ * 设计基准：375px 宽度 → 1rem = 37.5px
+ * 参照：C端UED交互与视觉设计规范 v1.0
+ */
+(function flexible(window, document) {
+  function resetFontSize() {
+    const size = (document.documentElement.clientWidth / 375) * 37.5;
+    document.documentElement.style.fontSize = size + 'px';
+  }
+
+  // reset root font size on page show or resize
+  window.addEventListener('pageshow', resetFontSize);
+  window.addEventListener('resize', resetFontSize);
+})(window, document);
+
+/**
+ * 模块卡片点击导航
+ * 各模块卡片点击后跳转到对应的列表页面
+ */
+function goToModule(moduleName) {
+  const pageMap = {
+    '健康摘要':     '健康摘要.html',
+    '我的档案':     '健康档案/健康档案.html',
+    '检查报告':     '检查报告列表/检查报告列表.html',
+    '检验报告':     '检验报告列表/检验报告列表.html',
+    '居民档案':     '#',
+    '健康体检':     '#',
+    '高血压管理':   '#',
+    '糖尿病管理':   '#',
+    '中医管理':     '#',
+    '儿童管理':     '儿童管理/儿童管理.html',
+    '妇女保健':     '孕产妇管理/孕产妇随访列表界面.html',
+    '健康教育':     '健康教育列表.html',
+    '预防接种':     '预防接种.html',
+    '高危管理':     '高危管理/高危管理列表.html',
+    '肿瘤管理':     '肿瘤管理/肿瘤管理列表.html',
+    '心脑血管':     '心脑血管/心脑血管管理列表.html',
+    '老年人自理能力评估': '#',
+    '慢阻肺':       '慢阻肺管理/慢阻肺随访列表.html',
+    '肺结核':       '肺结核管理/肺结核列表.html'
+  };
+  var url = pageMap[moduleName];
+  if (url && url !== '#') {
+    window.location.href = url;
+  }
+}
+
+    /**
+     * 诊疗服务 / 诊疗明细 切换（图标点击）
+     */
+    function initMedToggle() {
+      var toggleIcon = document.getElementById('medToggleIcon');
+      var titleEl = document.getElementById('medTitle');
+      var serviceView = document.getElementById('medServiceView');
+      var detailView = document.getElementById('medDetailView');
+      var isDetail = false;
+
+      toggleIcon.addEventListener('click', function() {
+        isDetail = !isDetail;
+        if (isDetail) {
+          titleEl.textContent = '检查用药';
+          serviceView.style.display = 'none';
+          detailView.style.display = 'block';
+        } else {
+          titleEl.textContent = '就医记录';
+          serviceView.style.display = 'block';
+          detailView.style.display = 'none';
+        }
+      });
+    }
+    document.addEventListener('DOMContentLoaded', initMedToggle);
+    </script>  </head>
+  <body>
+    <div class="page flex-col">
+      <div class="section_1 flex-col">
+        <div class="block_7 flex-row">
+          <span class="text_1">10:19</span>
+          <img
+            class="thumbnail_1"
+            referrerpolicy="no-referrer"
+            src="./img/白色信号.png"
+          />
+          <span class="text_2">5G</span>
+          <img
+            class="image_1"
+            referrerpolicy="no-referrer"
+            src="./img/白色电量.png"
+          />
+        </div>
+        <div class="block_8 flex-row justify-between">
+          <span class="text_3">首页</span>
+          <img
+            class="applet-top-bar_1"
+            referrerpolicy="no-referrer"
+            src="./img/白色设置.png"
+          />
+        </div>
+        <div class="section_3 flex-col">
+          <div class="group_23 flex-row justify-end">
+            <div class="image-text_83 flex-row justify-between">
+              <img
+                class="icon_1"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPng0ac4744f017ff7cca3dda48715912b2991ac14c649e086401ce05b624cb22f7e.png"
+              />
+              <span class="text-group_1">135****5555</span>
+            </div>
+            <div class="tag_1 flex-col"><span class="text_4">本人</span></div>
+            <div class="tag_2 flex-col"><span class="text_5">已签约</span></div>
+            <div class="button_1 flex-row">
+              <div class="image-text_84 flex-col">
+                <img
+                  class="icon_2"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPng1172282e1d3fcd9336c282dc6f18f3113db2e489a4159f4c31b1f876901025ac.png"
+                />
+                <span class="text-group_2">切换</span>
+              </div>
+            </div>
+            <div class="image-text_85 flex-row justify-between">
+              <div class="single-avatar_1 flex-col">
+                <img
+                  class="icon_3"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPng2bb688f875f211b0d16f2f19c59e8420615d07caf326249ad01f1520ec939afc.png"
+                />
+              </div>
+              <span class="text-group_3">张自信</span>
+            </div>
+          </div>
+          <div class="text-wrapper_1 flex-col">
+            <span class="text_6">出生日期：1995-05-15</span>
+            <span class="text_7">身份证号：5136***********4610</span>
+            <span class="text_8">现住址：武侯区&nbsp;晋阳区&nbsp;66号</span>
+            <span class="text_9">建档单位：成都高新西区社区卫生服务中心</span>
+          </div>
+          <!-- 核心功能入口：我的档案 | 健康摘要 -->
+          <div class="summary-archive-card">
+            <div class="summary-archive-half" onclick="goToModule('我的档案')">
+              <div class="summary-archive-icon-wrap summary-archive-icon-wrap--green">
+                <svg class="summary-archive-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 6C3 4.9 3.9 4 5 4H9L11 6H19C20.1 6 21 6.9 21 8V18C21 19.1 20.1 20 19 20H5C3.9 20 3 19.1 3 18V6Z" stroke="#0F9B72" stroke-width="1.8" stroke-linejoin="round"/>
+                  <path d="M8 13H16" stroke="#0F9B72" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="summary-archive-text-group">
+                <span class="summary-archive-text">我的档案</span>
+                <span class="summary-archive-subtext">查看完整档案</span>
+              </div>
+            </div>
+            <div class="summary-archive-divider"></div>
+            <div class="summary-archive-half" onclick="goToModule('健康摘要')">
+              <div class="summary-archive-icon-wrap summary-archive-icon-wrap--blue">
+                <svg class="summary-archive-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 21C12 21 4 15.5 4 10C4 7.5 6 5.5 8.5 5.5C10 5.5 11.3 6.3 12 7.5C12.7 6.3 14 5.5 15.5 5.5C18 5.5 20 7.5 20 10C20 15.5 12 21 12 21Z" stroke="#3B7DE8" stroke-width="1.8" stroke-linejoin="round"/>
+                  <path d="M7 11H9.5L10.5 9L13 14L14 11.5H17" stroke="#3B7DE8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="summary-archive-text-group">
+                <span class="summary-archive-text">健康摘要</span>
+                <span class="summary-archive-subtext">掌握健康动态</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section_4 flex-col">
+        <div class="flex-row justify-between align-center" style="margin-right:0;">
+          <span class="text_10" id="medTitle">就医记录</span>
+          <img class="icon_2" id="medToggleIcon" referrerpolicy="no-referrer" src="./img/SketchPng1172282e1d3fcd9336c282dc6f18f3113db2e489a4159f4c31b1f876901025ac.png" style="cursor:pointer;" />
+        </div>
+
+        <!-- 默认：诊疗服务 -->
+        <div id="medServiceView">
+          <div class="group_24 flex-row justify-between">
+            <div class="section_5 flex-row" onclick="goToModule('住院记录')">
+              <div class="image-text_89 flex-col">
+                <img class="icon_7" referrerpolicy="no-referrer" src="./img/SketchPngab72d92ac89f0589ee68a74a5f438a33de4ad1af692d3965a8ee1b25ea6220d9.png" />
+                <span class="text-group_7">住院记录</span>
+              </div>
+            </div>
+            <div class="group_5 flex-row" onclick="goToModule('门急诊记录')">
+              <div class="image-text_88 flex-col">
+                <img class="icon_6" referrerpolicy="no-referrer" src="./img/SketchPngd7d961e174cd2580432a89e1e96fb0e23609b454bce614e307d740514472e72a.png" />
+                <span class="text-group_6">门诊记录</span>
+              </div>
+            </div>
+            <div class="group_3 flex-row" onclick="goToModule('住院病案')">
+              <div class="image-text_86 flex-col">
+                <img class="icon_4" referrerpolicy="no-referrer" src="./img/Data-Copy-28.png" />
+                <span class="text-group_4">住院病案</span>
+              </div>
+            </div>
+          </div>
+          <div class="group_25 flex-row justify-between">
+            <div class="block_5 flex-row" onclick="window.location.href='病案首页/病案首页列表.html'">
+              <div class="image-text_90 flex-col">
+                <img class="label_3" referrerpolicy="no-referrer" src="./img/Data-Edit-28.png" />
+                <span class="text-group_19">门诊病案</span>
+              </div>
+            </div>
+            <div class="block_6 flex-row" style="visibility:hidden;">
+              <div class="image-text_91 flex-col">
+                <img class="label_2" referrerpolicy="no-referrer" src="./img/SketchPng7743c35e0eb282bf528cf0be7e49c732d7a37d2e73e1e48bdc6caf2b4cd235e8.png" />
+                <span class="text-group_20">占位</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 切换：诊疗明细 -->
+        <div id="medDetailView" style="display:none;">
+          <div class="group_24 flex-row justify-between">
+            <div class="group_3 flex-row" onclick="goToModule('检查报告')">
+              <div class="image-text_86 flex-col">
+                <img class="icon_4" referrerpolicy="no-referrer" src="./img/SketchPng048998f2fed52d0f69d009298c15988c04c3da45be3240ec1f87be0bd503d8eb.png" />
+                <span class="text-group_4">检查报告</span>
+              </div>
+            </div>
+            <div class="group_4 flex-row" onclick="goToModule('检验报告')">
+              <div class="image-text_87 flex-col">
+                <img class="icon_5" referrerpolicy="no-referrer" src="./img/SketchPngadfb875a6847037a642503d1875fc36c3356332f184f855aeb4b32ad15c6ab73.png" />
+                <span class="text-group_5">检验报告</span>
+              </div>
+            </div>
+            <div class="group_5 flex-row" onclick="goToModule('门急诊用药')">
+              <div class="image-text_88 flex-col">
+                <img class="icon_6" referrerpolicy="no-referrer" src="./img/SketchPng1ca2c99f46d0059151d9197535edf47a9bbffe15aa4e9a513132810283a8377f.png" />
+                <span class="text-group_6">门诊用药</span>
+              </div>
+            </div>
+          </div>
+          <div class="group_25 flex-row justify-between">
+            <div class="section_5 flex-row" onclick="goToModule('住院用药')">
+              <div class="image-text_89 flex-col">
+                <img class="icon_7" referrerpolicy="no-referrer" src="./img/SketchPng7743c35e0eb282bf528cf0be7e49c732d7a37d2e73e1e48bdc6caf2b4cd235e8.png" />
+                <span class="text-group_7">住院用药</span>
+              </div>
+            </div>
+            <div class="block_5 flex-row" style="visibility:hidden;">
+              <div class="image-text_90 flex-col">
+                <img class="label_3" referrerpolicy="no-referrer" src="./img/SketchPng1ca2c99f46d0059151d9197535edf47a9bbffe15aa4e9a513132810283a8377f.png" />
+                <span class="text-group_19">占位</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-wrapper_11 flex-row">
+          <span class="text_11">公共服务</span>
+        </div>
+        <div class="group_26 flex-row justify-between">
+          <div class="box_1 flex-row" onclick="goToModule('居民档案')">
+            <div class="image-text_92 flex-col">
+              <img
+                class="icon_9"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPng48553ee9e01b9523a8e352321b1eba89fc663f37616b0fc08451853e500b6189.png"
+              />
+              <span class="text-group_9">居民档案</span>
+            </div>
+          </div>
+          <div class="box_2 flex-row" onclick="goToModule('健康体检')">
+            <div class="image-text_93 flex-col">
+              <img
+                class="icon_10"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPngbfd30af396d3bd6107869a25f5b27088a40c15d0791da9b10d331ece6f71b5e2.png"
+              />
+              <span class="text-group_10">健康体检</span>
+            </div>
+          </div>
+          <div class="box_3 flex-row" onclick="goToModule('高血压管理')">
+            <div class="image-text_94 flex-col">
+              <img
+                class="icon_11"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPngf721dd0a71dc1905f3dc309d2ae814387a5ac388cfb63c6f8df83a92056aea30.png"
+              />
+              <span class="text-group_11">高血压管理</span>
+            </div>
+          </div>
+        </div>
+        <div class="group_27 flex-row justify-between">
+          <div class="box_4 flex-row" onclick="goToModule('糖尿病管理')">
+            <div class="image-text_95 flex-col">
+              <img
+                class="icon_12"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPngbaa4050861335bfb92e3ca62d4f4cc7988abf83dd3ada588e9f2183492e8eaa4.png"
+              />
+              <span class="text-group_12">糖尿病管理</span>
+            </div>
+          </div>
+          <div class="box_6 flex-row" onclick="goToModule('中医管理')">
+            <div class="image-text_96 flex-col">
+              <img
+                class="icon_14"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPngbb6ae69a8ab01c0870812479e3f2e8a363d90be4cfbb444c6d98e0574cab10f7.png"
+              />
+              <span class="text-group_14">中医管理</span>
+            </div>
+          </div>
+          <div class="box_5 flex-row" onclick="goToModule('儿童管理')">
+            <div class="image-text_97 flex-col">
+              <img
+                class="icon_13"
+                referrerpolicy="no-referrer"
+                src="./img/Baby-02-28.png"
+              />
+              <span class="text-group_13">儿童管理</span>
+            </div>
+          </div>
+        </div>
+        <div class="group_28 flex-row">
+          <div class="box_7 flex-row" onclick="goToModule('妇女保健')">
+            <div class="image-text_98 flex-col">
+              <img
+                class="icon_15"
+                referrerpolicy="no-referrer"
+                src="./img/Woman-06-28.png"
+              />
+              <span class="text-group_15">妇女保健</span>
+            </div>
+          </div>
+          <div class="box_8 flex-row" onclick="goToModule('慢阻肺')">
+            <div class="image-text_99 flex-col">
+              <img
+                class="icon_16"
+                referrerpolicy="no-referrer"
+                src="./img/Lungs-28.png"
+              />
+              <span class="text-group_16">慢阻肺</span>
+            </div>
+          </div>
+          <div class="box_9 flex-row" onclick="goToModule('肺结核')">
+            <div class="image-text_100 flex-col">
+              <img
+                class="icon_17"
+                referrerpolicy="no-referrer"
+                src="./img/Lungs-28 (1).png"
+              />
+              <span class="text-group_17">肺结核</span>
+            </div>
+          </div>
+        </div>
+        <div class="group_28 flex-row">
+          <div class="box_10 flex-row" onclick="goToModule('高危管理')">
+            <div class="image-text_98 flex-col">
+              <img
+                class="icon_15"
+                referrerpolicy="no-referrer"
+                src="./img/Warning-Shield-28.png"
+              />
+              <span class="text-group_15">高危管理</span>
+            </div>
+          </div>
+          <div class="box_11 flex-row" onclick="goToModule('肿瘤管理')">
+            <div class="image-text_99 flex-col">
+              <img
+                class="icon_16"
+                referrerpolicy="no-referrer"
+                src="./img/Ribbon-28.png"
+              />
+              <span class="text-group_16">肿瘤管理</span>
+            </div>
+          </div>
+          <div class="box_12 flex-row" onclick="goToModule('心脑血管')">
+            <div class="image-text_100 flex-col">
+              <img
+                class="icon_17"
+                referrerpolicy="no-referrer"
+                src="./img/Heart-01-28.png"
+              />
+              <span class="text-group_17">心脑血管</span>
+            </div>
+          </div>
+        </div>
+        <div class="group_29 flex-row">
+          <div class="box_10 flex-row" onclick="goToModule('老年人自理能力评估')">
+            <div class="image-text_101 flex-col">
+              <img
+                class="icon_18"
+                referrerpolicy="no-referrer"
+                src="./img/Old-Man-28.png"
+              />
+              <span class="text-group_18">
+                老年人自理
+                <br />
+                能力评估
+              </span>
+            </div>
+          </div>
+          <div class="box_11 flex-row" onclick="goToModule('健康教育')">
+            <div class="image-text_101 flex-col">
+              <img
+                class="icon_18"
+                referrerpolicy="no-referrer"
+                src="./img/Conference-Speaker-28.png"
+              />
+              <span class="text-group_18">
+                健康教育
+              </span>
+            </div>
+          </div>
+          <div class="box_12 flex-row" onclick="goToModule('预防接种')">
+            <div class="image-text_101 flex-col">
+              <img
+                class="icon_18"
+                referrerpolicy="no-referrer"
+                src="./img/Syringe-02-28.png"
+              />
+              <span class="text-group_18">
+                预防接种
+              </span>
+            </div>
+          </div>
+
+        </div>
+        
+      </div>
+      <div class="block_9 flex-col">
+        <div class="group_30 flex-row justify-between">
+          <img
+            class="image_2"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng8b135ffc87efbda93f36d2b865057097e12144cdce6bdb4fc25317152d1aa8be.png"
+          />
+          <span class="text_12">免责声明</span>
+          <img
+            class="image_3"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng8b135ffc87efbda93f36d2b865057097e12144cdce6bdb4fc25317152d1aa8be.png"
+          />
+        </div>
+        <span class="paragraph_1">
+          1.&nbsp;本应用程序的所载的数据内容仅供认证用户个人查询参考之目的，不可作为法律依据使用。
+          <br />
+          2.&nbsp;除非本应用程序单独提示或声明，本应用程序的所载的数据内容均来自于合作医疗机构的电子数据。
+          <br />
+          3.&nbsp;本应用程序所载的数据内容仅为部分档案数据信息，若需要完整信息请向就诊医疗机构查询。
+          <br />
+          4.&nbsp;本应用程序致力于提供准确、完整的信息，但不保证信息的准确性和完整性，如与各医疗机构数据有不一致的，以医疗机构记录为准。本应用程序对因信息的不准确或遗漏导致的任何损失或损害不承担责任
+        </span>
+      </div>
+      <div class="tab-bar_1 flex-row justify-between">
+        <div class="image-text_102 flex-col" onclick="window.location.href='index.html'" style="cursor:pointer;">
+          <img
+            class="icon_19"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPngae59c800419cfd9d9f61580b73b8e78b5c4d7be60281cdf3ab38451c50edc9ef.png"
+          />
+          <span class="text_13">首页</span>
+        </div>
+        <div class="image-text_103 flex-col">
+          <img
+            class="icon_20"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng5f058ce211f0c5cb54f454d6fa55cf70f726e3c63982f635b70c43f0db71052d.png"
+          />
+          <span class="text_14">消息</span>
+        </div>
+        <div class="image-text_104 flex-col" onclick="window.location.href='个人中心/index.html'" style="cursor:pointer;">
+          <img
+            class="icon_21"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPngb685478e555978ec9bb420ecdc095157e0522220b441e04bcb73a5eb30d74364.png"
+          />
+          <span class="text_15">我的</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

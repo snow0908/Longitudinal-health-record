@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>病案首页 · 详情</title>
+    <style>
+        /* ============================================================
+           病案首页详情 - 参照慢阻肺专项界面风格
+           蓝色医疗主题（主题色 #2378F5）
+           基准宽度：375px
+           ============================================================ */
+
+        /* ---------- 全局重置 ---------- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica,
+                Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+            background-color: #F3F5F7;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ---------- Flex 工具类 ---------- */
+        .flex-col { display: flex; flex-direction: column; }
+        .flex-row { display: flex; flex-direction: row; }
+        .justify-between { display: flex; justify-content: space-between; }
+        .align-center { display: flex; align-items: center; }
+        .align-start { display: flex; align-items: flex-start; }
+
+        /* ---------- 页面容器 ---------- */
+        .page {
+            background-color: #F3F5F7;
+            position: relative;
+            width: 375px;
+            min-height: 100vh;
+            padding-bottom: 24px;
+        }
+
+        /* ============================================================
+           导航栏
+           ============================================================ */
+        .group_1 { background-color: rgba(255, 255, 255, 1); padding: 14px 16px 7px 16px; }
+        .box_1 { margin: 0 10px 0 24px; }
+        .text_1 {
+            overflow-wrap: break-word; color: rgba(0, 0, 0, 1); font-size: 16px;
+            letter-spacing: 1.100000023841858px; font-family: PingFangSC-Semibold; font-weight: 600;
+            text-align: center; white-space: nowrap; line-height: 22px;
+        }
+        .thumbnail_1 { width: 19px; height: 12px; margin: 5px 0 5px 191px; }
+        .text_2 {
+            overflow-wrap: break-word; color: rgba(0, 0, 0, 1); font-size: 12px;
+            letter-spacing: 0.925000011920929px; font-family: PingFangSC-Semibold; font-weight: 600;
+            text-align: center; white-space: nowrap; line-height: 17px; margin: 3px 0 0 6px;
+        }
+        .image_1 { width: 25px; height: 13px; margin: 5px 0 4px 6px; }
+
+        .box_2 { margin-top: 15px; display: flex; align-items: center; }
+        .label_1 { width: 24px; height: 24px; flex-shrink: 0; cursor: pointer; }
+        .text_3 {
+            flex: 1; overflow-wrap: break-word; color: rgba(51, 51, 51, 1); font-size: 16px;
+            font-family: PingFangSC-Medium; font-weight: 500; text-align: center;
+            white-space: nowrap; line-height: 22px; margin: 4px 0 0 34px;
+        }
+        .image_2 { width: 78px; height: 30px; flex-shrink: 0; }
+
+        /* ============================================================
+           卡片样式
+           ============================================================ */
+        .card {
+            background-color: #FFFFFF; border-radius: 8px;
+            border: 1px solid #E5E5E5; padding: 16px; margin: 16px 16px 0 16px; width: calc(100% - 32px);
+        }
+
+        .section-title {
+            font-size: 16px; font-weight: 500; font-family: PingFangSC-Medium;
+            color: #333333; line-height: 22px; margin-bottom: 12px;
+        }
+
+        /* ---------- 蓝色高亮卡片（病案首页主题色） ---------- */
+        .card-highlight {
+            background-color: #F4F8FF; border: 1px solid #B0D0FF;
+            border-radius: 8px; padding: 16px;
+        }
+
+        /* ---------- 标签组件 ---------- */
+        .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .tag {
+            display: inline-flex; align-items: center; border-radius: 4px;
+            padding: 3px 8px; font-size: 12px; font-weight: 400;
+            font-family: PingFangSC-Regular; line-height: 17px; white-space: nowrap;
+        }
+        .tag--warning {
+            background-color: #FFF7ED; color: #FEA800; border: 1px solid #FEA800;
+        }
+        .tag--danger {
+            background-color: #FFF4F4; color: #F32929; border: 1px solid #F32929;
+        }
+        .tag--info {
+            background-color: #E8F1FE; color: #2378F5; border: 1px solid #2378F5;
+        }
+        .tag--success {
+            background-color: #E6FBF0; color: #18CF8E; border: 1px solid #18CF8E;
+        }
+        .tag--cancel {
+            background-color: #F5F5F5; color: #999999; border: 1px solid #CCCCCC;
+        }
+
+        /* ---------- 列表项 ---------- */
+        .list-item { display: flex; align-items: flex-start; padding: 4px 0; }
+        .list-dot {
+            width: 4px; height: 4px; border-radius: 50%; margin-top: 8px;
+            flex-shrink: 0; background-color: #2378F5;
+        }
+        .list-text {
+            font-size: 14px; font-weight: 400; font-family: PingFangSC-Regular;
+            color: #666666; line-height: 20px; margin-left: 8px; word-break: break-all;
+        }
+        .list-text .label { color: #333333; font-weight: 400; }
+        .list-text .val-yes { color: #F32929; margin-left: 8px; font-weight: 400; }
+        .list-text .val-no { color: #999999; margin-left: 8px; font-weight: 400; }
+
+        /* ============================================================
+           简洁列表样式（信息卡片）
+           ============================================================ */
+        .simple-card-title {
+            font-size: 16px; font-weight: 500; font-family: PingFangSC-Medium;
+            color: #333333; line-height: 22px; padding-bottom: 12px;
+            border-bottom: 1px solid #E5E5E5; margin-bottom: 0;
+        }
+        .simple-row { display: flex; align-items: baseline; padding: 10px 0; cursor: default; }
+        .simple-row.clickable { cursor: pointer; }
+        .simple-row.clickable:active { background-color: #F8FAFC; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+        .simple-label {
+            font-size: 14px; font-weight: 400; font-family: PingFangSC-Regular;
+            color: #666666; line-height: 20px; min-width: 88px; flex-shrink: 0;
+        }
+        .simple-value {
+            font-size: 14px; font-weight: 400; font-family: PingFangSC-Regular;
+            color: #333333; line-height: 20px; flex: 1; text-align: left; word-break: break-all;
+        }
+        .simple-value.long {
+            white-space: pre-wrap; line-height: 22px; color: #333333;
+        }
+        .simple-value.empty { color: #CCCCCC; }
+        .simple-arrow { color: #CCCCCC; font-size: 16px; margin-left: 6px; flex-shrink: 0; }
+
+        /* ============================================================
+           主诉/病史长文本样式
+           ============================================================ */
+        .text-block { margin-top: 12px; }
+        .text-block-title {
+            font-size: 14px; font-weight: 500; font-family: PingFangSC-Medium;
+            color: #333333; line-height: 20px; margin-bottom: 6px;
+        }
+        .text-block-content {
+            font-size: 14px; font-weight: 400; font-family: PingFangSC-Regular;
+            color: #666666; line-height: 22px; word-break: break-all;
+            margin-top: 12px;
+        }
+
+        /* ============================================================
+           Tab 切换样式
+           ============================================================ */
+        .tab-bar {
+            display: flex; margin: 16px 16px 0 16px;
+            background-color: #FFFFFF; border-radius: 8px;
+            border: 1px solid #E5E5E5; overflow: hidden;
+        }
+        .tab-item {
+            flex: 1; text-align: center; padding: 12px 0;
+            font-size: 14px; font-weight: 400; font-family: PingFangSC-Regular;
+            color: #666666; cursor: pointer; position: relative;
+            background-color: #FFFFFF; transition: all 0.15s ease;
+            border: none; outline: none;
+        }
+        .tab-item.active {
+            color: #2378F5; font-weight: 500; font-family: PingFangSC-Medium;
+            background-color: #F4F8FF;
+        }
+        .tab-item + .tab-item { border-left: 1px solid #E5E5E5; }
+        .tab-item:active { background-color: #F8FAFC; }
+
+        /* ============================================================
+           诊断卡片样式
+           ============================================================ */
+        .diag-card {
+            background-color: #FFFFFF; border-radius: 8px;
+            border: 1px solid #E5E5E5; padding: 16px; margin-top: 12px;
+        }
+        .diag-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+        .diag-card-name {
+            font-size: 16px; font-weight: 500; font-family: PingFangSC-Medium;
+            color: #333333; line-height: 22px; flex: 1;
+        }
+        .diag-card-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .diag-card-detail {
+            margin-top: 12px; padding-top: 12px; border-top: 1px dashed #E5E5E5;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px;
+        }
+        .diag-field { min-width: 0; }
+        .diag-field .field-k { font-size: 12px; color: #999999; line-height: 17px; }
+        .diag-field .field-v { font-size: 14px; color: #333333; line-height: 20px; margin-top: 2px; word-break: break-all; }
+        .diag-field.full { grid-column: 1 / -1; }
+
+        /* ---------- 空状态 ---------- */
+        .empty-state { text-align: center; padding: 48px 16px; color: #CCCCCC; }
+        .empty-state .empty-icon { font-size: 44px; margin-bottom: 8px; opacity: 0.7; }
+        .empty-state .empty-text { font-size: 14px; color: #999999; }
+
+        /* ---------- 底部脚注 ---------- */
+        .divider { width: 100%; height: 1px; background-color: #E5E5E5; margin: 8px 0; }
+
+        .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .card-header-icon { width: 20px; height: 20px; flex-shrink: 0; }
+        .card-header-title {
+            font-size: 16px; font-weight: 500; font-family: PingFangSC-Medium;
+            color: #333333; line-height: 22px;
+        }
+
+        .footer-note {
+            padding: 16px 16px 0 16px; text-align: center; font-size: 12px;
+            color: #999999; font-weight: 400; font-family: PingFangSC-Regular; line-height: 17px;
+        }
+
+        /* ---------- 提示条 ---------- */
+        .alert-bar {
+            margin: 12px 16px 0 16px; padding: 10px 12px;
+            background-color: #FFF8E5; border: 1px solid #FFE0A6; border-radius: 8px;
+            font-size: 12px; color: #8A6A2C; line-height: 18px;
+            display: flex; gap: 8px; align-items: flex-start;
+        }
+        .alert-bar::before { content: "ⓘ"; color: #FEA800; font-size: 14px; flex-shrink: 0; line-height: 18px; }
+
+        /* ============================================================
+           响应式适配
+           ============================================================ */
+        @media (max-width: 375px) { .page { width: 100%; } }
+        @media (max-width: 340px) {
+            .simple-label { min-width: 64px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page flex-col">
+
+        <!-- ==================== 导航栏 ==================== -->
+        <div class="group_1 flex-col">
+            <div class="box_1 flex-row">
+                <span class="text_1">10:19</span>
+                <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+                <span class="text_2">5G</span>
+                <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+            </div>
+            <div class="box_2 flex-row">
+                <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" id="btnBack" />
+                <span class="text_3" id="detailTitle">门诊记录</span>
+                <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" id="btnMore" />
+            </div>
+        </div>
+
+        <!-- ============================================================
+           摘要卡片（Hero）
+           ============================================================ -->
+        <div class="card" id="heroCard">
+            <div class="card-highlight">
+                <!-- 诊断名称 + 付费方式标签 -->
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                    <span style="font-size:18px; font-weight:500; font-family:PingFangSC-Medium; color:#333333; line-height:25px;" id="hdDiag">—</span>
+                    <span class="tag tag--info" id="hdPayment">—</span>
+                </div>
+
+                <!-- 机构 & 科室 -->
+                <div style="font-size:14px; font-weight:400; font-family:PingFangSC-Regular; color:#666666; line-height:20px;">
+                    <span id="hdHosp">—</span>
+                    <span style="color:#CCCCCC; margin:0 4px;">›</span>
+                    <span id="hdDept">—</span>
+                </div>
+
+                <!-- 就诊时间 -->
+                <div style="margin-top:12px; padding-top:12px; border-top:1px dashed #E5E5E5; font-size:14px; font-weight:400; font-family:PingFangSC-Regular; color:#999999; line-height:20px;">
+                    <span>就诊时间：</span>
+                    <span style="color:#333333;" id="hdTime">—</span>
+                </div>
+
+                <!-- 费用信息 -->
+                <div style="margin-top:8px; display:flex; align-items:baseline; font-size:14px; line-height:20px;">
+                    <span style="font-weight:400; font-family:PingFangSC-Regular; color:#666666;">总费用：</span>
+                    <span style="font-weight:500; font-family:PingFangSC-Medium; color:#F32929;" id="hdTotalFee">—</span>
+                    <span style="font-weight:400; font-family:PingFangSC-Regular; color:#999999; margin-left:8px;" id="hdSelfFee">—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+           Tab 切换栏
+           ============================================================ -->
+        <div class="tab-bar" id="tabBar" role="tablist" aria-label="病案信息分类">
+            <button class="tab-item active" role="tab" id="tab-basic" aria-selected="true" aria-controls="paneBasic" data-tab="basic">基本信息</button>
+            <button class="tab-item" role="tab" id="tab-diag" aria-selected="false" aria-controls="paneDiag" data-tab="diag">诊断信息</button>
+            <button class="tab-item" role="tab" id="tab-op" aria-selected="false" aria-controls="paneOp" data-tab="op">手术操作</button>
+        </div>
+
+        <!-- ============================================================
+           Tab 内容面板
+           ============================================================ -->
+        <div id="paneBasic" class="pane-content" data-pane="basic"></div>
+        <div id="paneDiag" class="pane-content" data-pane="diag" style="display:none;"></div>
+        <div id="paneOp" class="pane-content" data-pane="op" style="display:none;"></div>
+
+    </div>
+
+    <script>
+        /* ============================================================
+           数据定义
+           ============================================================ */
+        const RECORDS = [
+            {
+                id:1, status:'pending', statusText:'待就诊', statusTag:'warning',
+                diag:'急性肠胃炎', hospital:'内蒙古国际蒙医医院', dept:'消化内科',
+                date:'2023-11-23', time:'09:30', type:'门诊', payment:'城镇职工医保', totalFee:'486.50', selfFee:'138.00',
+                diags:[
+                    { type:'wm', typeName:'西医诊断', primary:true, name:'急性肠胃炎', code:'K52.905', doctor:'王立军', time:'2023-11-23 09:42' },
+                    { type:'wm', typeName:'西医诊断', primary:false, name:'轻度脱水', code:'E86.902', doctor:'王立军', time:'2023-11-23 09:42' },
+                    { type:'tcm', typeName:'中医诊断', primary:false, name:'泄泻（暴泻）', code:'BNV050', synd:'寒湿内盛证', doctor:'王立军', time:'2023-11-23 09:50' }
+                ],
+                ops:[
+                    { primary:true, name:'静脉穿刺置管术', code:'38.93', codeSystem:'ICD-9-CM-3', doctor:'李娜', anes:'局部麻醉', anesDoctor:'李娜', date:'2023-11-23 10:05', level:'一级', incision:'—', healing:'—', duration:'0.2 小时' },
+                    { primary:false, name:'静脉补液治疗', code:'00.91', codeSystem:'ICD-9-CM-3', doctor:'李娜', anes:'无需麻醉', anesDoctor:'—', date:'2023-11-23 10:30', level:'一级', incision:'—', healing:'—', duration:'1.5 小时' }
+                ]
+            },
+            {
+                id:2, status:'cancel', statusText:'已退号', statusTag:'cancel',
+                diag:'高血压复诊', hospital:'呼和浩特市第一医院', dept:'心血管内科',
+                date:'2023-11-15', time:'14:00', type:'门诊', payment:'城乡居民医保', totalFee:'120.00', selfFee:'45.00',
+                diags:[
+                    { type:'wm', typeName:'西医诊断', primary:true, name:'高血压3级', code:'I10.x05', doctor:'陈雅芳', time:'2023-11-15 14:30' },
+                    { type:'tcm', typeName:'中医诊断', primary:false, name:'眩晕', code:'BNV040', synd:'肝阳上亢证', doctor:'陈雅芳', time:'2023-11-15 14:35' }
+                ],
+                ops:[
+                    { primary:true, name:'24小时动态血压监测', code:'89.62', codeSystem:'ICD-9-CM-3', doctor:'陈雅芳', anes:'无需麻醉', anesDoctor:'—', date:'2023-11-15 14:50', level:'操作', incision:'—', healing:'—', duration:'24.0 小时' }
+                ]
+            },
+            {
+                id:3, status:'done', statusText:'已就诊', statusTag:'success',
+                diag:'2型糖尿病', hospital:'北京协和医院', dept:'内分泌科',
+                date:'2023-10-08', time:'09:00', type:'门诊', payment:'公费医疗', totalFee:'8,560.00', selfFee:'2,100.00',
+                diags:[
+                    { type:'wm', typeName:'西医诊断', primary:true, name:'2型糖尿病', code:'E11.900', doctor:'周慧', time:'2023-10-08 09:30' },
+                    { type:'wm', typeName:'西医诊断', primary:false, name:'糖尿病周围神经病变', code:'E11.400', doctor:'周慧', time:'2023-10-08 09:30' },
+                    { type:'wm', typeName:'西医诊断', primary:false, name:'高血压2级', code:'I10.x04', doctor:'周慧', time:'2023-10-08 09:30' }
+                ],
+                ops:[
+                    { primary:true, name:'末梢血糖采集', code:'90.51', codeSystem:'ICD-9-CM-3', doctor:'王敏', anes:'无需麻醉', anesDoctor:'—', date:'2023-10-08 09:15', level:'操作', incision:'—', healing:'—', duration:'0.1 小时' },
+                    { primary:false, name:'糖化血红蛋白检测', code:'91.21', codeSystem:'ICD-9-CM-3', doctor:'王敏', anes:'无需麻醉', anesDoctor:'—', date:'2023-10-08 09:20', level:'操作', incision:'—', healing:'—', duration:'0.1 小时' }
+                ]
+            },
+            {
+                id:4, status:'overdue', statusText:'已转入住院', statusTag:'danger',
+                diag:'急性心肌梗死', hospital:'内蒙古自治区人民医院', dept:'急诊科',
+                date:'2023-09-20', time:'22:48', type:'急诊', payment:'自费', totalFee:'12,380.00', selfFee:'3,500.00',
+                diags:[
+                    { type:'wm', typeName:'西医诊断', primary:true, name:'急性下壁心肌梗死', code:'I21.100', doctor:'刘建华', time:'2023-09-20 23:05' },
+                    { type:'wm', typeName:'西医诊断', primary:false, name:'高血压3级（极高危）', code:'I10.x03', doctor:'刘建华', time:'2023-09-20 23:05' },
+                    { type:'wm', typeName:'西医诊断', primary:false, name:'2型糖尿病', code:'E11.900', doctor:'刘建华', time:'2023-09-20 23:05' },
+                    { type:'tcm', typeName:'中医诊断', primary:false, name:'胸痹心痛', code:'BNV30', synd:'心血瘀阻证', doctor:'刘建华', time:'2023-09-20 23:10' }
+                ],
+                ops:[
+                    { primary:true, name:'冠状动脉造影术', code:'88.5301', codeSystem:'ICD-9-CM-3', doctor:'黄国栋', anes:'全身麻醉', anesDoctor:'孙志远', date:'2023-09-21 02:15', level:'四级', incision:'Ⅱ类', healing:'甲', duration:'1.0 小时' },
+                    { primary:false, name:'经皮冠状动脉支架植入术', code:'36.0601', codeSystem:'ICD-9-CM-3', doctor:'黄国栋', anes:'局部麻醉', anesDoctor:'孙志远', date:'2023-09-21 02:30', level:'四级', incision:'—', healing:'—', duration:'1.5 小时' }
+                ]
+            }
+        ];
+
+        /* ============================================================
+           基本信息分组数据
+           ============================================================ */
+        const BASIC_GROUPS = [
+            {
+                name:'患者信息',
+                rows:[
+                    { k:'门（急）诊号', v:'MZ202311230031', clickable:true },
+                    { k:'病案号',       v:'BA2023-1123-031', clickable:true },
+                    { k:'患者姓名',     v:'张自强' },
+                    { k:'性别',         v:'男' },
+                    { k:'出生日期',     v:'1995-05-15', clickable:true },
+                    { k:'身份证件号码', v:'513636********4610' },
+                    { k:'电话号码',     v:'138****8888', clickable:true },
+                    { k:'现居住地址',   v:'四川省成都市高新区天府大道66号', clickable:true }
+                ]
+            },
+            {
+                name:'就诊信息',
+                rows:[
+                    { k:'挂号日期',     v:'2023-11-23 09:10', clickable:true },
+                    { k:'就诊日期',     v:'2023-11-23 09:30', clickable:true },
+                    { k:'就诊院区',     v:'内蒙古国际蒙医医院（主院区）', clickable:true },
+                    { k:'接诊科室',     v:'消化内科' },
+                    { k:'接诊医师',     v:'王立军 主任医师' },
+                    { k:'门急诊类型',   v:'门诊', clickable:true }
+                ]
+            },
+            {
+                name:'主诉',
+                textOnly: true,
+                rows:[{ v:'腹痛、腹泻6小时，伴恶心、呕吐2次' }]
+            },
+            {
+                name:'现病史',
+                textOnly: true,
+                rows:[{ v:'患者6小时前进食生冷食物后出现阵发性腹部绞痛，以脐周明显，随后排水样便4次，伴恶心、呕吐胃内容物2次。无发热、无黏液脓血便。' }]
+            },
+            {
+                name:'既往史',
+                textOnly: true,
+                rows:[{ v:'既往体健，否认肝炎、结核等传染病史，否认手术史。' }]
+            },
+            {
+                name:'过敏史',
+                textOnly: true,
+                rows:[{ v:'否认药物及食物过敏史' }]
+            },
+            {
+                name:'费用信息',
+                rows:[
+                    { k:'门急诊总费用', v:'¥ 486.50' },
+                    { k:'自付金额',     v:'¥ 138.00' },
+                    { k:'医保支付',     v:'¥ 348.50' }
+                ]
+            }
+        ];
+
+        /* ============================================================
+           全局状态
+           ============================================================ */
+        let currentIdx = 0, currentTab = 'basic';
+
+        function getRecordById(){
+            const params = new URLSearchParams(location.search);
+            const id = parseInt(params.get('id'), 10);
+            const idx = RECORDS.findIndex(r => r.id === id);
+            return idx >= 0 ? idx : 0;
+        }
+
+        /* ============================================================
+           初始化
+           ============================================================ */
+        function initDetail(){
+            currentIdx = getRecordById();
+            const r = RECORDS[currentIdx];
+
+            // 导航标题
+            document.getElementById('detailTitle').textContent = r.type + '记录';
+
+            // 摘要卡片
+            document.getElementById('hdDiag').textContent = r.diag;
+            document.getElementById('hdPayment').textContent = r.payment || '—';
+            document.getElementById('hdHosp').textContent = r.hospital;
+            document.getElementById('hdDept').textContent = r.dept;
+            document.getElementById('hdTime').textContent = r.date + ' ' + r.time;
+            document.getElementById('hdTotalFee').textContent = '¥' + (r.totalFee || '—');
+            document.getElementById('hdSelfFee').textContent = '（自费 ¥' + (r.selfFee || '—') + '）';
+
+            switchTab('basic');
+        }
+
+        /* ============================================================
+           Tab 切换
+           ============================================================ */
+        document.querySelectorAll('.tab-item').forEach(function(t){
+            t.addEventListener('click', function(){ switchTab(t.dataset.tab); });
+            t.addEventListener('keydown', function(e){
+                if(e.key==='ArrowRight' || e.key==='ArrowLeft'){
+                    e.preventDefault();
+                    var tabs = [].slice.call(document.querySelectorAll('.tab-item'));
+                    var idx = tabs.indexOf(t);
+                    var next = e.key==='ArrowRight' ? (idx+1)%tabs.length : (idx-1+tabs.length)%tabs.length;
+                    tabs[next].focus();
+                    switchTab(tabs[next].dataset.tab);
+                }
+            });
+        });
+
+        function switchTab(name){
+            currentTab = name;
+            document.querySelectorAll('.tab-item').forEach(function(t){
+                var on = t.dataset.tab === name;
+                t.classList.toggle('active', on);
+                t.setAttribute('aria-selected', on ? 'true' : 'false');
+                t.tabIndex = on ? 0 : -1;
+            });
+            document.querySelectorAll('.pane-content').forEach(function(p){
+                var on = p.dataset.pane === name;
+                p.style.display = on ? 'block' : 'none';
+            });
+            renderPane();
+        }
+
+        function renderPane(){
+            if(currentTab==='basic') document.getElementById('paneBasic').innerHTML = renderBasicPane();
+            else if(currentTab==='diag') document.getElementById('paneDiag').innerHTML = renderDiagPane();
+            else if(currentTab==='op') document.getElementById('paneOp').innerHTML = renderOpPane();
+        }
+
+        /* ============================================================
+           基本信息面板
+           ============================================================ */
+        function renderBasicGroup(g){
+            // 纯文本卡片（如主诉、现病史等）—— 一个卡片只展示一段文本
+            if(g.textOnly){
+                var content = (g.rows[0] && g.rows[0].v) || '—';
+                return '<div class="card">' +
+                    '<div class="simple-card-title" style="border-bottom:none; padding-bottom:0; margin-bottom:12px;">' + g.name + '</div>' +
+                    '<div class="text-block-content" style="margin-top:0;">' + content + '</div>' +
+                    '</div>';
+            }
+
+            var rowsHtml = g.rows.map(function(r){
+                var isEmpty = !r.v || r.v === '—';
+                var vCls = 'simple-value';
+                if(isEmpty) vCls += ' empty';
+                if(r.long) vCls += ' long';
+                var rowCls = r.clickable ? 'simple-row clickable' : 'simple-row';
+                var onClick = r.clickable ? ' onclick="showToast(\'查看：' + r.k + '\')"' : '';
+                var val = r.v || '—';
+                return '<div class="' + rowCls + '"' + onClick + '>' +
+                    '<span class="simple-label">' + r.k + '</span>' +
+                    '<span class="' + vCls + '">' + val + '</span>' +
+                    '</div>';
+            }).join('');
+
+            return '<div class="card">' +
+                '<div class="simple-card-title">' + g.name + '</div>' +
+                rowsHtml +
+                '</div>';
+        }
+
+        function renderBasicPane(){
+            var groupsHtml = BASIC_GROUPS.map(renderBasicGroup).join('');
+            var alertHtml = '<div class="alert-bar">就诊信息来源于医疗机构归档，标准仅供参考。如有出入，请联系原就诊机构核实。</div>';
+            return groupsHtml + alertHtml;
+        }
+
+        /* ============================================================
+           诊断信息面板
+           ============================================================ */
+        function renderDiagPane(){
+            var r = RECORDS[currentIdx];
+            if(!r.diags || !r.diags.length){
+                return '<div class="card">' +
+                    '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">本次就诊未采集诊断信息</div></div>' +
+                    '</div>' +
+                    '<div class="alert-bar">诊断信息以医疗机构最终归档的病案为准。</div>';
+            }
+
+            var wmCount = r.diags.filter(function(d){ return d.type==='wm'; }).length;
+            var tcmCount = r.diags.filter(function(d){ return d.type==='tcm'; }).length;
+
+            var cardsHtml = r.diags.map(function(d, idx){
+                var cardCls = d.primary ? 'diag-card primary' : (d.type==='tcm' ? 'diag-card tcm' : 'diag-card secondary');
+
+                // 主诊标签
+                var tagHtml = '';
+                if(d.primary){
+                    tagHtml = '<span class="tag tag--danger">主诊断</span>';
+                } else if(d.type==='tcm'){
+                    tagHtml = '<span class="tag tag--warning">中医</span>';
+                } else {
+                    tagHtml = '<span class="tag tag--cancel">其他</span>';
+                }
+                tagHtml += '<span class="tag tag--info">' + d.typeName + '</span>';
+                tagHtml += '<span class="tag" style="background:#F8FAFC;color:#8A92A0;border:1px solid #E5E5E5;">' + d.code + '</span>';
+
+                var syndRow = d.synd
+                    ? '<div class="diag-field"><span class="field-k">中医证候</span><div class="field-v">' + d.synd + '</div></div>'
+                    : '';
+
+                return '<div class="' + cardCls + '">' +
+                    '<div class="diag-card-header">' +
+                        '<div class="diag-card-name">' + d.name + '</div>' +
+                    '</div>' +
+                    '<div class="diag-card-tags">' + tagHtml + '</div>' +
+                    '<div class="diag-card-detail">' +
+                        '<div class="diag-field"><span class="field-k">诊断医师</span><div class="field-v">' + d.doctor + '</div></div>' +
+                        '<div class="diag-field"><span class="field-k">诊断时间</span><div class="field-v">' + d.time + '</div></div>' +
+                        syndRow +
+                        '<div class="diag-field"><span class="field-k">是否主诊</span><div class="field-v">' + (d.primary?'是':'否') + '</div></div>' +
+                        '<div class="diag-field"><span class="field-k">排序</span><div class="field-v">第 ' + (idx+1) + ' 诊断</div></div>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+
+            return '<div class="card">' +
+                '<div class="simple-card-title">诊断汇总 · 共 ' + r.diags.length + ' 条（西医 ' + wmCount + ' / 中医 ' + tcmCount + '）</div>' +
+                cardsHtml +
+                '</div>' +
+                '<div class="alert-bar">诊断信息以医疗机构最终归档的病案为准。</div>';
+        }
+
+        /* ============================================================
+           手术操作面板
+           ============================================================ */
+        function renderOpPane(){
+            var r = RECORDS[currentIdx];
+            if(!r.ops || !r.ops.length){
+                return '<div class="card">' +
+                    '<div class="empty-state"><div class="empty-icon">🩺</div><div class="empty-text">本次就诊无手术 / 操作记录</div></div>' +
+                    '</div>' +
+                    '<div class="alert-bar">如本次就诊无手术/操作记录，相关字段将留空。</div>';
+            }
+
+            var cardsHtml = r.ops.map(function(o, idx){
+                var cardCls = o.primary ? 'diag-card primary' : 'diag-card secondary';
+
+                var tagHtml = o.primary
+                    ? '<span class="tag tag--danger">主手术</span>'
+                    : '<span class="tag tag--cancel">副手术</span>';
+                tagHtml += '<span class="tag tag--info">手术</span>';
+                tagHtml += '<span class="tag" style="background:#F8FAFC;color:#8A92A0;border:1px solid #E5E5E5;">' + o.code + '</span>';
+                tagHtml += '<span class="tag" style="background:#F8FAFC;color:#8A92A0;border:1px solid #E5E5E5;">' + o.codeSystem + '</span>';
+
+                function cell(k, v){
+                    var empty = (!v || v==='—');
+                    return '<div class="diag-field"><span class="field-k">' + k + '</span><div class="field-v' + (empty?' empty':'') + '" style="' + (empty?'color:#CCCCCC;':'') + '">' + (v||'—') + '</div></div>';
+                }
+
+                return '<div class="' + cardCls + '">' +
+                    '<div class="diag-card-header">' +
+                        '<div class="diag-card-name">' + o.name + '</div>' +
+                    '</div>' +
+                    '<div class="diag-card-tags">' + tagHtml + '</div>' +
+                    '<div class="diag-card-detail">' +
+                        cell('手术医师', o.doctor) +
+                        cell('手术日期', o.date) +
+                        cell('麻醉方式', o.anes) +
+                        cell('麻醉医师', o.anesDoctor) +
+                        cell('手术级别', o.level) +
+                        cell('手术时长', o.duration) +
+                        cell('切口类别', o.incision) +
+                        cell('愈合等级', o.healing) +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+
+            return '<div class="card">' +
+                '<div class="simple-card-title">手术 / 操作记录 · 共 ' + r.ops.length + ' 条</div>' +
+                cardsHtml +
+                '</div>' +
+                '<div class="alert-bar">手术信息以医疗机构最终归档的病案为准。</div>';
+        }
+
+        /* ============================================================
+           Toast 提示
+           ============================================================ */
+        var toastTimer;
+        function showToast(msg){
+            var existing = document.getElementById('toastEl');
+            if(existing) existing.parentNode.removeChild(existing);
+
+            var el = document.createElement('div');
+            el.id = 'toastEl';
+            el.textContent = msg;
+            el.style.cssText = 'position:fixed;bottom:48px;left:50%;transform:translateX(-50%);' +
+                'background:rgba(21,23,28,.94);color:#fff;font-size:14px;font-weight:500;' +
+                'padding:10px 20px;border-radius:20px;box-shadow:0 8px 24px rgba(16,24,40,.15);' +
+                'z-index:999;pointer-events:none;max-width:280px;text-align:center;' +
+                'font-family:PingFangSC-Medium,Microsoft YaHei,sans-serif;';
+            document.body.appendChild(el);
+
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(function(){
+                if(el.parentNode) el.parentNode.removeChild(el);
+            }, 1800);
+        }
+
+        /* ============================================================
+           事件绑定
+           ============================================================ */
+        document.getElementById('btnBack').addEventListener('click', function(){
+            window.location.href = '病案首页列表.html';
+        });
+        document.getElementById('btnMore').addEventListener('click', function(){
+            showToast('更多操作');
+        });
+
+        /* ============================================================
+           启动
+           ============================================================ */
+        initDetail();
+    </script>
+
+</body>
+</html>

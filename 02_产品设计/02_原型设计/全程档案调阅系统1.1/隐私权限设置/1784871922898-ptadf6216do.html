@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://unpkg.com" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="common.css">
+  <style>
+    * {
+      scrollbar-width: none;
+      scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    }
+  </style>
+</head>
+
+<body class="bg-[#f5f7fa] min-h-screen w-[375px] mx-auto relative font-sans antialiased" style="max-width:375px;">
+
+<!-- 状态栏 -->
+<div class="status-bar">
+    <span>9:41</span>
+    <div class="status-bar-icons">
+        <div class="signal-bars">
+            <span></span><span></span><span></span><span></span>
+        </div>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000000">
+            <path d="M8 2.5C10.5 2.5 12.8 3.5 14.5 5.2L13.5 6.2C12.1 4.9 10.1 4 8 4C5.9 4 3.9 4.9 2.5 6.2L1.5 5.2C3.2 3.5 5.5 2.5 8 2.5Z" fill="currentColor"/>
+            <path d="M8 6C9.4 6 10.7 6.5 11.7 7.5L10.7 8.5C10 7.8 9 7.5 8 7.5C7 7.5 6 7.8 5.3 8.5L4.3 7.5C5.3 6.5 6.6 6 8 6Z" fill="currentColor"/>
+            <circle cx="8" cy="10" r="1.5" fill="currentColor"/>
+        </svg>
+        <div class="battery">
+            <div class="battery-fill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<div class="nav-bar">
+    <div class="nav-back" onclick="goBack()">
+        <img src="../img/返回.png" alt="返回" style="width:24px;height:24px">
+    </div>
+    <span class="nav-title">隐私保险箱</span>
+    <div class="nav-action" onclick="openSettings()">
+        <img src="../img/设置.png" alt="设置" style="width: 62px;height:24px">
+    </div>
+</div>
+
+<link href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style type="text/tailwindcss">
+  @theme {
+    --color-primary: #2b7ff2;
+    --color-primary-light: #e8f1fd;
+    --color-accent-red: #e5453b;
+    --color-accent-red-bg: #fdeeed;
+    --color-accent-orange: #f0851e;
+    --color-accent-orange-bg: #fef3e6;
+    --color-accent-gray: #8c939a;
+    --color-accent-gray-bg: #f0f2f5;
+    --color-warning-bg: #fff8ee;
+    --color-warning-border: #fde8c4;
+    --color-warning-text: #b87514;
+    --color-card-bg: #ffffff;
+    --color-page-bg: #f5f7fa;
+    --color-text-primary: #1a2233;
+    --color-text-secondary: #5a6170;
+    --color-text-tertiary: #8c939a;
+    --color-divider: #eef0f3;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.4s ease-out both;
+  }
+</style>
+
+
+<!-- Main Scrollable Content -->
+<div class="pb-[100px] overflow-y-auto" style="font-family:'Noto Sans SC',sans-serif;">
+
+  <!-- Header Section -->
+  <div class="px-5 pt-5 pb-3 animate-fade-in-up">
+    <div class="flex items-start gap-3">
+      <!-- Lock Icon - SVG -->
+      <div class="flex-shrink-0 mt-0.5">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="36" height="36" rx="10" fill="#e8f4ec"/>
+          <path d="M13.5 16V13.5C13.5 11 15.5 9 18 9C20.5 9 22.5 11 22.5 13.5V16" stroke="#34a853" stroke-width="1.8" stroke-linecap="round"/>
+          <rect x="11" y="16" width="14" height="12" rx="2.5" fill="#34a853"/>
+          <circle cx="18" cy="21" r="1.8" fill="white"/>
+          <rect x="17.25" y="22" width="1.5" height="3" rx="0.75" fill="white"/>
+        </svg>
+      </div>
+      <div class="flex-1">
+        <h1 class="text-[18px] font-bold text-text-primary leading-tight mb-1.5">隐私保险箱</h1>
+        <p class="text-[13px] text-text-tertiary leading-[1.6]">选择需要屏蔽的业务模块数据，支持全部屏蔽或部分屏蔽。被屏蔽的数据将无法被他人浏览。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Warning Banner -->
+  <div class="px-5 pb-4 animate-fade-in-up" style="animation-delay: 0.05s;">
+    <div class="bg-warning-bg border border-warning-border rounded-xl px-3.5 py-3 flex items-start gap-2.5">
+      <div class="flex-shrink-0 mt-[1px]">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 1.5L16.5 15H1.5L9 1.5Z" fill="#f6b844" stroke="#e89c1c" stroke-width="0.5"/>
+          <rect x="8.3" y="6.5" width="1.4" height="4.5" rx="0.7" fill="white"/>
+          <circle cx="9" cy="12.8" r="0.8" fill="white"/>
+        </svg>
+      </div>
+      <p class="text-[12.5px] text-warning-text leading-[1.6] flex-1">屏蔽后，对应的业务数据将不再对其他医务人员可见，请谨慎操作。</p>
+    </div>
+  </div>
+
+  <!-- Module List Card -->
+  <div class="px-5 animate-fade-in-up" style="animation-delay: 0.1s;">
+    <div class="bg-card-bg rounded-2xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] overflow-hidden">
+
+      <!-- Item 1: 孕产妇管理 -->
+      <div class="flex items-center px-4 py-3.5 border-b border-divider hover:bg-[#fafbfc] transition-colors">
+        <div class="w-[40px] h-[40px] rounded-full bg-[#fce4ec] flex items-center justify-center flex-shrink-0">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Pregnant woman / mother & baby icon -->
+            <circle cx="11" cy="5.5" r="3" fill="white" stroke="#e91e6e" stroke-width="1.2"/>
+            <path d="M7 11.5C7 10 8.8 9 11 9C12.5 9 13.8 9.5 14.5 10.3" stroke="#e91e6e" stroke-width="1.2" stroke-linecap="round"/>
+            <ellipse cx="10" cy="15" rx="3.2" ry="4" fill="white" stroke="#e91e6e" stroke-width="1.2"/>
+            <circle cx="15" cy="13.5" r="2" fill="white" stroke="#e91e6e" stroke-width="1"/>
+            <path d="M14.2 12.8C14.5 12.5 15 12.3 15.5 12.5" stroke="#e91e6e" stroke-width="0.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="ml-3 text-[15px] font-medium text-text-primary flex-1">孕产妇管理</span>
+        <span class="text-[12px] font-medium text-accent-orange bg-accent-orange-bg px-2.5 py-[3px] rounded-full mr-2">部分屏蔽(4)</span>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-text-tertiary"></i>
+      </div>
+
+      <!-- Item 2: 高血压患者管理 -->
+      <div class="flex items-center px-4 py-3.5 border-b border-divider hover:bg-[#fafbfc] transition-colors">
+        <div class="w-[40px] h-[40px] rounded-full bg-[#fce4e4] flex items-center justify-center flex-shrink-0">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Heart / blood pressure icon -->
+            <path d="M11 18.5C11 18.5 3.5 14 3.5 8.5C3.5 5.5 5.5 4 7.5 4C9 4 10.3 5 11 6.2C11.7 5 13 4 14.5 4C16.5 4 18.5 5.5 18.5 8.5C18.5 14 11 18.5 11 18.5Z" fill="white" stroke="#e53935" stroke-width="1.2"/>
+            <polyline points="6.5,11 9,11 10,8.5 12,13.5 13,11 15.5,11" fill="none" stroke="#e53935" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="ml-3 text-[15px] font-medium text-text-primary flex-1">高血压患者管理</span>
+        <span class="text-[12px] font-medium text-accent-red bg-accent-red-bg px-2.5 py-[3px] rounded-full mr-2">全部屏蔽</span>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-text-tertiary"></i>
+      </div>
+
+      <!-- Item 3: 糖尿病患者管理 -->
+      <div class="flex items-center px-4 py-3.5 border-b border-divider hover:bg-[#fafbfc] transition-colors">
+        <div class="w-[40px] h-[40px] rounded-full bg-[#e3f0fd] flex items-center justify-center flex-shrink-0">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Syringe / blood glucose icon -->
+            <rect x="8.5" y="3" width="5" height="13" rx="2" fill="white" stroke="#1e88e5" stroke-width="1.2"/>
+            <line x1="8.5" y1="7" x2="13.5" y2="7" stroke="#1e88e5" stroke-width="0.8"/>
+            <line x1="8.5" y1="9.5" x2="13.5" y2="9.5" stroke="#1e88e5" stroke-width="0.8"/>
+            <line x1="8.5" y1="12" x2="13.5" y2="12" stroke="#1e88e5" stroke-width="0.8"/>
+            <line x1="11" y1="16" x2="11" y2="19" stroke="#1e88e5" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="11" cy="19.5" r="0.8" fill="#1e88e5"/>
+            <rect x="9.5" y="1" width="3" height="2.5" rx="0.5" fill="white" stroke="#1e88e5" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <span class="ml-3 text-[15px] font-medium text-text-primary flex-1">糖尿病患者管理</span>
+        <span class="text-[12px] font-medium text-accent-gray bg-accent-gray-bg px-2.5 py-[3px] rounded-full mr-2">未屏蔽</span>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-text-tertiary"></i>
+      </div>
+
+      <!-- Item 4: 0-6岁儿童管理 -->
+      <div class="flex items-center px-4 py-3.5 border-b border-divider hover:bg-[#fafbfc] transition-colors">
+        <div class="w-[40px] h-[40px] rounded-full bg-[#e4f5e8] flex items-center justify-center flex-shrink-0">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Child / baby icon -->
+            <circle cx="11" cy="8" r="4.5" fill="white" stroke="#43a047" stroke-width="1.2"/>
+            <circle cx="9.2" cy="7.5" r="0.7" fill="#43a047"/>
+            <circle cx="12.8" cy="7.5" r="0.7" fill="#43a047"/>
+            <path d="M9.5 9.8C9.8 10.5 10.3 10.8 11 10.8C11.7 10.8 12.2 10.5 12.5 9.8" stroke="#43a047" stroke-width="0.8" stroke-linecap="round"/>
+            <path d="M7 13C7 12 8.8 11.5 11 11.5C13.2 11.5 15 12 15 13V15C15 16.5 13.2 17.5 11 17.5C8.8 17.5 7 16.5 7 15V13Z" fill="white" stroke="#43a047" stroke-width="1.2"/>
+            <path d="M6.5 6C6 4.5 7 3 9 2.8" stroke="#43a047" stroke-width="0.8" stroke-linecap="round"/>
+            <path d="M15.5 6C16 4.5 15 3 13 2.8" stroke="#43a047" stroke-width="0.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="ml-3 text-[15px] font-medium text-text-primary flex-1">0-6岁儿童管理</span>
+        <span class="text-[12px] font-medium text-accent-gray bg-accent-gray-bg px-2.5 py-[3px] rounded-full mr-2">未屏蔽</span>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-text-tertiary"></i>
+      </div>
+
+      <!-- Item 5: 老年人健康管理 -->
+      <div class="flex items-center px-4 py-3.5 border-b border-divider hover:bg-[#fafbfc] transition-colors">
+        <div class="w-[40px] h-[40px] rounded-full bg-[#fff8e1] flex items-center justify-center flex-shrink-0">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Elderly person icon -->
+            <circle cx="11" cy="5" r="2.8" fill="white" stroke="#f9a825" stroke-width="1.2"/>
+            <path d="M8.5 5.2C8.5 3.5 9.5 2.5 11 2.2C12.5 2.5 13.5 3.5 13.5 5.2" stroke="#f9a825" stroke-width="0.8" fill="none"/>
+            <path d="M8 10C8 9 9.3 8.2 11 8.2C12.7 8.2 14 9 14 10V12L15 18H7L8 12V10Z" fill="white" stroke="#f9a825" stroke-width="1.2"/>
+            <!-- Walking cane -->
+            <line x1="16" y1="10" x2="16" y2="19" stroke="#f9a825" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M15 10C15 10 15.5 9.5 16 9.5C16.5 9.5 17 10 17 10" stroke="#f9a825" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="ml-3 text-[15px] font-medium text-text-primary flex-1">老年人健康管理</span>
+        <span class="text-[12px] font-medium text-accent-gray bg-accent-gray-bg px-2.5 py-[3px] rounded-full mr-2">未屏蔽</span>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-text-tertiary"></i>
+      </div>
+
+      <!-- Item 6: 严重精神障碍患者管理 -->
+      <div class="flex items-center px-4 py-3.5 hover:bg-[#fafbfc] transition-colors">
+        <div class="w-[40px] h-[40px] rounded-full bg-[#f3e5f5] flex items-center justify-center flex-shrink-0">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Brain / mental health icon -->
+            <path d="M11 4C8 4 5.5 6 5.5 9C5.5 10.5 6 11.5 7 12.5C7 13.5 6.5 14.5 6.5 14.5L8 14C8 14 8.5 15 9 15.5V17.5C9 18 9.5 18.5 10 18.5H12C12.5 18.5 13 18 13 17.5V15.5C13.5 15 14 14 14 14L15.5 14.5C15.5 14.5 15 13.5 15 12.5C16 11.5 16.5 10.5 16.5 9C16.5 6 14 4 11 4Z" fill="white" stroke="#8e24aa" stroke-width="1.2"/>
+            <line x1="11" y1="4" x2="11" y2="12" stroke="#8e24aa" stroke-width="0.8"/>
+            <path d="M8 7.5C8 7.5 9 8 9.5 9" stroke="#8e24aa" stroke-width="0.8" stroke-linecap="round"/>
+            <path d="M14 7.5C14 7.5 13 8 12.5 9" stroke="#8e24aa" stroke-width="0.8" stroke-linecap="round"/>
+            <path d="M8.5 10C8.5 10 9.5 10.5 10 11.5" stroke="#8e24aa" stroke-width="0.8" stroke-linecap="round"/>
+            <path d="M13.5 10C13.5 10 12.5 10.5 12 11.5" stroke="#8e24aa" stroke-width="0.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="ml-3 text-[15px] font-medium text-text-primary flex-1">严重精神障碍患者管理</span>
+        <span class="text-[12px] font-medium text-accent-red bg-accent-red-bg px-2.5 py-[3px] rounded-full mr-2">全部屏蔽</span>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-text-tertiary"></i>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Fixed Bottom Button -->
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-[375px] bg-white px-5 pt-3 pb-8 border-t border-divider" style="font-family:'Noto Sans SC',sans-serif;">
+  <button class="w-full h-[48px] rounded-xl text-white text-[16px] font-semibold tracking-wide shadow-[0_4px_16px_rgba(43,127,242,0.3)]"
+    style="background: linear-gradient(135deg, #3b8ff6 0%, #2b7ff2 50%, #1a6de0 100%);">
+    保存设置
+  </button>
+</div>
+
+</body>
+<script>if (window.lucide) lucide.createIcons();</script>
+</html>

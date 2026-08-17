@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./flexible.js"></script>
+    <link rel="stylesheet" type="text/css" href="./common.css" />
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+    <style>
+      .nav-item{cursor:pointer}
+      .nav-item.active{background-color:rgba(224,239,255,1)!important}
+      .nav-item.active span{color:rgba(0,122,255,1)!important}
+      #altTabs{display:none}
+      .alt-mode #originalTabs{display:none!important}
+      .alt-mode #originalBody{display:none!important}
+      .alt-mode #altTabs{display:block!important}
+      #altTabBar{justify-content:flex-start!important;gap:0!important}
+      #altTabs{display:flex;flex-direction:column}
+      #altTabs .image_2{display:block;margin:0}
+      #altTabBar .alt-tab{width:max-content;height:40px;padding:0 16px;cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;justify-content:flex-start;background:transparent}
+      #altTabBar .alt-tab span{font-size:14px;line-height:22px;margin-top:9px;white-space:nowrap;color:rgba(89,89,89,1);font-family:PingFangSC-Regular}
+      #altTabBar .alt-tab.active span{color:rgba(0,122,255,1);font-family:PingFangSC-Medium;font-weight:500}
+      #altTabBar .alt-tab .alt-tab-line{width:calc(100% + 32px);height:2px;background:rgba(0,122,255,1);margin-top:7px;display:none}
+      #altTabBar .alt-tab.active .alt-tab-line{display:block}
+    </style>
+  </head>
+  <body>
+    <div class="page flex-col">
+      <div class="group_1 flex-row">
+        <div class="box_1 flex-row justify-between">
+          <img
+            class="thumbnail_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng569cccdf143331dd68415b8e0745be0cb7cae70e9a35f3b267b5318dd22f541e.png"
+          />
+          <span class="text_1">患者概况</span>
+        </div>
+        <div class="box_2 flex-row justify-between">
+          <img
+            class="thumbnail_2"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPnge7d8b644c408a51d9a97d38bbaa8e44d7268e9dd354d2907086b0cedeae8dbd5.png"
+          />
+          <span class="text_2">诊疗服务</span>
+        </div>
+        <div class="box_3 flex-row justify-between">
+          <img
+            class="thumbnail_3"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng26db7cebabf61e8e36198fdc760dd33b5c1f71051bd6de4f22fb5a93dea1ac52.png"
+          />
+          <span class="text_3">公共卫生</span>
+        </div>
+        <div class="box_4 flex-row justify-between">
+          <img
+            class="thumbnail_4"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng45a2d71a03e97be82a9fac1d70d11da7d49ee115b9fb9f0f2b8fcb844428e607.png"
+          />
+          <span class="text_4">全生命周期</span>
+        </div>
+        <div class="box_5 flex-row justify-between">
+          <img
+            class="thumbnail_5"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng408f10f938384b38daa1e02b51bf8c931532d3ee4c69b2cf9d0629223029abfe.png"
+          />
+          <span class="text_5">个人管理中心</span>
+        </div>
+        <div class="box_6 flex-row">
+          <img
+            class="label_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng408b24d1a6baa551118bad9fb7f07e7c2e63b7210d70b7de75b1c21768b19bfc.png"
+          />
+          <span class="text_6">李小路/35岁</span>
+          <div class="group_2 flex-col">
+            <span class="text_7">已签约</span>
+            <div class="image-wrapper_1 flex-col">
+              <img
+                class="thumbnail_6"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPng6ef8841bc94e35a0084e0260a2ae2eaad9f217ecf13935040760bc61a0d5a24f.png"
+              />
+            </div>
+          </div>
+          <div class="text-wrapper_1 flex-col">
+            <span class="text_8">高</span>
+          </div>
+          <div class="text-wrapper_2 flex-col">
+            <span class="text_9">糖</span>
+          </div>
+          <div class="text-wrapper_3 flex-col">
+            <span class="text_10">肺</span>
+          </div>
+          <div class="text-wrapper_4 flex-col">
+            <span class="text_11">冠</span>
+          </div>
+          <div class="text-wrapper_5 flex-col">
+            <span class="text_12">肾</span>
+          </div>
+          <div class="text-wrapper_6 flex-col">
+            <span class="text_13">卒</span>
+          </div>
+          <div class="text-wrapper_7 flex-col">
+            <span class="text_14">瘤</span>
+          </div>
+          <span class="text_15">身份证：</span>
+          <span class="text_16">1234566543211234</span>
+          <span class="text_17">出生日期：</span>
+          <span class="text_18">12343211234</span>
+          <span class="text_19">手机号码：</span>
+          <span class="text_20">1351242286</span>
+          <span class="text_21">主索引：</span>
+          <span class="text_22">1351242286</span>
+          <span class="text_23">详情</span>
+          <img
+            class="thumbnail_7"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPngb050a0365b56bbe78e7f2607515788354aa8a74e4caacbb40e24455fcd2f0978.png"
+          />
+        </div>
+      </div>
+      <div class="group_3 flex-row justify-between">
+        <div class="group_4 flex-col justify-between">
+          <div class="section_1 flex-row">
+            <div class="box_7 flex-row">
+              <img
+                class="thumbnail_8"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPng950cd1251b0b973121d744ed495f118b4941c3a72cc820621b414f930ca9ea10.png"
+              />
+              <span class="text_24">类型展示</span>
+            </div>
+            <img
+              class="thumbnail_9"
+              referrerpolicy="no-referrer"
+              src="./img/SketchPnge9c916eccd4897df7af10c2e8af9e68675e3e613b6026fbdb94f353b44681639.png"
+            />
+            <span class="text_25">时序展示</span>
+          </div>
+          <div class="section_2 flex-col" style="overflow-y:auto;">
+            <div class="text-wrapper_8 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_26">基本档案</span>
+            </div>
+            <div class="text-wrapper_10 flex-col nav-item active" onclick="selectNav(this)">
+              <span class="text_28">儿童保健（20）</span>
+            </div>
+            <div class="text-wrapper_10 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_28">孕产妇保健（20）</span>
+            </div>
+            <div class="text-wrapper_11 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_29">中医药管理（25）</span>
+            </div>
+            <div class="text-wrapper_12 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_30">高血压管理（16）</span>
+            </div>
+            <div class="text-wrapper_13 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_31">糖尿病管理（3）</span>
+            </div>
+            <div class="text-wrapper_14 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_32">肺结核管理（3）</span>
+            </div>
+            <div class="text-wrapper_15 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_33">精神病管理（3）</span>
+            </div>
+            <div class="text-wrapper_16 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_34">计划免疫（3）</span>
+            </div>
+            <div class="text-wrapper_16 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_34">高危人群管理（0）</span>
+            </div>
+            <div class="text-wrapper_16 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_34">慢阻肺管理（0）</span>
+            </div>
+            <div class="text-wrapper_16 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_34">心脑血管管理（0）</span>
+            </div>
+            <div class="text-wrapper_16 flex-col nav-item" onclick="selectNav(this)">
+              <span class="text_34">肿瘤管理（0）</span>
+            </div>
+          </div>
+        </div>
+        <div class="group_6 flex-col" id="rightPanel">
+          <div class="group_7 flex-row justify-between" id="originalTabs">
+            <div class="text-wrapper_17 flex-col">
+              <span class="text_35">儿童档案</span>
+            </div>
+            <div class="text-wrapper_18 flex-col">
+              <span class="text_36">新生儿方式</span>
+            </div>
+            <div class="section_3 flex-col justify-end">
+              <span class="text_37">1-8月龄儿童健康检查</span>
+              <img
+                class="image_1"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPng3686f19511cee9457243a5de080ab8a0fb7d01c97521b774e83338c037c5ce10.png"
+              />
+            </div>
+            <div class="text-wrapper_19 flex-col">
+              <span class="text_38">12-30月龄儿童健康检查</span>
+            </div>
+            <div class="text-wrapper_20 flex-col">
+              <span class="text_39">3岁-6岁儿童健康检查</span>
+            </div>
+            <div class="text-wrapper_21 flex-col">
+              <span class="text_40">生长发育监测图</span>
+            </div>
+          </div>
+          <img
+            class="image_2"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng54ab4f504a1a8cfa0a62b05d8e9c1301f8e7bee661fc2f1c5e29bb0f02f0c0b8.png"
+          />
+          <div id="originalBody">
+          <div class="group_8 flex-row">
+            <div class="box_8 flex-col">
+              <div class="group_9 flex-col"></div>
+              <div class="group_10 flex-col"></div>
+              <div class="group_21 flex-col"></div>
+            </div>
+            <div class="box_9 flex-col">
+              <span class="text_41">2021-08-12</span>
+              <div class="section_4 flex-row">
+                <div class="text-wrapper_22 flex-col justify-between">
+                  <span class="text_42">8月</span>
+                  <span class="text_43">月龄</span>
+                </div>
+                <img
+                  class="image_3"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPngbacf33d3bcc6c6f9ab83de248569f612f662ffb80b1c04da662e8a1cd815db4f.png"
+                />
+                <div class="text-wrapper_23 flex-col justify-between">
+                  <span class="text_44">身高：168CM</span>
+                  <span class="text_45">体重：50KG</span>
+                </div>
+              </div>
+              <span class="text_46">2021-08-13</span>
+              <div class="image-text_1 flex-col justify-between">
+                <div class="section_5 flex-row">
+                  <div class="text-group_1 flex-col justify-between">
+                    <span class="text_47">7月</span>
+                    <span class="text_48">月龄</span>
+                  </div>
+                  <img
+                    class="image_4"
+                    referrerpolicy="no-referrer"
+                    src="./img/SketchPng7c929903d05ee61bafc82847f57489e26837a1625af1d260d5cad981845446fd.png"
+                  />
+                  <div class="text-group_2 flex-col justify-between">
+                    <span class="text_49">身高：168CM</span>
+                    <span class="text_50">体重：50KG</span>
+                  </div>
+                  <div class="text-group_3 flex-col justify-between">
+                    <span class="text_47">7月</span>
+                    <span class="text_48">月龄</span>
+                  </div>
+                  <div class="text-group_4 flex-col justify-between">
+                    <span class="text_49">身高：168CM</span>
+                    <span class="text_50">体重：50KG</span>
+                  </div>
+                </div>
+                <span class="text-group_5">2021-08-14</span>
+              </div>
+              <div class="section_6 flex-row">
+                <div class="text-group_6 flex-col justify-between">
+                  <span class="text_51">6月</span>
+                  <span class="text_52">月龄</span>
+                </div>
+                <img
+                  class="image_5"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPng7c929903d05ee61bafc82847f57489e26837a1625af1d260d5cad981845446fd.png"
+                />
+                <div class="text-group_7 flex-col justify-between">
+                  <span class="text_53">身高：168CM</span>
+                  <span class="text_54">体重：50KG</span>
+                </div>
+              </div>
+            </div>
+            <div class="box_10 flex-col">
+              <div class="text-wrapper_24 flex-row justify-between">
+                <span class="text_55">姓名：</span>
+                <span class="text_56">孔会</span>
+              </div>
+              <div class="text-wrapper_25 flex-col">
+                <span class="text_57">月龄</span>
+              </div>
+              <div class="text-wrapper_26 flex-col">
+                <span class="text_58">体重</span>
+              </div>
+              <div class="text-wrapper_27 flex-col">
+                <span class="text_59">头围</span>
+              </div>
+              <div class="group_11 flex-row justify-between">
+                <div class="text-wrapper_28 flex-col">
+                  <span class="paragraph_1">
+                    体格
+                    <br />
+                    检查
+                  </span>
+                </div>
+                <div class="group_12 flex-col justify-between">
+                  <div class="text-wrapper_29 flex-col">
+                    <span class="text_60">面色</span>
+                  </div>
+                  <div class="text-wrapper_30 flex-col">
+                    <span class="text_61">皮肤</span>
+                  </div>
+                  <div class="text-wrapper_31 flex-col">
+                    <span class="text_62">前囱</span>
+                  </div>
+                  <div class="text-wrapper_32 flex-col">
+                    <span class="text_63">颈部包块</span>
+                  </div>
+                  <div class="text-wrapper_33 flex-col">
+                    <span class="text_64">眼睛</span>
+                  </div>
+                  <div class="text-wrapper_34 flex-col">
+                    <span class="text_65">耳</span>
+                  </div>
+                  <div class="text-wrapper_35 flex-col">
+                    <span class="text_66">听力</span>
+                  </div>
+                  <div class="text-wrapper_36 flex-col">
+                    <span class="text_67">口腔</span>
+                  </div>
+                  <div class="text-wrapper_37 flex-col">
+                    <span class="text_68">胸部</span>
+                  </div>
+                  <div class="text-wrapper_38 flex-col">
+                    <span class="text_69">腹部</span>
+                  </div>
+                  <div class="text-wrapper_39 flex-col">
+                    <span class="text_70">脐部</span>
+                  </div>
+                  <div class="text-wrapper_40 flex-col">
+                    <span class="text_71">可疑佝偻病病症</span>
+                  </div>
+                  <div class="text-wrapper_41 flex-col">
+                    <span class="text_72">四肢</span>
+                  </div>
+                  <div class="text-wrapper_42 flex-col">
+                    <span class="text_73">可疑佝偻病体征</span>
+                  </div>
+                  <div class="text-wrapper_43 flex-col">
+                    <span class="text_74">血红蛋白值</span>
+                  </div>
+                  <div class="text-wrapper_44 flex-col">
+                    <span class="text_75">肛门/外生殖器</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="box_11 flex-col">
+              <span class="text_76">1-8月龄儿童健康检查</span>
+              <div class="text-wrapper_45 flex-row justify-between">
+                <span class="text_77">档案编号：</span>
+                <span class="text_78">00123476</span>
+              </div>
+              <div class="group_13 flex-row justify-between">
+                <div class="text-wrapper_46 flex-col">
+                  <span class="text_79">8</span>
+                </div>
+                <div class="text-wrapper_47 flex-col">
+                  <span class="text_80">随访日期</span>
+                </div>
+                <div class="text-wrapper_48 flex-col">
+                  <span class="text_81">1983-05-14</span>
+                </div>
+              </div>
+              <div class="group_14 flex-row justify-between">
+                <span class="text_82">男</span>
+                <div class="text-wrapper_49 flex-col">
+                  <span class="text_83">168</span>
+                </div>
+              </div>
+              <div class="text-wrapper_50 flex-col">
+                <span class="text_84">38</span>
+              </div>
+              <div class="text-wrapper_51 flex-col">
+                <span class="text_85">红润</span>
+              </div>
+              <div class="text-wrapper_52 flex-col">
+                <span class="text_86">未见异常</span>
+              </div>
+              <div class="text-wrapper_53 flex-col">
+                <span class="text_87">未见异常</span>
+              </div>
+              <div class="text-wrapper_54 flex-col">
+                <span class="text_88">未见异常</span>
+              </div>
+              <div class="text-wrapper_55 flex-col">
+                <span class="text_89">未见异常</span>
+              </div>
+              <div class="text-wrapper_56 flex-col">
+                <span class="text_90">未见异常</span>
+              </div>
+              <div class="text-wrapper_57 flex-col">
+                <span class="text_91">未见异常</span>
+              </div>
+              <div class="text-wrapper_58 flex-col">
+                <span class="text_92">未见异常</span>
+              </div>
+              <div class="text-wrapper_59 flex-col">
+                <span class="text_93">未见异常</span>
+              </div>
+              <div class="text-wrapper_60 flex-col">
+                <span class="text_94">未见异常</span>
+              </div>
+              <div class="text-wrapper_61 flex-col">
+                <span class="text_95">未见异常</span>
+              </div>
+              <div class="text-wrapper_62 flex-col">
+                <span class="text_96">未见异常</span>
+              </div>
+              <div class="text-wrapper_63 flex-col">
+                <span class="text_97">未见异常</span>
+              </div>
+              <div class="text-wrapper_64 flex-col">
+                <span class="text_98">未见异常</span>
+              </div>
+              <div class="text-wrapper_65 flex-col">
+                <span class="text_99">未见异常</span>
+              </div>
+              <div class="text-wrapper_66 flex-col">
+                <span class="text_100">未见异常</span>
+              </div>
+            </div>
+          </div>
+          <div class="group_15 flex-row">
+            <div class="text-wrapper_67 flex-col">
+              <span class="text_101">户外活动</span>
+            </div>
+            <div class="text-wrapper_68 flex-col">
+              <span class="text_102">无</span>
+            </div>
+            <div class="text-wrapper_69 flex-col">
+              <span class="text_103">无</span>
+            </div>
+          </div>
+          <div class="group_16 flex-row justify-between">
+            <div class="text-wrapper_70 flex-col">
+              <span class="text_104">发育评估</span>
+            </div>
+            <img
+              class="thumbnail_10"
+              referrerpolicy="no-referrer"
+              src="./img/SketchPng03d5cb3b1c3c9a06e9d51b1869c6e27f9d428a133060bd5c4c2328c0816aeb47.png"
+            />
+          </div>
+          <div class="group_17 flex-row justify-between">
+            <div class="text-wrapper_71 flex-col">
+              <span class="text_105">两次随访间患病情况</span>
+            </div>
+            <div class="text-wrapper_72 flex-col">
+              <span class="text_106">无</span>
+            </div>
+          </div>
+          <div class="group_18 flex-row justify-between">
+            <div class="text-wrapper_73 flex-col">
+              <span class="text_107">转诊意见</span>
+            </div>
+            <div class="text-wrapper_74 flex-col">
+              <span class="text_108">无</span>
+            </div>
+          </div>
+          <div class="group_19 flex-row justify-between">
+            <div class="text-wrapper_75 flex-col">
+              <span class="text_109">指导</span>
+            </div>
+            <div class="text-wrapper_76 flex-col">
+              <span class="text_110">无</span>
+            </div>
+          </div>
+          <div class="group_20 flex-row">
+            <div class="text-wrapper_77 flex-col">
+              <span class="text_111">下次随访日期</span>
+            </div>
+            <div class="text-wrapper_78 flex-col">
+              <span class="text_112">1981-09-15</span>
+            </div>
+            <div class="text-wrapper_79 flex-col">
+              <span class="text_113">邓莎星</span>
+            </div>
+          </div>
+          </div><!-- /originalBody -->
+          <!-- Alt 内容区（动态 tab + iframe） -->
+          <div id="altTabs">
+            <div class="group_7 flex-row justify-between" id="altTabBar"></div>
+            <img class="image_2" referrerpolicy="no-referrer" src="./img/SketchPng54ab4f504a1a8cfa0a62b05d8e9c1301f8e7bee661fc2f1c5e29bb0f02f0c0b8.png" />
+            <iframe id="altIframe" style="width:100%;height:600px;border:none;"></iframe>
+          </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // ============================================================
+    //  模式配置：左侧菜单 → 右侧 Tab + iframe 内容
+    // ============================================================
+    var modeMap = {
+      '高危人群管理': {
+        tabs: ['专项信息', '随访信息'],
+        urls: [
+          '../公共卫生业务/高危人群专项.html',
+          '../公共卫生业务/高危人群随访.html'
+        ]
+      },
+      '慢阻肺管理': {
+        tabs: ['专项信息', '随访信息'],
+        urls: [
+          '../公共卫生业务/慢阻肺病人专项.html',
+          '../公共卫生业务/慢阻肺随访.html'
+        ]
+      },
+      '肿瘤管理': {
+        tabs: ['专项信息', '随访信息'],
+        urls: [
+          '../公共卫生业务/肿瘤专项.html',
+          '../公共卫生业务/肿瘤随访.html'
+        ]
+      },
+      '心脑血管管理': {
+        tabs: ['评估信息', '随访信息'],
+        urls: [
+          '../公共卫生业务/心脑血管评估.html',
+          '../公共卫生业务/心脑血管随访.html'
+        ]
+      }
+    };
+
+    var currentMode = null;   // 当前模式 key
+    var activeTabIdx = 0;     // 当前激活的 tab 索引
+
+    // ============================================================
+    //  构建 alt tab 栏
+    // ============================================================
+    function buildAltTabs(modeKey) {
+      var cfg = modeMap[modeKey];
+      var bar = document.getElementById('altTabBar');
+      var html = '';
+      for (var i = 0; i < cfg.tabs.length; i++) {
+        var isActive = i === activeTabIdx;
+        var activeClass = isActive ? ' active' : '';
+        html += '<div class="alt-tab' + activeClass + '" onclick="switchAltTab(' + i + ')">' +
+          '<span>' + cfg.tabs[i] + '</span>' +
+          '<i class="alt-tab-line"></i>' +
+          '</div>';
+      }
+      bar.innerHTML = html;
+    }
+
+    // ============================================================
+    //  Alt tab 点击切换
+    // ============================================================
+    function switchAltTab(idx) {
+      if (!currentMode) return;
+      activeTabIdx = idx;
+      var cfg = modeMap[currentMode];
+      document.getElementById('altIframe').src = cfg.urls[idx];
+      buildAltTabs(currentMode);
+    }
+
+    // ============================================================
+    //  左侧菜单点击
+    // ============================================================
+    function selectNav(el) {
+      document.querySelectorAll('.nav-item').forEach(function(item) {
+        item.classList.remove('active');
+      });
+      el.classList.add('active');
+
+      var text = el.textContent.trim();
+      var panel = document.getElementById('rightPanel');
+
+      // 提取模式 key（去掉括号内数字）
+      var foundKey = null;
+      Object.keys(modeMap).forEach(function(k) {
+        if (text.indexOf(k) === 0) foundKey = k;
+      });
+
+      if (foundKey) {
+        // Alt 模式：隐藏原内容，显示 alt 内容
+        document.getElementById('originalTabs').style.display = 'none';
+        document.getElementById('originalBody').style.display = 'none';
+        document.getElementById('altTabs').style.display = 'flex';
+        currentMode = foundKey;
+        activeTabIdx = 0;
+        var cfg = modeMap[foundKey];
+        buildAltTabs(foundKey);
+        document.getElementById('altIframe').src = cfg.urls[0];
+      } else {
+        // 默认模式：恢复原始内容，隐藏 alt
+        document.getElementById('originalTabs').style.display = '';
+        document.getElementById('originalBody').style.display = '';
+        document.getElementById('altTabs').style.display = 'none';
+        currentMode = null;
+        activeTabIdx = 0;
+      }
+    }
+  </script>
+  </body>
+</html>

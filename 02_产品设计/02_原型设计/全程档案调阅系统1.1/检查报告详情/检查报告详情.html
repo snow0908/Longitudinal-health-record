@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>检查报告详情</title>
+    <script src="./flexible.js"></script>
+    <link rel="stylesheet" type="text/css" href="./common.css" />
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+    <style>
+      /* ===== AI入口卡片 ===== */
+      .ai-entry{
+        display:flex;align-items:center;gap:12px;
+        margin:10px 12px 0 12px;padding:16px;
+        background:#fff;border-radius:10px;
+        cursor:pointer;transition:opacity .2s;
+        box-shadow:0 1px 3px rgba(0,0,0,0.04);
+      }
+      .ai-entry:active{opacity:.85;}
+      .ai-entry-icon{
+        width:36px;height:36px;border-radius:8px;
+        background:linear-gradient(135deg,#007AFF,#4A9AFF);
+        display:flex;align-items:center;justify-content:center;
+        font-size:14px;color:#fff;font-weight:700;flex-shrink:0;
+        box-shadow:0 2px 8px rgba(0,122,255,0.25);
+      }
+      .ai-entry-info{flex:1;display:flex;flex-direction:column;gap:2px;}
+      .ai-entry-title{font-size:15px;font-weight:600;color:#1A1A1A;line-height:21px;}
+      .ai-entry-desc{font-size:12px;color:#999;line-height:17px;}
+      .ai-entry-arrow{font-size:16px;color:#ccc;flex-shrink:0;}
+    </style>
+  </head>
+  <body>
+    <div class="page flex-col">
+      <!-- 状态栏 + 标题栏 -->
+      <div class="section_1 flex-col">
+        <div class="group_1 flex-row">
+          <span class="text_1">10:19</span>
+          <img
+            class="thumbnail_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng704147f8b978587e16053c0aff2e7a89010fce4b1451e830bc244c0f5237adc5.png"
+          />
+          <span class="text_2">5G</span>
+          <img
+            class="image_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPngb44e7965ccfb0dcdb8b19278c26b84b1f1e92d5ae3c4c02730dc831e2478c8ee.png"
+          />
+        </div>
+        <div class="group_2 flex-row">
+          <img
+            class="label_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng1f264f6d2d7519387132cd8cedd70f26e20a37499e604d10ad41e07e06c00a98.png"
+            onclick="window.location.href='../检查报告列表/检查报告列表.html'"
+            style="cursor:pointer;"
+          />
+          <span class="text_3">检查报告</span>
+          <img
+            class="image_2"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng1351788870940f46d7266f53b69d89b18357240c5dc52af155ce338c959c0152.png"
+          />
+        </div>
+      </div>
+
+      <!-- 患者信息 -->
+      <div class="section_2 flex-col">
+        <div class="text-wrapper_1 flex-row">
+          <span class="text_4">张子强</span>
+          <span class="text_5">男</span>
+          <span class="text_6">25岁</span>
+          <span class="text_7">就诊号：000036556</span>
+        </div>
+        <img
+          class="image_3"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng00abe6df26e504b5ae94bed18740a15bbd7cd7fb735a1bebb861e0416cb831b3.png"
+        />
+        <div class="text-wrapper_2 flex-row justify-between">
+          <span class="text_8">开方医院</span>
+          <span class="text_9">内蒙古国际蒙医医院</span>
+        </div>
+        <div class="text-wrapper_3 flex-row justify-between">
+          <span class="text_10">检查类型</span>
+          <span class="text_11">B超</span>
+        </div>
+        <div class="text-wrapper_4 flex-row justify-between">
+          <span class="text_12">检查部位</span>
+          <span class="text_13">腹部彩超（肝、胆、胰、脾）</span>
+        </div>
+        <div class="text-wrapper_5 flex-row justify-between">
+          <span class="text_14">开方医生</span>
+          <span class="text_15">侯登国</span>
+        </div>
+        <div class="text-wrapper_6 flex-row justify-between">
+          <span class="text_16">开方科室</span>
+          <span class="text_17">血管外科</span>
+        </div>
+        <div class="text-wrapper_7 flex-row justify-between">
+          <span class="text_18">报告时间</span>
+          <span class="text_19">2023-11-24&nbsp;18:00:30</span>
+        </div>
+      </div>
+
+      <!-- 诊断 + 描述 -->
+      <div class="section_3 flex-col">
+        <div class="group_3 flex-row">
+          <div class="text-group_1 flex-col">
+            <span class="text_20">诊断</span>
+            <span class="text_21">左室顺应性减低。</span>
+          </div>
+        </div>
+        <div class="text-wrapper_8 flex-col">
+          <span class="text_22">描述</span>
+          <span class="text_23">
+            检查报告结果-客观所见：2D及M型特征：&nbsp;1.各房室大小比例正常，大动脉根径在正常范围。&nbsp;2.室壁厚度、回声及搏动幅度正常，未见明显节段性室壁运动异常。&nbsp;3.各瓣膜形态、结构及运动正常。&nbsp;4.心包腔内未见明显液性暗区。&nbsp;CDFI：二尖瓣前向血流E峰＜A峰，各瓣膜口未见明显异常彩色血流信号。
+          </span>
+        </div>
+      </div>
+
+      <!-- ===== AI入口卡片 ===== -->
+      <div class="ai-entry" onclick="window.location.href='./AI报告分析.html'">
+        <span class="ai-entry-icon">AI</span>
+        <div class="ai-entry-info">
+          <span class="ai-entry-title">AI报告分析</span>
+          <span class="ai-entry-desc">智能解读报告 · 关键指标提取 · 健康建议</span>
+        </div>
+        <span class="ai-entry-arrow">›</span>
+      </div>
+
+      <div class="bottom-spacer"></div>
+    </div>
+  </body>
+</html>

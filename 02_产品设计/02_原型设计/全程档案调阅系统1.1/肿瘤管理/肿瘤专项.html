@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>肿瘤专项 - 白蓝</title>
+  <style>
+    /* ============================================================
+       肿瘤专项页面 - 参照高危专项样式风格
+       ============================================================ */
+
+    * {
+      box-sizing: border-box;
+      flex-shrink: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+      background-color: #F3F5F7;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      justify-content: center;
+    }
+
+    .flex-col { display: flex; flex-direction: column; }
+    .flex-row { display: flex; flex-direction: row; }
+
+    .page {
+      background-color: #F3F5F7;
+      position: relative;
+      width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding-bottom: 24px;
+    }
+
+    /* ============================================================
+       导航栏
+       ============================================================ */
+    .group_1 {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+    .box_1 {
+  margin: 0 10px 0 24px;
+}
+    .text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+    .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0 5px 191px;
+}
+    .text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+    .image_1 {
+  width: 25px;
+  height: 13px;
+  margin: 5px 0 4px 6px;
+}
+
+    .box_2 {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
+    .label_1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+          cursor: pointer;
+}
+    .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+    .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+    /* ============================================================
+       卡片样式
+       ============================================================ */
+    .card {
+      background-color: #FFFFFF;
+      border-radius: 8px;
+      border: 1px solid #E5E5E5;
+      padding: 16px;
+      width: 375px;
+      margin-top: 16px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #333333;
+      line-height: 22px;
+      margin-bottom: 8px;
+      padding-top: 16px;
+    }
+    .section-title--first {
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    .card-highlight {
+      background-color: #F6FAFF;
+      border: 1px solid #AFCFFF;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 0 0 16px 0;
+    }
+
+    .hl-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #333333;
+      line-height: 22px;
+      margin-bottom: 8px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 14px;
+      white-space: nowrap;
+    }
+    .tag--orange {
+      background-color: #FEA800;
+      color: #FFFFFF;
+    }
+    .tag--blue {
+      border: 1px solid #196DFF;
+      color: #096AFF;
+      background-color: #FFFFFF;
+    }
+
+    .hl-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 16px;
+    }
+
+    .hl-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 3px 0;
+    }
+    .hl-item--full {
+      grid-column: 1 / -1;
+    }
+    .hl-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      margin-top: 8px;
+      margin-right: 8px;
+      flex-shrink: 0;
+      background-color: #096AFF;
+    }
+    .hl-text {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 20px;
+      word-break: break-all;
+    }
+    .hl-text .label {
+      color: #666666;
+      font-weight: 400;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 4px 0;
+    }
+    .info-item--first { padding-top: 0; }
+    .info-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      margin-top: 8px;
+      flex-shrink: 0;
+    }
+    .info-dot--gray { background-color: #666666; }
+    .info-dot--blue { background-color: #096AFF; }
+    .info-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 20px;
+      margin-left: 8px;
+      flex-shrink: 0;
+    }
+    .info-value {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 20px;
+      word-break: break-all;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 3px 0;
+    }
+    .list-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      margin-top: 8px;
+      flex-shrink: 0;
+      background-color: #096AFF;
+    }
+    .list-text {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 20px;
+      margin-left: 8px;
+      word-break: break-all;
+    }
+
+    .sub-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 12px;
+      margin: 4px 0 4px 12px;
+      padding-left: 4px;
+    }
+    .sub-item {
+      font-size: 13px;
+      color: #666666;
+      line-height: 18px;
+    }
+    .sub-item .sub-label { color: #999999; }
+
+    .patient-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px;
+      background-color: #FFFFFF;
+      width: 375px;
+      margin-top: 16px;
+      border-radius: 8px;
+      border: 1px solid #E5E5E5;
+    }
+    .patient-footer .name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .patient-footer .name-row .name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333333;
+      line-height: 20px;
+    }
+    .patient-footer .name-row .gender,
+    .patient-footer .name-row .age {
+      font-size: 14px;
+      font-weight: 400;
+      color: #333333;
+      line-height: 20px;
+    }
+    .patient-footer .info-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .patient-footer .info-row .label {
+      font-size: 14px;
+      font-weight: 400;
+      color: #333333;
+      line-height: 20px;
+    }
+    .patient-footer .info-row .value {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 20px;
+    }
+    .patient-footer .divider {
+      width: 100%;
+      height: 1px;
+      background-color: #E5E5E5;
+      margin: 4px 0;
+    }
+
+    /* ============================================================
+       简洁列表样式（与心脑血管转诊卡片一致）
+       标题下有分割线，内容行无分割线
+       ============================================================ */
+    .simple-card-title {
+      font-size: 16px;
+      font-weight: 500;
+      font-family: PingFangSC-Medium;
+      color: #333333;
+      line-height: 22px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #E5E5E5;
+      margin-bottom: 0;
+    }
+    .simple-row {
+      display: flex;
+      align-items: baseline;
+      padding: 10px 0;
+    }
+    .simple-label {
+      font-size: 14px;
+      font-weight: 400;
+      font-family: PingFangSC-Regular;
+      color: #666666;
+      line-height: 20px;
+      min-width: 70px;
+      flex-shrink: 0;
+    }
+    .simple-value {
+      font-size: 14px;
+      font-weight: 400;
+      font-family: PingFangSC-Regular;
+      color: #333333;
+      line-height: 20px;
+      flex: 1;
+      text-align: left;
+      word-break: break-all;
+    }
+
+    .footer-note {
+      padding: 16px 16px 0 16px;
+      text-align: center;
+      font-size: 12px;
+      color: #999999;
+      font-weight: 400;
+      line-height: 17px;
+    }
+
+    @media (max-width: 375px) {
+      .page,
+      .card,
+      .patient-footer { width: 100%; }
+    }
+    @media (max-width: 340px) {
+      .hl-grid,
+      .sub-grid {
+        grid-template-columns: 1fr;
+        gap: 4px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page flex-col">
+
+    <!-- ==================== 导航栏 ==================== -->
+    <div class="group_1 flex-col">
+  <div class="box_1 flex-row">
+    <span class="text_1">10:19</span>
+    <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+    <span class="text_2">5G</span>
+    <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+  </div>
+  <div class="box_2 flex-row">
+    <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+    <span class="text_3">肿瘤专项</span>
+    <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+  </div>
+</div>
+
+    <!-- ============================================================
+    白色卡片
+    ============================================================ -->
+    <div class="card">
+
+      <!-- ===== 蓝色高亮框：核心诊断信息 ===== -->
+      <div class="card-highlight">
+        <div class="hl-title">淋巴上皮样淋巴瘤</div>
+        <div class="tag-row">
+          <span class="tag tag--orange">III期</span>
+          <span class="tag tag--blue">门诊</span>
+        </div>
+        <div class="hl-grid">
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">ICD-10：</span>C34.9</span>
+          </div>
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">临床分期：</span>III期</span>
+          </div>
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">确诊日期：</span>2016-05-23</span>
+          </div>
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">首次治疗：</span>手术</span>
+          </div>
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">Karnofsky评分：</span>80</span>
+          </div>
+          <div class="hl-item">
+            <span class="hl-dot"></span>
+            <span class="hl-text"><span class="label">肿瘤转移：</span>否</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- 建档信息（保持原位置：卡片上部） ---- -->
+      <div class="section-title section-title--first">建档信息</div>
+      <div class="info-item info-item--first">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">建档机构：</span>
+        <span class="info-value">青羊人民医院</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">建档医生：</span>
+        <span class="info-value">夏爱</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">建档日期：</span>
+        <span class="info-value">2026-07-21</span>
+      </div>
+
+      <!-- ---- 诊断编码 ---- -->
+      <div class="section-title">诊断编码</div>
+      <div class="info-item info-item--first">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">ICD-O-3形态学编码：</span>
+        <span class="info-value">8140/3</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">ICD-O-3形态学名称：</span>
+        <span class="info-value">腺癌</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">ICD-O-3解剖学编码：</span>
+        <span class="info-value">C34.9</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">ICD-O-3解剖学名称：</span>
+        <span class="info-value">支气管或肺，未特指</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">报告卡编号：</span>
+        <span class="info-value">BG2026001234</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">病情已告知病人：</span>
+        <span class="info-value">是</span>
+      </div>
+
+      <!-- ---- 联系与编号 ---- -->
+      <div class="section-title">联系与编号</div>
+      <div class="info-item info-item--first">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">联系人：</span>
+        <span class="info-value">白明</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">联系人电话：</span>
+        <span class="info-value">13800138000</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">门诊号：</span>
+        <span class="info-value">MZ20260156</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">住院号：</span>
+        <span class="info-value">ZY20260123</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">病理号：</span>
+        <span class="info-value">BL20260089</span>
+      </div>
+
+      <!-- ---- 吸烟史 ---- -->
+      <div class="section-title">吸烟史</div>
+      <div class="list-item">
+        <span class="list-dot"></span>
+        <span class="list-text">已戒烟</span>
+      </div>
+      <div class="sub-grid">
+        <div class="sub-item"><span class="sub-label">开始吸烟年龄：</span>20岁</div>
+        <div class="sub-item"><span class="sub-label">戒烟年龄：</span>55岁</div>
+        <div class="sub-item"><span class="sub-label">吸烟总年数：</span>35年</div>
+        <div class="sub-item"><span class="sub-label">每日吸烟支数：</span>10支</div>
+      </div>
+
+      <!-- ---- 分期与分级 ---- -->
+      <div class="section-title">分期与分级</div>
+      <div class="info-item info-item--first">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">肿瘤TNM分期：</span>
+        <span class="info-value">T2N1M0</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">临床分期：</span>
+        <span class="info-value">III期</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">分级（组织学/分化程度）：</span>
+        <span class="info-value">2级</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">肿瘤诊断依据：</span>
+        <span class="info-value">病理（原发）</span>
+      </div>
+
+      <!-- ---- 诊断与治疗 ---- -->
+      <div class="section-title">诊断与治疗</div>
+      <div class="info-item info-item--first">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">首次出现症状日期：</span>
+        <span class="info-value">2016-03-10</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">首次就诊日期：</span>
+        <span class="info-value">2016-04-05</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">确诊日期：</span>
+        <span class="info-value">2016-05-23</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">首次治疗情况：</span>
+        <span class="info-value">手术</span>
+      </div>
+
+      <!-- ---- 医院信息 ---- -->
+      <div class="section-title">医院信息</div>
+      <div class="info-item info-item--first">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">手术医院：</span>
+        <span class="info-value">北京大学第一医院宁夏妇女儿童医院</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">化疗医院：</span>
+        <span class="info-value">青羊人民医院</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">放疗医院：</span>
+        <span class="info-value">—</span>
+      </div>
+
+      <!-- ---- 手术详情 ---- -->
+      <div class="section-title">手术详情</div>
+      <div class="info-item info-item--first">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">首次手术医院：</span>
+        <span class="info-value">北京大学第一医院宁夏妇女儿童医院</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">首次手术日期：</span>
+        <span class="info-value">2016-06-15</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--blue"></span>
+        <span class="info-label">首次手术性质：</span>
+        <span class="info-value">根治</span>
+      </div>
+
+      <!-- ---- 现状管理 ---- -->
+      <div class="section-title">现状管理</div>
+      <div class="info-item info-item--first">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">社区管理医师：</span>
+        <span class="info-value">孙思邈</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">化疗次数：</span>
+        <span class="info-value">6次</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">目前状况类别：</span>
+        <span class="info-value">稳定</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">既往治疗情况：</span>
+        <span class="info-value">手术+化疗</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">肿瘤家族史：</span>
+        <span class="info-value">否</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">Karnofsky评分：</span>
+        <span class="info-value">80</span>
+      </div>
+      <div class="info-item">
+        <span class="info-dot info-dot--gray"></span>
+        <span class="info-label">肿瘤转移：</span>
+        <span class="info-value">否</span>
+      </div>
+    </div>
+
+    <!-- ============================================================
+    卡片 2：报告信息（独立卡片 — 与心脑血管转诊卡片样式一致）
+    ============================================================ -->
+    <div class="card">
+      <div class="simple-card-title">报告信息</div>
+
+      <div class="simple-row">
+        <span class="simple-label">报告机构</span>
+        <span class="simple-value">青羊人民医院</span>
+      </div>
+      <div class="simple-row">
+        <span class="simple-label">报告医生</span>
+        <span class="simple-value">夏爱</span>
+      </div>
+      <div class="simple-row">
+        <span class="simple-label">报告日期</span>
+        <span class="simple-value">2026-07-21</span>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      编号 11200056 · 恶性肿瘤管理 · 建档日期 2026-07-21
+    </div>
+
+  </div>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '肿瘤管理列表.html';
+  });
+</script>
+
+</body>
+</html>

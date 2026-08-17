@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>预防接种</title>
+    <style>
+        /* ============================================================
+           样式参照 肺结核随访记录表2（nav-bar 风格）
+           基准宽度：375px
+           ============================================================ */
+
+        /* ---------- Reset & Base ---------- */
+        * { box-sizing: border-box; flex-shrink: 0; margin: 0; padding: 0; }
+        body {
+            font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+            background-color: #F3F5F7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .flex-col { display: flex; flex-direction: column; }
+        .flex-row { display: flex; flex-direction: row; }
+        .justify-between { display: flex; justify-content: space-between; }
+        .align-center { display: flex; align-items: center; }
+
+        /* ---------- Page ---------- */
+        .page {
+            background-color: #F3F5F7;
+            position: relative;
+            width: 375px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-bottom: 16px;
+        }
+
+        /* ============================================================
+           导航栏（参照 肺结核随访记录表2 .nav-bar）
+           状态栏 + 导航合并为单一白色区块
+           ============================================================ */
+        .group_1 {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+        .box_1 {
+  margin: 0 10px 0 24px;
+}
+        .text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+        .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0 5px 191px;
+}
+        .text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+        .image_1 {
+  width: 25px;
+  height: 13px;
+  margin: 5px 0 4px 6px;
+}
+
+        .box_2 {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
+        .label_1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+        .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+        .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+        /* ============================================================
+           内容区
+           ============================================================ */
+        .section_1 {
+            padding: 16px 16px 0 16px;
+        }
+
+        /* ============================================================
+           概览条
+           ============================================================ */
+        .group_5 {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #f0f4f8;
+        }
+        .image-text_5 {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .text-group_1 {
+            font-size: 14px;
+            font-weight: 400;
+            color: #666666;
+        }
+        .thumbnail_2 {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        /* ============================================================
+           时间轴样式
+           ============================================================ */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .timeline-item {
+            display: flex;
+            position: relative;
+            padding-bottom: 0;
+        }
+
+        /* 左侧时间轴标记 */
+        .timeline-marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 60px;
+            flex-shrink: 0;
+            position: relative;
+            padding-top: 4px;
+        }
+
+        .timeline-marker .date {
+            font-size: 12px;
+            color: #999999;
+            font-weight: 400;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            white-space: nowrap;
+        }
+
+        .timeline-marker .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #096aff;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 2px #096aff;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+
+        .timeline-marker .line {
+            flex: 1;
+            width: 2px;
+            background: #e5e5e5;
+            margin: 4px 0 0 0;
+            min-height: 20px;
+        }
+
+        /* 最后一个时间轴项目隐藏连线 */
+        .timeline-item:last-child .timeline-marker .line {
+            display: none;
+        }
+
+        /* 右侧内容卡片 */
+        .timeline-card {
+            flex: 1;
+            margin-left: 12px;
+            margin-bottom: 16px;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 12px 16px 16px 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #f0f4f8;
+        }
+
+        .timeline-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f7f9fc;
+            margin-bottom: 8px;
+        }
+
+        .timeline-card .card-header .vaccine-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333333;
+        }
+
+        .timeline-card .card-header .status-tag {
+            font-size: 12px;
+            font-weight: 500;
+            color: #096aff;
+            background: #e8effa;
+            padding: 2px 12px;
+            border-radius: 12px;
+            line-height: 20px;
+            border: 1px solid #196dff;
+        }
+
+        .timeline-card .info-row {
+            display: flex;
+            align-items: center;
+            padding: 4px 0;
+            font-size: 14px;
+            color: #1f2a3a;
+        }
+
+        .timeline-card .info-row .label {
+            color: #666666;
+            font-weight: 400;
+            width: 70px;
+            flex-shrink: 0;
+        }
+
+        .timeline-card .info-row .value {
+            color: #333333;
+            font-weight: 500;
+            flex: 1;
+            text-align: left;
+        }
+
+        .timeline-card .info-row .icon {
+            width: 14px;
+            height: 14px;
+            margin-right: 6px;
+        }
+
+        .timeline-card .divider {
+            height: 1px;
+            background: #f0f4f8;
+            margin: 6px 0;
+        }
+
+        /* ============================================================
+           底部脚注
+           ============================================================ */
+        .footer-note {
+            text-align: center;
+            padding-top: 8px;
+            font-size: 12px;
+            color: #aab8c7;
+            letter-spacing: 0.3px;
+        }
+
+        /* ============================================================
+           响应式
+           ============================================================ */
+        @media (max-width: 375px) {
+            .page {
+                width: 100%;
+            }
+            .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+            .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+            .timeline-marker {
+                width: 50px;
+            }
+            .timeline-marker .date {
+                font-size: 11px;
+            }
+            .timeline-card {
+                padding: 10px 12px 14px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+  <div class="page flex-col">
+
+    <!-- ==================== 导航栏（参照 肺结核随访记录表2 .nav-bar） ==================== -->
+    <div class="group_1 flex-col">
+  <div class="box_1 flex-row">
+    <span class="text_1">10:19</span>
+    <img class="thumbnail_1" referrerpolicy="no-referrer" src="./img/信号.png" />
+    <span class="text_2">5G</span>
+    <img class="image_1" referrerpolicy="no-referrer" src="./img/电量.png" />
+  </div>
+  <div class="box_2 flex-row">
+    <img class="label_1" referrerpolicy="no-referrer" src="./img/返回.png" />
+    <span class="text_3">预防接种</span>
+    <img class="image_2" referrerpolicy="no-referrer" src="./img/设置.png" />
+  </div>
+</div>
+
+    <!-- ===== 内容 ===== -->
+    <div class="section_1 flex-col">
+      <!-- 日期范围条 -->
+      <div class="group_5 flex-row">
+        <div class="image-text_5 flex-row justify-between">
+          <span class="text-group_1">接种记录 · 共3剂次</span>
+          <img
+            class="thumbnail_2"
+            referrerpolicy="no-referrer"
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M8 10L3 5l1-1 4 4 4-4 1 1-5 5z' fill='%23999'/%3E%3C/svg%3E"
+          />
+        </div>
+      </div>
+
+      <!-- ===== 时间轴列表 ===== -->
+      <div class="timeline flex-col">
+
+        <!-- 时间轴项目 1：卡介苗 -->
+        <div class="timeline-item flex-row">
+          <div class="timeline-marker flex-col">
+            <span class="date">2025-03-14</span>
+            <div class="dot"></div>
+            <div class="line"></div>
+          </div>
+          <div class="timeline-card">
+            <div class="card-header">
+              <span class="vaccine-name">卡介苗</span>
+              <span class="status-tag">已接种</span>
+            </div>
+            <div class="info-row">
+              <span class="label">接种单位</span>
+              <span class="value">扬州市江都中医院</span>
+            </div>
+            <div class="info-row">
+              <span class="label">医生</span>
+              <span class="value">刘晓燕</span>
+            </div>
+            <div class="divider"></div>
+            <div class="info-row">
+              <span class="label">接种部位</span>
+              <span class="value">右上臂</span>
+            </div>
+            <div class="info-row">
+              <span class="label">疫苗批号</span>
+              <span class="value">004546545</span>
+            </div>
+            <div class="info-row">
+              <span class="label">生产企业</span>
+              <span class="value">大连汉信</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 时间轴项目 2：乙肝疫苗 HepB（第1剂） -->
+        <div class="timeline-item flex-row">
+          <div class="timeline-marker flex-col">
+            <span class="date">2025-03-14</span>
+            <div class="dot"></div>
+            <div class="line"></div>
+          </div>
+          <div class="timeline-card">
+            <div class="card-header">
+              <span class="vaccine-name">乙肝疫苗 HepB</span>
+              <span class="status-tag">已接种</span>
+            </div>
+            <div class="info-row">
+              <span class="label">接种单位</span>
+              <span class="value">扬州市江都区第四人民医院</span>
+            </div>
+            <div class="info-row">
+              <span class="label">医生</span>
+              <span class="value">刘晓燕</span>
+            </div>
+            <div class="divider"></div>
+            <div class="info-row">
+              <span class="label">接种部位</span>
+              <span class="value">右上臂</span>
+            </div>
+            <div class="info-row">
+              <span class="label">疫苗批号</span>
+              <span class="value">454560000</span>
+            </div>
+            <div class="info-row">
+              <span class="label">生产企业</span>
+              <span class="value">大连汉信</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 时间轴项目 3：乙肝疫苗 HepB（第2剂） -->
+        <div class="timeline-item flex-row">
+          <div class="timeline-marker flex-col">
+            <span class="date">2025-03-14</span>
+            <div class="dot"></div>
+            <div class="line"></div>
+          </div>
+          <div class="timeline-card">
+            <div class="card-header">
+              <span class="vaccine-name">乙肝疫苗 HepB</span>
+              <span class="status-tag">已接种</span>
+            </div>
+            <div class="info-row">
+              <span class="label">接种单位</span>
+              <span class="value">扬州市江都妇幼保健院</span>
+            </div>
+            <div class="info-row">
+              <span class="label">医生</span>
+              <span class="value">刘晓燕</span>
+            </div>
+            <div class="divider"></div>
+            <div class="info-row">
+              <span class="label">接种部位</span>
+              <span class="value">左大腿</span>
+            </div>
+            <div class="info-row">
+              <span class="label">疫苗批号</span>
+              <span class="value">787320000</span>
+            </div>
+            <div class="info-row">
+              <span class="label">生产企业</span>
+              <span class="value">大连汉信</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /timeline -->
+
+      <!-- ===== 底部脚注 ===== -->
+      <div class="footer-note">
+        共 3 剂次 · 数据更新于 2025-03-14
+      </div>
+
+    </div>
+    <!-- /section_1 -->
+  </div>
+  <!-- /page -->
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = './index.html';
+  });
+</script>
+
+</body>
+</html>

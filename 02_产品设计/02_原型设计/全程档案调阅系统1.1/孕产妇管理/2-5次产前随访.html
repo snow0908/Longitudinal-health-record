@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>随访详情 - 2-5次产前随访</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ============================================================
+           2-5次产前随访 - 完全遵循产后访视记录字体卡片规范
+           ============================================================ */
+
+        :root {
+            --primary: #E85A8F;
+            --primary-light: #FFF0F5;
+            --primary-dark: #C94A78;
+            --primary-gradient-start: #E85A8F;
+            --primary-gradient-mid: #EC8EB3;
+            --primary-gradient-end: #F5C6D8;
+
+            --success: #15CF6E;
+            --success-bg: #E6FEF5;
+            --warning: #FEA800;
+            --warning-bg: #FFF7ED;
+            --error: #F32929;
+            --error-bg: #FFF4F4;
+            --info: #3B82F6;
+            --info-bg: #EFF6FF;
+
+            --bg: #F3F5F7;
+            --surface: #FFFFFF;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --border: #E5E5E5;
+            --border-light: #E5E5E5;
+            --indicator-bg: #F4F6FB;
+
+            --font-sans: 'Noto Sans SC', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --radius-sm: 4px;
+            --radius-lg: 8px;
+
+            --safe-top: env(safe-area-inset-top, 0);
+            --safe-bottom: env(safe-area-inset-bottom, 0);
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+        }
+
+        /* ---------- Reset & Base ---------- */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: var(--space-4);
+            max-width: 375px;
+            margin: 0 auto;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+        }
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+        }
+        .justify-between {
+            justify-content: space-between;
+        }
+        .align-center {
+            align-items: center;
+        }
+
+        /* ============================================================
+           头部 — 粉色渐变，高度自适应
+           姓名距顶部40px
+           ============================================================ */
+        .hero-header {
+            position: relative;
+            overflow: hidden;
+            height: 240px;
+            color: white;
+            background: linear-gradient(135deg,
+                    var(--primary-gradient-start) 0%,
+                    var(--primary-gradient-mid) 55%,
+                    var(--primary-gradient-end) 100%);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 70% 30%, rgba(255, 255, 255, 0.25) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 20% 80%, rgba(232, 90, 143, 0.10) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .ph-decor {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+        .ph-decor-1 {
+            width: 180px;
+            height: 180px;
+            background: white;
+            top: -60px;
+            right: -40px;
+        }
+        .ph-decor-2 {
+            width: 120px;
+            height: 120px;
+            background: white;
+            bottom: 10px;
+            left: -30px;
+        }
+        .ph-decor-3 {
+            width: 60px;
+            height: 60px;
+            background: white;
+            top: 80px;
+            right: 60px;
+            opacity: 0.12;
+        }
+
+        .hero-bg-img {
+            position: absolute;
+            right: -10px;
+            bottom: -5px;
+            width: 120px;
+            height: auto;
+            opacity: 0.25;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           导航栏 — 覆盖在渐变上，白色文字/图标
+           参照 lanhu_jiankangtijian2beifen 样式
+           ============================================================ */
+        .box_1 {
+          padding: 14px 16px 7px 16px;
+        }
+        .section_10 {
+          margin: 0 10px 0 24px;
+        }
+        .text_1 {
+          overflow-wrap: break-word;
+          color: rgba(255, 255, 255, 1);
+          font-size: 16px;
+          letter-spacing: 1.100000023841858px;
+          font-family: PingFangSC-Semibold;
+          font-weight: 600;
+          text-align: center;
+          white-space: nowrap;
+          line-height: 22px;
+        }
+        .thumbnail_1 {
+          width: 19px;
+          height: 12px;
+          margin: 5px 0 5px auto;
+        }
+        .text_2 {
+          overflow-wrap: break-word;
+          color: rgba(255, 255, 255, 1);
+          font-size: 12px;
+          letter-spacing: 0.925000011920929px;
+          font-family: PingFangSC-Semibold;
+          font-weight: 600;
+          text-align: center;
+          white-space: nowrap;
+          line-height: 17px;
+          margin: 3px 0 0 6px;
+        }
+        .image_1 {
+          width: 25px;
+          height: 13px;
+          margin: 5px 0 4px 6px;
+        }
+        .section_11 {
+          margin-top: 15px;
+          display: flex;
+          align-items: center;
+        }
+        .label_1 {
+          width: 24px;
+          height: 24px;
+          flex-shrink: 0;
+          cursor: pointer;
+        }
+        .text_3 {
+          flex: 1;
+          overflow-wrap: break-word;
+          color: rgba(255, 255, 255, 1);
+          font-size: 16px;
+          font-family: PingFangSC-Medium;
+          font-weight: 500;
+          text-align: center;
+          white-space: nowrap;
+          line-height: 22px;
+          margin: 4px 0 0 34px;
+        }
+        .image_2 {
+          width: 78px;
+          height: 30px;
+          flex-shrink: 0;
+        }
+
+        /* ---------- 头部信息 — 姓名距顶部40px ---------- */
+        .hero-info {
+            position: relative;
+            z-index: 5;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 16px 4px;
+        }
+
+        .hero-patient-name {
+            font-size: 20px;
+            font-weight: 700;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: white;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(232, 90, 143, 0.15);
+        }
+
+        .hero-patient-meta {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.88);
+            font-weight: 500;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            margin-top: 4px;
+        }
+
+        /* ===== 白色状态卡 — 底部16px间距 ===== */
+        .status-card-wrapper {
+            flex-shrink: 0;
+            padding: 0 16px 16px;
+            position: relative;
+            z-index: 5;
+            margin-top: auto;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--radius-lg);
+            padding: var(--space-3) var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            box-shadow: 0 4px 16px rgba(232, 90, 143, 0.12), 0 1px 4px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .status-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: var(--success-bg);
+            color: #15CF6E;
+        }
+
+        .status-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .status-info h3 {
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            line-height: 1.3;
+            color: var(--text-primary);
+        }
+
+        .status-info p {
+            font-size: 12px;
+            margin-top: 4px;
+            color: var(--text-secondary);
+            font-family: 'PingFangSC-Regular', sans-serif;
+        }
+
+        /* ============================================================
+           内容区域
+           ============================================================ */
+        .page-content {
+            padding: var(--space-4) var(--space-4) 0;
+            margin-top: 0;
+        }
+
+        /* ---------- 通用卡片 ---------- */
+        .card {
+            background-color: var(--surface);
+            margin-top: var(--space-4);
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 343px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-first {
+            margin-top: 0;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: 6px;
+        }
+
+        .card-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-light);
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .card-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .card-divider {
+            width: 100%;
+            height: 1px;
+            background-color: var(--border);
+            margin-bottom: 12px;
+        }
+
+        /* ============================================================
+           生命体征指标 — 卡片网格（3个并排）
+           ============================================================ */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 0px;
+            margin-bottom: var(--space-4);
+        }
+
+        .metric-item {
+            background: linear-gradient(135deg, var(--primary-light) 0%, #FFF5F9 100%);
+            border-radius: var(--radius-sm);
+            padding: 10px 4px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            text-align: center;
+        }
+
+        .metric-item .metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'PingFangSC-Semibold', 'PingFangSC-Medium', sans-serif;
+            color: #E85A8F;
+            line-height: 1.2;
+            letter-spacing: 0.3px;
+        }
+
+        .metric-item .metric-label {
+            font-size: 12px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        /* ============================================================
+           一般情况 — 独立卡片样式
+           ============================================================ */
+        .info-card-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+
+        .info-card-item {
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            padding: var(--space-3) var(--space-4);
+            border: 1px solid var(--border-light);
+        }
+
+        .info-card-item .label {
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .info-card-item .value {
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: var(--text-primary);
+        }
+
+        .info-card-item .value.empty {
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+
+        /* ============================================================
+           体格检查表格 — 行间无分割线
+           ============================================================ */
+        .exam-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+        }
+
+        .exam-table tr {
+            border-bottom: none;
+        }
+
+        .exam-table td {
+            padding: 4px 0;
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            vertical-align: top;
+            line-height: 20px;
+            border-bottom: none;
+        }
+
+        .exam-table td:first-child {
+            color: var(--text-primary);
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+        .exam-table td:last-child {
+            color: var(--text-secondary);
+            word-break: break-all;
+        }
+
+        .exam-table .empty {
+            color: var(--text-tertiary);
+        }
+
+        .tag-normal {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 10px;
+            background: var(--success-bg);
+            color: #1a8a5a;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        /* ============================================================
+           内容行（无分割线）- 用于随访计划
+           ============================================================ */
+        .data-row {
+            display: flex;
+            padding: 4px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            border-bottom: none;
+        }
+
+        .data-row .label {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            line-height: 20px;
+            width: 136px;
+            flex-shrink: 0;
+        }
+
+        .data-row .value {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            line-height: 20px;
+            flex: 1;
+            text-align: left;
+        }
+
+        .data-row .value .highlight {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* ---------- 底部脚注 ---------- */
+        .footer-note {
+            padding: 20px 16px 0 16px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: var(--text-tertiary);
+        }
+
+        .bottom-spacer {
+            height: 24px;
+        }
+
+        /* ============================================================
+           响应式适配
+           ============================================================ */
+        @media (max-width: 375px) {
+            .card {
+                max-width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+            }
+            .data-row .label {
+                width: 100px;
+            }
+            .exam-table td:first-child {
+                width: 85px;
+                font-size: 13px;
+            }
+            .exam-table td:last-child {
+                font-size: 13px;
+            }
+            .hero-header {
+                padding: 90px var(--space-3) 0;
+            }
+            .nav-bar {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+            .page-content {
+                padding: var(--space-3) var(--space-3) 0;
+            }
+            .metric-item .metric-value {
+                font-size: 16px;
+            }
+            .hero-info {
+                padding-top: 0;
+            }
+        }
+
+        @media (max-width: 340px) {
+            .data-row .label {
+                width: 76px;
+                font-size: 13px;
+            }
+            .data-row .value {
+                font-size: 13px;
+            }
+            .exam-table td {
+                font-size: 12.5px;
+            }
+            .exam-table td:first-child {
+                width: 72px;
+                font-size: 12.5px;
+            }
+            .hero-patient-name {
+                font-size: 18px;
+            }
+            .metric-item .metric-value {
+                font-size: 16px;
+            }
+            .metric-grid {
+                gap: 6px;
+            }
+            .hero-info {
+                padding-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    头部 — 粉色渐变，高度自适应
+    ============================================================ -->
+    <header class="hero-header">
+
+        <div class="ph-decor ph-decor-1"></div>
+        <div class="ph-decor ph-decor-2"></div>
+        <div class="ph-decor ph-decor-3"></div>
+
+        <svg class="hero-bg-img" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="140" cy="140" r="80" fill="rgba(255,255,255,0.15)" />
+            <circle cx="160" cy="120" r="60" fill="rgba(255,255,255,0.10)" />
+            <path d="M120 100 L160 80 L180 110 L140 130 Z" fill="rgba(255,255,255,0.12)" />
+            <circle cx="150" cy="100" r="20" fill="rgba(255,255,255,0.15)" />
+        </svg>
+
+        <!-- 导航栏 — 覆盖在渐变上，参照 lanhu_jiankangtijian2beifen -->
+        <div class="box_1 flex-col">
+          <div class="section_10 flex-row">
+            <span class="text_1">10:19</span>
+            <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/白色信号.png" />
+            <span class="text_2">5G</span>
+            <img class="image_1" referrerpolicy="no-referrer" src="../img/白色电量.png" />
+          </div>
+          <div class="section_11 flex-row">
+            <img class="label_1" referrerpolicy="no-referrer" src="../img/白色返回.png" />
+            <span class="text_3">随访详情</span>
+            <img class="image_2" referrerpolicy="no-referrer" src="../img/白色设置.png" />
+          </div>
+        </div>
+
+        <div class="hero-info">
+            <h1 class="hero-patient-name">周*风</h1>
+            <p class="hero-patient-meta">G2P1 · 20周+5 · 预产期 2025-09-12</p>
+        </div>
+
+        <div class="status-card-wrapper">
+            <div class="status-card">
+                <div class="status-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+                <div class="status-info">
+                    <h3>第2次产前随访 - 已完成</h3>
+                    <p>随访时间：2025-03-20 · 陈友谅医生</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================
+    内容区域
+    ============================================================ -->
+    <div class="page-content">
+
+        <!-- ===== 卡片1：体格检查 ===== -->
+        <div class="card card-first">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                </div>
+                <span class="card-title">体格检查</span>
+            </div>
+            <div class="card-divider"></div>
+
+            <div class="metric-grid">
+                <div class="metric-item">
+                    <span class="metric-value">68.4</span>
+                    <span class="metric-label">体重 kg</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-value">135</span>
+                    <span class="metric-label">收缩压 mmHg</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-value">80</span>
+                    <span class="metric-label">舒张压 mmHg</span>
+                </div>
+            </div>
+
+            <div class="info-card-group">
+                <div class="info-card-item">
+                    <span class="label">一般情况</span>
+                    <span class="value empty">—</span>
+                </div>
+            </div>
+
+            <table class="exam-table">
+                <tr>
+                    <td>宫底高度</td>
+                    <td>15 cm</td>
+                </tr>
+                <tr>
+                    <td>腹围</td>
+                    <td>35 cm</td>
+                </tr>
+                <tr>
+                    <td>胎心率</td>
+                    <td>78 次/分钟</td>
+                </tr>
+                <tr>
+                    <td>胎位</td>
+                    <td>正常</td>
+                </tr>
+                <tr>
+                    <td>血红蛋白</td>
+                    <td>5.8 g/L</td>
+                </tr>
+                <tr>
+                    <td>尿蛋白</td>
+                    <td>5.8</td>
+                </tr>
+                <tr>
+                    <td>其他辅助检查</td>
+                    <td class="empty">—</td>
+                </tr>
+                <tr>
+                    <td>分类</td>
+                    <td><span class="tag-normal">未见异常</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ===== 卡片2：保健指导与转诊 ===== -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:#FFFBEB; color:#F59E0B;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                </div>
+                <span class="card-title">保健指导与转诊</span>
+            </div>
+            <div class="card-divider"></div>
+
+            <div class="info-card-group">
+                <div class="info-card-item">
+                    <span class="label">保健指导</span>
+                    <span class="value empty">生活方式、营养、心理</span>
+                </div>
+                <div class="info-card-item">
+                    <span class="label">转诊</span>
+                    <span class="value empty">无</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 卡片3：随访计划 ===== -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:#EFF6FF; color:#3B82F6;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                </div>
+                <span class="card-title">随访计划</span>
+            </div>
+            <div class="card-divider"></div>
+
+            <div class="data-row" style="margin-top:4px;">
+                <span class="label">下次随访日期</span>
+                <span class="value"><span class="highlight">2025-05-20</span></span>
+            </div>
+            <div class="data-row">
+                <span class="label">随访医生签名</span>
+                <span class="value">陈友谅</span>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            档案编号 M20250215001 · 随访日期 2025-3-20 · 陈友谅医生
+        </div>
+
+        <div class="bottom-spacer"></div>
+
+    </div>
+
+<script>
+  // 返回按钮 — 点击返回随访列表
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '孕产妇随访列表界面.html';
+  });
+</script>
+</body>
+</html>

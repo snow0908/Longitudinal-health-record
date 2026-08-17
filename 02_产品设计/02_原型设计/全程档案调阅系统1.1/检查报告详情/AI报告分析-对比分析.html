@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI对比分析摘要</title>
+    <script src="./flexible.js"></script>
+    <link rel="stylesheet" type="text/css" href="./common.css" />
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+    <style>
+      /* ===== AI 对比分析摘要页样式（沿用项目原UI风格） ===== */
+
+      /* --- 对比元信息卡片（白底） --- */
+      .compare-meta-card {
+        background-color: rgba(255, 255, 255, 1);
+        margin: 10px 16px 0 16px;
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+      }
+      .compare-meta-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 0;
+      }
+      .compare-meta-tag {
+        font-size: 12px;
+        color: rgba(153, 153, 153, 1);
+        font-family: PingFangSC-Regular;
+        line-height: 17px;
+        padding: 2px 8px;
+        background-color: rgba(243, 245, 247, 1);
+        border-radius: 4px;
+        margin-bottom: 8px;
+      }
+      .compare-meta-tag.cur {
+        color: rgba(9, 106, 255, 1);
+        background-color: rgba(234, 245, 255, 1);
+      }
+      .compare-meta-date {
+        font-size: 16px;
+        color: rgba(51, 51, 51, 1);
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        line-height: 22px;
+      }
+      .compare-meta-vs {
+        font-size: 14px;
+        color: rgba(9, 106, 255, 1);
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        padding: 0 12px;
+        flex-shrink: 0;
+      }
+
+      /* --- AI 卡片（白底 8px 圆角） --- */
+      .ai-card {
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 8px;
+        margin: 16px 16px 0 16px;
+        padding: 16px;
+      }
+      .ai-card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .ai-card-title {
+        font-size: 16px;
+        color: rgba(51, 51, 51, 1);
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        line-height: 22px;
+        margin-left: 8px;
+      }
+      .ai-card-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .ai-card-item {
+        position: relative;
+        padding-left: 12px;
+        font-size: 14px;
+        color: rgba(51, 51, 51, 1);
+        font-family: PingFangSC-Regular;
+        line-height: 20px;
+        margin-top: 8px;
+      }
+      .ai-card-item:first-child { margin-top: 0; }
+      .ai-card-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: rgba(9, 106, 255, 1);
+      }
+      .ai-card-item .hl-warn {
+        color: rgba(234, 88, 12, 1);
+        font-weight: 500;
+      }
+      .ai-card-item .hl-danger {
+        color: rgba(245, 63, 63, 1);
+        font-weight: 500;
+      }
+      .ai-suggest-item {
+        font-size: 14px;
+        color: rgba(51, 51, 51, 1);
+        font-family: PingFangSC-Regular;
+        line-height: 20px;
+        margin-top: 8px;
+      }
+      .ai-suggest-item:first-child { margin-top: 0; }
+      .ai-suggest-item .num {
+        color: rgba(9, 106, 255, 1);
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        margin-right: 4px;
+      }
+
+      .bottom-spacer { height: 24px; }
+    </style>
+  </head>
+  <body>
+    <div class="page flex-col">
+      <!-- 状态栏 + 标题栏 -->
+      <div class="section_1 flex-col">
+        <div class="group_1 flex-row">
+          <span class="text_1">10:19</span>
+          <img
+            class="thumbnail_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng704147f8b978587e16053c0aff2e7a89010fce4b1451e830bc244c0f5237adc5.png"
+          />
+          <span class="text_2">5G</span>
+          <img
+            class="image_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPngb44e7965ccfb0dcdb8b19278c26b84b1f1e92d5ae3c4c02730dc831e2478c8ee.png"
+          />
+        </div>
+        <div class="group_2 flex-row">
+          <img
+            class="label_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng1f264f6d2d7519387132cd8cedd70f26e20a37499e604d10ad41e07e06c00a98.png"
+            onclick="window.location.href='./AI报告分析-选择报告.html'"
+            style="cursor:pointer;"
+          />
+          <span class="text_3">AI对比分析摘要</span>
+        </div>
+      </div>
+
+      <!-- 对比元信息 -->
+      <div class="compare-meta-card">
+        <div class="compare-meta-item">
+          <span class="compare-meta-tag">对比报告</span>
+          <span class="compare-meta-date">2023-06-15</span>
+        </div>
+        <span class="compare-meta-vs">VS</span>
+        <div class="compare-meta-item">
+          <span class="compare-meta-tag cur">当前报告</span>
+          <span class="compare-meta-date">2024-06-15</span>
+        </div>
+      </div>
+
+      <!-- AI 关键变化 -->
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <span class="ai-card-title">AI关键变化</span>
+        </div>
+        <ul class="ai-card-list">
+          <li class="ai-card-item"><span class="hl-warn">息肉数量：2枚 → 4枚，新增横结肠、降结肠息肉</span></li>
+          <li class="ai-card-item"><span class="hl-warn">息肉大小：最大0.8cm → 最大1.2cm，息肉显著增大，癌变风险升高</span></li>
+          <li class="ai-card-item">新增病变：<span class="hl-danger">直肠0.7×0.7cm隆起，疑似NET</span>，为新发高危病变</li>
+          <li class="ai-card-item">Boston评分：7分 → 8分，肠道准备质量提升</li>
+        </ul>
+      </div>
+
+      <!-- 风险预警 -->
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <span class="ai-card-title">风险预警</span>
+        </div>
+        <ul class="ai-card-list">
+          <li class="ai-card-item"><span class="hl-danger">2年内息肉进展明显，提示患者息肉生长活跃，需立即干预</span></li>
+          <li class="ai-card-item"><span class="hl-danger">新发直肠NET疑似病变，为本次检查最急发现，需优先处理</span></li>
+        </ul>
+      </div>
+
+      <!-- 临床建议 -->
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <span class="ai-card-title">临床建议</span>
+        </div>
+        <ul class="ai-card-list">
+          <li class="ai-suggest-item"><span class="num">1.</span>优先处理直肠NET疑似病变，尽快行活检明确诊断</li>
+          <li class="ai-suggest-item"><span class="num">2.</span>完整切除所有结肠息肉，术后定期随访监测复发</li>
+          <li class="ai-suggest-item"><span class="num">3.</span>缩短复查间隔，建议术后6个月复查肠镜</li>
+        </ul>
+      </div>
+
+      <div class="bottom-spacer"></div>
+    </div>
+  </body>
+</html>

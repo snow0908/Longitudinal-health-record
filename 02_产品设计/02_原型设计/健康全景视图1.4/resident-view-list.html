@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>视图配置 - 系统设置</title>
+<link rel="stylesheet" href="框架.css">
+<style>
+  /* ===== 视图配置页面特有样式（设计变量与公共样式见 框架.css） ===== */
+
+  /* 按钮（页面特有：链接型按钮） */
+  .btn-link{height:auto;padding:0;color:var(--text-link);font-size:var(--font-size-body);font-weight:var(--font-weight-regular)}
+  .btn-link:hover{text-decoration:underline}
+  .btn-link:active{color:var(--primary-active)}
+  .btn-link.danger{color:var(--danger)}
+  .btn-link.danger:hover{color:#FF7875}
+  .btn-link.disabled,.btn-link[disabled]{color:var(--text-disabled);cursor:not-allowed;text-decoration:none;pointer-events:none}
+  .btn-link + .btn-link{margin-left:12px}
+  /* 布局与左侧菜单栏、主内容区、页面标题样式已提取至 框架.css */
+
+  /* 页面标题（本页覆盖：右侧按钮定宽） */
+  .page-head .right .btn{width:60px;padding:0;min-width:60px}
+
+  /* 筛选区 */
+  .filter-bar{padding:11px 12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid #E8E8E8;flex-shrink:0}
+  .filter-bar .filter-actions .btn{width:60px;padding:0;min-width:60px}
+  .filter-bar .lbl{font-size:var(--font-size-body);color:var(--text-secondary);flex-shrink:0}
+  .search-input{flex:0 0 240px}
+  .select{height:32px;border:1px solid var(--color-neutral-300);border-radius:var(--r-sm);padding:0 10px;font-size:var(--font-size-body);color:var(--text-primary);background:var(--bg-white);outline:none;transition:all var(--transition-fast);min-width:120px;cursor:pointer}
+  .select:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(0,122,255,0.15)}
+  .filter-bar .spacer{flex:1}
+  .filter-bar .filter-actions{display:flex;gap:8px;align-items:center}
+
+  /* 下拉多选 */
+  .multi-select{position:relative;flex:0 0 260px}
+  .ms-trigger{height:32px;border:1px solid var(--color-neutral-300);border-radius:var(--r-sm);padding:0 12px;background:var(--bg-white);display:flex;align-items:center;gap:8px;cursor:pointer;transition:all var(--transition-fast);user-select:none}
+  .ms-trigger:hover{border-color:var(--primary)}
+  .multi-select.open .ms-trigger{border-color:var(--primary);box-shadow:0 0 0 2px rgba(0,122,255,0.15)}
+  .ms-text{flex:1;font-size:var(--font-size-body);color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:32px}
+  .ms-text.placeholder{color:var(--text-placeholder)}
+  .ms-text.has-value{color:var(--text-primary)}
+  .ms-badge{font-size:var(--font-size-caption);color:var(--primary);background:var(--primary-light);padding:1px 6px;border-radius:2px;line-height:1.4;display:none;font-weight:var(--font-weight-medium)}
+  .ms-badge.show{display:inline-block}
+  .ms-arrow{width:12px;height:12px;stroke:var(--text-tertiary);fill:none;stroke-width:1.5;transition:transform var(--transition-fast);flex-shrink:0}
+  .multi-select.open .ms-arrow{transform:rotate(180deg)}
+  .ms-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg-white);border:1px solid var(--primary-border);border-radius:var(--r-sm);box-shadow:var(--shadow-md);max-height:280px;overflow-y:auto;z-index:var(--z-dropdown);display:none;padding:4px 0}
+  .multi-select.open .ms-dropdown{display:block}
+  .ms-option{display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:var(--font-size-body);color:var(--text-primary);transition:background var(--transition-fast);user-select:none}
+  .ms-option:hover{background:var(--primary-bg)}
+  .ms-option input[type="checkbox"]{width:14px;height:14px;accent-color:var(--primary);cursor:pointer;flex-shrink:0}
+  .ms-option span{flex:1;line-height:1.4}
+  .ms-toolbar{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid var(--primary-border);margin-bottom:4px;background:var(--bg-white);position:sticky;top:0;z-index:1}
+  .ms-toolbar a{font-size:var(--font-size-caption);color:var(--primary);cursor:pointer;user-select:none}
+  .ms-toolbar a:hover{text-decoration:underline}
+  .ms-toolbar .ms-clear{color:var(--text-tertiary)}
+  .ms-toolbar .ms-clear:hover{color:var(--danger)}
+
+  /* 数据表格（基础样式见 框架.css，本页仅保留覆盖） */
+  .table-card{background:var(--bg-white);border:1px solid var(--primary-border);overflow:hidden;margin:12px}
+  .tbl input[type="checkbox"]{width:14px;height:14px;accent-color:var(--primary);cursor:pointer;vertical-align:middle}
+  .tbl .col-name .nm{color:var(--text-secondary)}
+  .tbl .col-act{white-space:nowrap;text-align:left;width:1%}
+
+  /* 状态 */
+  .status-cell{display:inline-flex;align-items:center;gap:6px}
+  .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .status-dot.on{background:var(--success)}         /* 已启用 — 绿色 */
+  .status-dot.off{background:var(--gray)}           /* 已停用 — 灰色 */
+  .status-text{font-size:var(--font-size-body);color:var(--text-secondary)}
+
+  /* 分页器 */
+  .pagination{display:flex;align-items:center;gap:4px;padding:12px 16px;background:var(--bg-white);border-top:1px solid var(--primary-border);font-size:var(--font-size-caption);color:var(--text-tertiary);justify-content:flex-end;flex-wrap:wrap}
+  .pg-info{color:var(--text-tertiary);font-size:var(--font-size-caption);padding:0 4px}
+  .pg-info b{color:var(--text-primary);font-weight:var(--font-weight-medium);margin:0 2px}
+  .pg-btn{min-width:24px;height:24px;border-radius:2px;border:0.75px solid var(--color-neutral-300);background:var(--bg-white);color:var(--text-secondary);font-size:var(--font-size-caption);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition-fast);padding:0 6px;line-height:1}
+  .pg-btn:hover{border-color:var(--primary);color:var(--primary)}
+  .pg-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+  .pg-btn:disabled{opacity:.5;cursor:not-allowed}
+  .pg-ellipsis{padding:0 2px;color:var(--text-tertiary);font-size:var(--font-size-caption)}
+  .pg-input{width:40px;height:24px;border:0.75px solid var(--color-neutral-300);border-radius:2px;text-align:center;font-size:var(--font-size-caption);outline:none;background:var(--bg-white);color:var(--text-secondary);padding:0 4px}
+  .pg-input:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(0,122,255,0.15)}
+  .pg-page-size{height:24px;border:0.75px solid var(--color-neutral-300);border-radius:2px;padding:0 6px;font-size:var(--font-size-caption);color:var(--text-secondary);background:var(--bg-white);outline:none;cursor:pointer}
+  .pg-page-size:focus{border-color:var(--primary)}
+
+  /* 标签 */
+  .tag{font-size:12px;padding:1px 6px;border-radius:2px;font-weight:var(--font-weight-medium);display:inline-block;line-height:18px;margin-right:4px;margin-bottom:2px;border:0.75px solid transparent}
+  .tag.blue{background:var(--primary-light);color:var(--primary);border-color:var(--primary-border)}
+  .tag.green{background:var(--success-bg);color:#389E0D;border-color:#b7eb8f}
+  .tag.orange{background:#FAEEDA;color:#854F0B;border-color:#FFD591}
+  .tag.red{background:#FFECEC;color:var(--danger);border-color:#FFA39E}
+  .tag.purple{background:#F0F0FF;color:#531DAB;border-color:#D3ADF7}
+  .tag.cyan{background:#E0F7F7;color:#0E8A8A;border-color:#87E8DE}
+  .tag.pink{background:#FCE8F1;color:#C0306E;border-color:#FFADD2}
+  .tag.gray{background:var(--color-neutral-100);color:var(--text-tertiary);border-color:var(--color-neutral-300)}
+  .tag-more{font-size:var(--font-size-caption);color:var(--text-tertiary);cursor:pointer;padding:0 4px}
+  .tag-more:hover{color:var(--primary)}
+
+  /* 空状态样式已提取至 框架.css */
+
+  /* 弹窗 */
+  .modal-mask{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:var(--z-modal)}
+  .modal-mask.show{display:flex}
+  .modal{background:var(--bg-white);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.08),0 4px 12px rgba(0,0,0,0.04);width:640px;max-width:92vw;max-height:80vh;display:flex;flex-direction:column}
+  .modal .m-head{padding:16px 24px;border-bottom:2px solid var(--primary);display:flex;align-items:center;justify-content:space-between}
+  .modal .m-head .t{font-size:16px;font-weight:var(--font-weight-semibold);color:var(--primary)}
+  .modal .m-head .x{cursor:pointer;color:var(--text-tertiary);font-size:18px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:var(--r-sm);transition:all var(--transition-fast)}
+  .modal .m-head .x:hover{background:var(--color-neutral-100);color:var(--text-primary)}
+  .modal .m-body{padding:20px 24px;overflow:auto;flex:1}
+  .modal .m-foot{padding:12px 24px;border-top:1px solid var(--color-neutral-100);display:flex;justify-content:flex-end;gap:8px}
+  .field{display:flex;align-items:center;margin-bottom:14px;gap:0}
+  .field:last-child{margin-bottom:0}
+  .field>.field-label{flex-shrink:0;width:80px;font-size:14px;color:var(--text-secondary);font-weight:var(--font-weight-regular);text-align:right;margin-bottom:0;line-height:32px}
+  .field>.field-label .req{color:var(--danger);margin-right:2px}
+  .field .hint{font-size:12px;color:var(--text-tertiary);margin-top:4px}
+  .field .input,.field .textarea,.field .switch,.field .crowd-picker{flex:1;min-width:0}
+  .field.field-textarea{align-items:flex-start}
+  .field.field-textarea>.field-label{line-height:1.5;padding-top:6px}
+  .input,.textarea{width:100%;border:1px solid var(--color-neutral-300);border-radius:var(--r-sm);padding:0 12px;font-size:14px;color:var(--text-primary);background:var(--bg-white);outline:none;transition:all var(--transition-fast)}
+  .input{height:32px}
+  .input::placeholder,.textarea::placeholder{color:var(--text-placeholder)}
+  .textarea{min-height:72px;padding:8px 12px;resize:vertical;font-family:inherit;line-height:1.75}
+  .input:focus,.textarea:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(0,122,255,0.15)}
+  .field-row{display:flex;gap:12px}
+  .field-row .field{flex:1}
+  .ms-picker{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1px solid var(--color-neutral-300);border-radius:var(--r-sm);background:var(--bg-white);min-height:40px;max-height:120px;overflow-y:auto}
+  .ms-picker .picker-tag{font-size:12px;padding:3px 10px;border:1px solid var(--color-neutral-300);border-radius:var(--r-pill);color:var(--text-secondary);cursor:pointer;transition:all var(--transition-fast);user-select:none}
+  .ms-picker .picker-tag:hover{border-color:var(--primary);color:var(--primary)}
+  .ms-picker .picker-tag.active{background:var(--primary);border-color:var(--primary);color:#fff}
+  .ms-picker .empty{font-size:12px;color:var(--text-tertiary);align-self:center}
+
+  /* 弹框 - 适用人群：+ 添加人群 按钮 + 已选 tag 列表 */
+  .crowd-picker{position:relative;display:flex;align-items:flex-start;flex-wrap:wrap;gap:8px;min-height:32px;padding:2px 0}
+  .btn-add-crowd{height:28px;padding:0 12px;border:1px dashed var(--color-neutral-300);border-radius:var(--r-sm);background:var(--bg-white);color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all var(--transition-fast);display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;flex-shrink:0;line-height:1}
+  .btn-add-crowd:hover{border-color:var(--primary);border-style:solid;color:var(--primary);background:var(--primary-bg)}
+  .crowd-picker.open .btn-add-crowd{border-color:var(--primary);color:var(--primary);background:var(--primary-bg)}
+  .crowd-selected{display:flex;flex-wrap:wrap;gap:6px;flex:1;align-items:center;min-width:0}
+  .crowd-tag{display:inline-flex;align-items:center;gap:2px;height:24px;padding:0 2px 0 8px;background:var(--primary-light);color:var(--primary);border:1px solid var(--primary-border);border-radius:2px;font-size:13px;line-height:1;user-select:none}
+  .crowd-tag .x{cursor:pointer;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;line-height:1;border-radius:50%;color:var(--primary);opacity:.6;transition:all var(--transition-fast);font-weight:400}
+  .crowd-tag .x:hover{opacity:1;background:rgba(0,122,255,0.12)}
+  .crowd-picker .crowd-empty{font-size:12px;color:var(--text-tertiary);padding:4px 0}
+  .crowd-dropdown{position:fixed;min-width:220px;max-width:320px;background:var(--bg-white);border:1px solid var(--primary-border);border-radius:var(--r-sm);box-shadow:var(--shadow-md);z-index:9999;display:none;padding:4px 0;max-height:260px;overflow-y:auto}
+  .crowd-picker.open .crowd-dropdown{display:block}
+  .crowd-toolbar{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid var(--primary-border);margin-bottom:4px;background:var(--bg-white);position:sticky;top:0;z-index:1}
+  .crowd-toolbar a{font-size:12px;color:var(--primary);cursor:pointer;user-select:none}
+  .crowd-toolbar a:hover{text-decoration:underline}
+  .crowd-toolbar .clear{color:var(--text-tertiary)}
+  .crowd-toolbar .clear:hover{color:var(--danger)}
+  .crowd-option{display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:14px;color:var(--text-primary);transition:background var(--transition-fast);user-select:none}
+  .crowd-option:hover{background:var(--primary-bg)}
+  .crowd-option input[type="checkbox"]{width:14px;height:14px;accent-color:var(--primary);cursor:pointer;flex-shrink:0}
+  .crowd-option span{flex:1;line-height:1.4}
+
+  /* 开关样式已提取至 框架.css */
+
+  .confirm-modal{width:440px}
+  .confirm-body{padding:24px;text-align:center}
+  .confirm-body .ico{font-size:36px;margin-bottom:8px}
+  .confirm-body .msg{font-size:14px;color:var(--text-primary);margin-bottom:4px}
+  .confirm-body .sub{font-size:12px;color:var(--text-tertiary)}
+
+  /* 底部状态栏已按需求移除；Toast 样式已提取至 框架.css */
+</style>
+</head>
+<body>
+
+<!-- ===== 主内容区（顶部导航栏与左侧菜单栏由 框架.js 注入） ===== -->
+  <div class="main-area">
+
+    <!-- 标签栏 -->
+    <div class="tabbar">
+      <div class="tab-item dashboard active">
+        <svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><polyline points="4 17 10 11 14 15 20 9"/><polyline points="14 9 20 9 20 15"/></svg>
+        视图配置
+        <span class="tab-close" onclick="event.stopPropagation();toast('关闭标签','info')">×</span>
+      </div>
+    </div>
+
+    <!-- 内容 — 8px 间距 + #F0F0F0 背景，content-card 统一白色大区域 -->
+    <div class="content">
+      <div class="content-card">
+
+      <!-- 页面标题 + 右上 删除 / 新增 — 脱敏规则风格 -->
+      <div class="page-head">
+        <h1>视图配置</h1>
+        <div class="right">
+          <button class="btn btn-danger-outline" id="btnDelete" onclick="batchDelete()" disabled>删除</button>
+          <button class="btn btn-primary" onclick="openCreate()">新增</button>
+        </div>
+      </div>
+
+      <!-- 筛选区 — 脱敏规则风格 -->
+      <div class="filter-bar">
+        <span class="lbl">视图名称</span>
+        <div class="search-input">
+          <input type="text" id="searchName" placeholder="请输入视图名称" oninput="renderTable()">
+        </div>
+        <span class="lbl">适用人群</span>
+        <div class="multi-select" id="tagSelect">
+          <div class="ms-trigger" onclick="toggleTagDropdown(event)">
+            <span class="ms-text placeholder" id="tagPlaceholder">请选择适用人群（可多选）</span>
+            <span class="ms-badge" id="tagBadge">0</span>
+            <svg class="ms-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="ms-dropdown" id="tagDropdown" onclick="event.stopPropagation()">
+            <div class="ms-toolbar">
+              <a onclick="selectAllTags()">全选</a>
+              <a class="ms-clear" onclick="clearAllTags()">清空</a>
+            </div>
+            <div id="tagOptions"></div>
+          </div>
+        </div>
+        <span class="lbl">状态</span>
+        <select class="select" id="filterStatus" onchange="renderTable()">
+          <option value="">全部</option>
+          <option value="on">已启用</option>
+          <option value="off">已停用</option>
+        </select>
+        <div class="spacer"></div>
+        <div class="filter-actions">
+          <button class="btn btn-default" onclick="resetFilter()">重置</button>
+          <button class="btn btn-primary" onclick="renderTable()">查询</button>
+        </div>
+      </div>
+
+      <!-- 表格 + 分页器 — 脱敏规则风格（一卡片） -->
+      <div class="table-card">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th class="center" style="width:40px"><input type="checkbox" id="checkAll" onchange="toggleCheckAll(this.checked)"></th>
+              <th class="center" style="width:60px">序号</th>
+              <th>视图名称</th>
+              <th>适用人群</th>
+              <th>更新人</th>
+              <th>更新时间</th>
+              <th class="center">状态</th>
+              <th class="col-act">操作</th>
+            </tr>
+          </thead>
+          <tbody id="viewTbody"></tbody>
+        </table>
+
+        <!-- 分页器 — 脱敏规则风格 -->
+        <div class="pagination">
+          <span class="pg-info">共 <b id="totalCount">0</b> 条</span>
+          <select class="pg-page-size" id="pageSize" onchange="changePageSize()">
+            <option>20 条/页</option>
+            <option>50 条/页</option>
+            <option>100 条/页</option>
+          </select>
+          <button class="pg-btn" id="pgPrev" onclick="goPage(currentPage-1)">‹</button>
+          <div id="pgNumbers" style="display:inline-flex;gap:4px"></div>
+          <button class="pg-btn" id="pgNext" onclick="goPage(currentPage+1)">›</button>
+          <span class="pg-info">跳至第</span>
+          <input class="pg-input" id="pgJump" type="number" min="1" value="1" onkeydown="if(event.key==='Enter'){goPage(parseInt(this.value)||1)}">
+          <span class="pg-info">页</span>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+
+<!-- ===== 新增/编辑 Modal ===== -->
+<div class="modal-mask" id="editModal" onclick="if(event.target===this)closeEdit()">
+  <div class="modal">
+    <div class="m-head"><span class="t" id="editTitle">新增</span><span class="x" onclick="closeEdit()">×</span></div>
+    <div class="m-body">
+      <div class="field">
+        <label class="field-label"><span class="req">*</span>视图名称：</label>
+        <input class="input" id="fName" placeholder="请输入视图名称">
+      </div>
+      <div class="field">
+        <label class="field-label">状态：</label>
+        <label class="switch"><input type="checkbox" id="fEnabled"><span class="track"></span></label>
+      </div>
+      <div class="field">
+        <label class="field-label"><span class="req">*</span>适用人群：</label>
+        <div class="crowd-picker" id="fCrowdPicker">
+          <button type="button" class="btn-add-crowd" onclick="toggleCrowdDropdown(event)">+ 添加人群</button>
+          <div class="crowd-selected" id="fCrowdSelected"></div>
+          <div class="crowd-dropdown" id="fCrowdDropdown" onclick="event.stopPropagation()">
+            <div class="crowd-toolbar">
+              <a onclick="selectAllCrowd()">全选</a>
+              <a class="clear" onclick="clearCrowd()">清空</a>
+            </div>
+            <div class="crowd-options" id="fCrowdOptions"></div>
+          </div>
+        </div>
+      </div>
+      <div class="field field-textarea">
+        <label class="field-label">备注：</label>
+        <textarea class="textarea" id="fDesc" placeholder="请输入备注"></textarea>
+      </div>
+    </div>
+    <div class="m-foot">
+      <button class="btn btn-default" onclick="closeEdit()">取消</button>
+      <button class="btn btn-primary" onclick="saveView()">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 删除确认 ===== -->
+<div class="modal-mask" id="delModal" onclick="if(event.target===this)closeDel()">
+  <div class="modal confirm-modal">
+    <div class="m-head"><span class="t">删除视图</span><span class="x" onclick="closeDel()">×</span></div>
+    <div class="confirm-body">
+      <div class="ico">⚠️</div>
+      <div class="msg">确定删除 <b id="delName"></b> 吗？</div>
+      <div class="sub">删除后不可恢复，已绑定的用户将不再看到该视图</div>
+    </div>
+    <div class="m-foot">
+      <button class="btn btn-default" onclick="closeDel()">取消</button>
+      <button class="btn btn-primary" style="background:var(--danger)" onclick="confirmDel()">确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 统一框架：顶部导航栏 + 左侧菜单栏（菜单配置见 框架.js） ===== -->
+<script src="框架.js" data-page="view-list"></script>
+
+<script>
+const TAG_DEFS = [
+  {key:'高血压', color:'blue'},{key:'糖尿病', color:'purple'},{key:'冠心病', color:'orange'},
+  {key:'脑卒中', color:'red'},{key:'孕产妇', color:'pink'},{key:'0-6儿童', color:'cyan'},
+  {key:'65岁以上老人', color:'green'},{key:'残疾人', color:'gray'},{key:'低保户', color:'orange'},
+  {key:'结核病', color:'red'}
+];
+const tagColor = k => (TAG_DEFS.find(t=>t.key===k)||{}).color || 'gray';
+let filterTags = [];
+let editingCrowd = [];
+
+let views = [
+  { id:1, name:'概况视图', enabled:true, tags:[], updatedBy:'admin', updatedAt:'2026-07-28 09:30:00' },
+  { id:2, name:'老年人健康视图', enabled:true, tags:['65岁以上老人'], updatedBy:'张江', updatedAt:'2026-07-26 14:20:00' },
+  { id:3, name:'孕产妇管理视图', enabled:true, tags:['孕产妇'], updatedBy:'李娜', updatedAt:'2026-07-25 10:15:00' },
+  { id:4, name:'儿童保健视图', enabled:false, tags:['0-6儿童'], updatedBy:'王芳', updatedAt:'2026-07-20 16:45:00' },
+  { id:5, name:'慢病综合管理视图', enabled:true, tags:[], updatedBy:'刘毅', updatedAt:'2026-07-22 11:00:00' },
+  { id:6, name:'结核病管理视图', enabled:false, tags:['结核病'], updatedBy:'陈晨', updatedAt:'2026-07-18 09:00:00' }
+];
+let nextViewId = 7;
+let editingId = null;
+let deletingId = null;
+let currentPage = 1;
+let pageSize = 20;
+let selectedIds = new Set();
+
+/* 公共函数（toggleMenu / navigate / toast / escapeHtml 已提取至 框架.js） */
+
+// 点击外部关闭多选
+document.addEventListener('click', e=>{
+  const ms = document.getElementById('tagSelect');
+  if(ms && !ms.contains(e.target)) ms.classList.remove('open');
+});
+
+function renderTagOptions(){
+  const el = document.getElementById('tagOptions');
+  el.innerHTML = TAG_DEFS.map(t=>
+    `<label class="ms-option">
+      <input type="checkbox" value="${t.key}" ${filterTags.includes(t.key)?'checked':''} onchange="onFilterTagChange()">
+      <span>${t.key}</span>
+    </label>`
+  ).join('');
+}
+function onFilterTagChange(){
+  filterTags = Array.from(document.querySelectorAll('#tagOptions input:checked')).map(i=>i.value);
+  updateTagTrigger();
+  renderTable();
+}
+function selectAllTags(){
+  document.querySelectorAll('#tagOptions input').forEach(i=>i.checked=true);
+  onFilterTagChange();
+}
+function clearAllTags(){
+  document.querySelectorAll('#tagOptions input').forEach(i=>i.checked=false);
+  onFilterTagChange();
+}
+function toggleTagDropdown(e){
+  if(e) e.stopPropagation();
+  document.getElementById('tagSelect').classList.toggle('open');
+}
+function updateTagTrigger(){
+  const placeholder = document.getElementById('tagPlaceholder');
+  const badge = document.getElementById('tagBadge');
+  if(filterTags.length === 0){
+    placeholder.textContent = '请选择适用人群（可多选）';
+    placeholder.className = 'ms-text placeholder';
+    badge.classList.remove('show');
+  } else {
+    placeholder.textContent = filterTags.join('、');
+    placeholder.className = 'ms-text has-value';
+    badge.textContent = filterTags.length;
+    badge.classList.add('show');
+  }
+}
+
+function renderCrowdPicker(){
+  // 已选标签
+  const sel = document.getElementById('fCrowdSelected');
+  if(editingCrowd.length === 0){
+    sel.innerHTML = '';
+  } else {
+    sel.innerHTML = editingCrowd.map(k=>
+      `<span class="crowd-tag">${k}<span class="x" onclick="removeCrowd('${k}')" title="移除">×</span></span>`
+    ).join('');
+  }
+  // 下拉选项
+  const opt = document.getElementById('fCrowdOptions');
+  opt.innerHTML = TAG_DEFS.map(t=>
+    `<label class="crowd-option">
+      <input type="checkbox" value="${t.key}" ${editingCrowd.includes(t.key)?'checked':''} onchange="toggleCrowd('${t.key}',this.checked)">
+      <span>${t.key}</span>
+    </label>`
+  ).join('');
+}
+function toggleCrowd(k, checked){
+  const i = editingCrowd.indexOf(k);
+  if(checked && i<0) editingCrowd.push(k);
+  else if(!checked && i>=0) editingCrowd.splice(i,1);
+  // 同步刷新下拉 checkbox 与已选区
+  renderCrowdPicker();
+}
+function removeCrowd(k){
+  editingCrowd = editingCrowd.filter(x=>x!==k);
+  renderCrowdPicker();
+}
+function selectAllCrowd(){
+  editingCrowd = TAG_DEFS.map(t=>t.key);
+  renderCrowdPicker();
+}
+function clearCrowd(){
+  editingCrowd = [];
+  renderCrowdPicker();
+}
+function toggleCrowdDropdown(e){
+  if(e) e.stopPropagation();
+  var picker = document.getElementById('fCrowdPicker');
+  var dropdown = document.getElementById('fCrowdDropdown');
+  var isOpen = picker.classList.contains('open');
+  if (isOpen) {
+    picker.classList.remove('open');
+    return;
+  }
+  // 定位下拉框：相对于触发按钮
+  var btn = picker.querySelector('.btn-add-crowd');
+  var rect = btn.getBoundingClientRect();
+  dropdown.style.top = (rect.bottom + 4) + 'px';
+  dropdown.style.left = rect.left + 'px';
+  picker.classList.add('open');
+}
+// 点击外部关闭人群下拉
+document.addEventListener('click', e=>{
+  const cp = document.getElementById('fCrowdPicker');
+  if(cp && !cp.contains(e.target)) cp.classList.remove('open');
+});
+
+function statusInfo(v){
+  if(!v.enabled) return {dot:'off', text:'已停用'};
+  return {dot:'on', text:'已启用'};
+}
+
+function filteredList(){
+  const name = document.getElementById('searchName').value.trim().toLowerCase();
+  const status = document.getElementById('filterStatus').value;
+  return views.filter(v=>{
+    if(name && !v.name.toLowerCase().includes(name)) return false;
+    if(status==='on' && !v.enabled) return false;
+    if(status==='off' && v.enabled) return false;
+    if(filterTags.length && !filterTags.some(t=>(v.tags||[]).includes(t))) return false;
+    return true;
+  });
+}
+
+function renderTable(){
+  const list = filteredList();
+  const total = list.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  if(currentPage > totalPages) currentPage = totalPages;
+  const start = (currentPage-1) * pageSize;
+  const pageList = list.slice(start, start + pageSize);
+  document.getElementById('totalCount').textContent = total;
+  const tbody = document.getElementById('viewTbody');
+  if(!pageList.length){
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="8"><div class="ico">📭</div>没有匹配的视图<br><span style="font-size:var(--font-size-caption)">调整筛选条件或新增视图</span></td></tr>`;
+    renderPagination(total, totalPages);
+    updateCheckAll();
+    return;
+  }
+  tbody.innerHTML = pageList.map((v,i)=>{
+    const st = statusInfo(v);
+    const seq = start + i + 1;
+    const tagsHtml = (v.tags&&v.tags.length)
+      ? v.tags.slice(0,3).map(t=>`<span class="tag ${tagColor(t)}">${t}</span>`).join('') + (v.tags.length>3?`<span class="tag-more" title="${v.tags.slice(3).join('、')}">+${v.tags.length-3}</span>`:'')
+      : `<span style="font-size:var(--font-size-caption);color:var(--text-tertiary)">全部用户</span>`;
+    const checked = selectedIds.has(v.id) ? 'checked' : '';
+    return `
+      <tr>
+        <td class="center"><input type="checkbox" data-id="${v.id}" ${checked} onchange="onRowCheck(this)"></td>
+        <td class="center">${seq}</td>
+        <td class="col-name"><span class="nm">${escapeHtml(v.name)}</span></td>
+        <td>${tagsHtml}</td>
+        <td>${escapeHtml(v.updatedBy)}</td>
+        <td style="white-space:nowrap;color:var(--text-secondary);font-size:var(--font-size-caption)">${v.updatedAt}</td>
+        <td class="center"><div class="status-cell"><span class="status-dot ${st.dot}"></span><span class="status-text">${st.text}</span></div></td>
+        <td class="col-act">
+          <a class="btn-link" onclick="openConfig(${v.id})">配置</a>
+          ${v.id !== 1 ? `<a class="btn-link" onclick="openEdit(${v.id})">编辑</a>
+          <a class="btn-link danger" onclick="openDel(${v.id})">删除</a>` : ''}
+        </td>
+      </tr>`;
+  }).join('');
+  renderPagination(total, totalPages);
+  updateCheckAll();
+  updateDeleteBtn();
+}
+
+function onRowCheck(cb){
+  const id = parseInt(cb.dataset.id);
+  if(cb.checked) selectedIds.add(id); else selectedIds.delete(id);
+  updateCheckAll();
+  updateDeleteBtn();
+}
+function toggleCheckAll(checked){
+  selectedIds.clear();
+  if(checked){
+    const list = filteredList().slice((currentPage-1)*pageSize, currentPage*pageSize);
+    list.forEach(v=>selectedIds.add(v.id));
+  }
+  document.querySelectorAll('#viewTbody input[type="checkbox"]').forEach(cb=>{
+    cb.checked = checked && selectedIds.has(parseInt(cb.dataset.id));
+  });
+  updateDeleteBtn();
+}
+function updateCheckAll(){
+  const cbs = document.querySelectorAll('#viewTbody input[type="checkbox"]');
+  if(!cbs.length){ document.getElementById('checkAll').checked = false; return; }
+  const all = Array.from(cbs).every(cb=>cb.checked);
+  document.getElementById('checkAll').checked = all;
+}
+function updateDeleteBtn(){
+  document.getElementById('btnDelete').disabled = selectedIds.size === 0;
+}
+
+function renderPagination(total, totalPages){
+  document.getElementById('pgPrev').disabled = currentPage <= 1;
+  document.getElementById('pgNext').disabled = currentPage >= totalPages;
+  document.getElementById('pgJump').value = currentPage;
+  document.getElementById('pgJump').max = totalPages;
+  const el = document.getElementById('pgNumbers');
+  const pages = computePageList(currentPage, totalPages);
+  el.innerHTML = pages.map(p=>{
+    if(p === '...') return '<span class="pg-ellipsis">...</span>';
+    return `<button class="pg-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+  }).join('');
+}
+function computePageList(cur, total){
+  if(total <= 7) return Array.from({length:total},(_,i)=>i+1);
+  if(cur <= 4) return [1,2,3,4,5,'...',total];
+  if(cur >= total-3) return [1,'...',total-4,total-3,total-2,total-1,total];
+  return [1,'...',cur-1,cur,cur+1,'...',total];
+}
+function goPage(p){
+  if(!p || p < 1) p = 1;
+  const totalPages = Math.max(1, Math.ceil(filteredList().length / pageSize));
+  if(p > totalPages) p = totalPages;
+  currentPage = p;
+  renderTable();
+}
+function changePageSize(){
+  const val = document.getElementById('pageSize').value;
+  pageSize = parseInt(val) || 20;
+  currentPage = 1;
+  renderTable();
+}
+
+function resetFilter(){
+  document.getElementById('searchName').value = '';
+  document.getElementById('filterStatus').value = '';
+  document.querySelectorAll('#tagOptions input').forEach(i=>i.checked=false);
+  filterTags = [];
+  updateTagTrigger();
+  currentPage = 1;
+  renderTable();
+}
+
+function openCreate(){
+  editingId = null;
+  document.getElementById('editTitle').textContent = '新增';
+  document.getElementById('fName').value = '';
+  document.getElementById('fEnabled').checked = false;
+  document.getElementById('fDesc').value = '';
+  editingCrowd = [];
+  renderCrowdPicker();
+  document.getElementById('fCrowdPicker').classList.remove('open');
+  document.getElementById('editModal').classList.add('show');
+  setTimeout(()=>document.getElementById('fName').focus(),50);
+}
+function openConfig(id){
+  const v = views.find(x=>x.id===id);
+  if(!v) return;
+  const url = id === 1
+    ? `resident-view-config-v3.html?viewId=${id}&name=${encodeURIComponent(v.name)}`
+    : `resident-view-config-v2.html?viewId=${id}&name=${encodeURIComponent(v.name)}`;
+  window.location.href = url;
+}
+function openEdit(id){
+  const v = views.find(x=>x.id===id);
+  if(!v) return;
+  editingId = id;
+  document.getElementById('editTitle').textContent = '编辑';
+  document.getElementById('fName').value = v.name;
+  document.getElementById('fEnabled').checked = v.enabled;
+  document.getElementById('fDesc').value = v.desc || '';
+  editingCrowd = [...(v.tags||[])];
+  renderCrowdPicker();
+  document.getElementById('fCrowdPicker').classList.remove('open');
+  document.getElementById('editModal').classList.add('show');
+}
+function closeEdit(){
+  document.getElementById('editModal').classList.remove('show');
+  document.getElementById('fCrowdPicker').classList.remove('open');
+}
+function saveView(){
+  const name = document.getElementById('fName').value.trim();
+  if(!name){ toast('请填写视图名称','warning'); document.getElementById('fName').focus(); return; }
+  if(editingCrowd.length === 0){ toast('请至少选择一个人群','warning'); return; }
+  const enabled = document.getElementById('fEnabled').checked;
+  const desc = document.getElementById('fDesc').value.trim();
+  if(editingId){
+    const v = views.find(x=>x.id===editingId);
+    Object.assign(v, {name,enabled,tags:[...editingCrowd],desc,updatedBy:'admin',updatedAt:now()});
+    toast(`视图「${name}」已更新`,'success');
+  } else {
+    views.push({id:nextViewId++,name,enabled,tags:[...editingCrowd],desc,updatedBy:'admin',updatedAt:now()});
+    toast(`视图「${name}」已创建`,'success');
+  }
+  closeEdit();
+  renderTable();
+}
+
+function openDel(id){
+  const v = views.find(x=>x.id===id);
+  if(!v) return;
+  deletingId = id;
+  document.getElementById('delName').textContent = v.name;
+  document.getElementById('delModal').classList.add('show');
+}
+function closeDel(){ document.getElementById('delModal').classList.remove('show'); deletingId=null; }
+function confirmDel(){
+  if(!deletingId) return;
+  const v = views.find(x=>x.id===deletingId);
+  views = views.filter(x=>x.id!==deletingId);
+  selectedIds.delete(deletingId);
+  closeDel();
+  renderTable();
+  toast(`视图「${v?v.name:''}」已删除`,'success');
+}
+function batchDelete(){
+  if(selectedIds.size === 0) return;
+  if(!confirm(`确定删除已选中的 ${selectedIds.size} 个视图吗？`)) return;
+  views = views.filter(v=>!selectedIds.has(v.id));
+  selectedIds.clear();
+  renderTable();
+  toast('批量删除完成','success');
+}
+
+function now(){
+  const d = new Date();
+  const pad = x=>String(x).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){ closeEdit(); closeDel(); document.getElementById('tagSelect').classList.remove('open'); const cp=document.getElementById('fCrowdPicker'); if(cp) cp.classList.remove('open'); }
+});
+
+renderTagOptions();
+renderTable();
+</script>
+</body>
+</html>

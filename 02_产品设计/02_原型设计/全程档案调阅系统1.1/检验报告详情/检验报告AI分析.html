@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>检验报告AI分析</title>
+    <style>
+        /* ============================================================
+           样式严格参照《健康教育.html》及 C 端 UED 交互与视觉设计规范
+           基准宽度：375px
+           ============================================================ */
+
+        /* ---------- Reset & Base ---------- */
+        * {
+            box-sizing: border-box;
+            flex-shrink: 0;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+            background-color: #F3F5F7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+        }
+        .justify-between {
+            display: flex;
+            justify-content: space-between;
+        }
+        .align-center {
+            display: flex;
+            align-items: center;
+        }
+        .align-start {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        /* ---------- Page ---------- */
+        .page {
+            background-color: #F3F5F7;
+            position: relative;
+            width: 375px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-bottom: 16px;
+        }
+
+        /* ============================================================
+           导航栏
+           ============================================================ */
+        .group_1 {
+            background-color: rgba(255, 255, 255, 1);
+            padding: 14px 16px 7px 16px;
+        }
+        .box_1 {
+            margin: 0 10px 0 24px;
+        }
+        .text_1 {
+            overflow-wrap: break-word;
+            color: rgba(0, 0, 0, 1);
+            font-size: 16px;
+            letter-spacing: 1.100000023841858px;
+            font-family: PingFangSC-Semibold;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            line-height: 22px;
+        }
+        .thumbnail_1 {
+            width: 19px;
+            height: 12px;
+            margin: 5px 0 5px 191px;
+        }
+        .text_2 {
+            overflow-wrap: break-word;
+            color: rgba(0, 0, 0, 1);
+            font-size: 12px;
+            letter-spacing: 0.925000011920929px;
+            font-family: PingFangSC-Semibold;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            line-height: 17px;
+            margin: 3px 0 0 6px;
+        }
+        .image_1 {
+            width: 25px;
+            height: 13px;
+            margin: 5px 0 4px 6px;
+        }
+        .box_2 {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .label_1 {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .text_3 {
+            flex: 1;
+            overflow-wrap: break-word;
+            color: rgba(51, 51, 51, 1);
+            font-size: 16px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: center;
+            white-space: nowrap;
+            line-height: 22px;
+            margin: 4px 0 0 34px;
+        }
+        .image_2 {
+            width: 78px;
+            height: 30px;
+            flex-shrink: 0;
+        }
+
+        /* ============================================================
+           白色内容卡片
+           ============================================================ */
+        .card {
+            background-color: #FFFFFF;
+            margin-bottom: 16px;
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        /* ---------- Divider ---------- */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #E5E5E5;
+        }
+        .divider--mt12 {
+            margin-top: 12px;
+        }
+        .divider--mt16 {
+            margin-top: 16px;
+        }
+
+        /* ============================================================
+           AI 指标深度解读头部横幅
+           ============================================================ */
+        .hero-card {
+            background: linear-gradient(135deg, #E6F4FF 0%, #F0F7FF 100%);
+            margin: 10px 0 10px;
+            padding: 24px 20px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-title {
+            color: #333333;
+            font-size: 22px;
+            font-family: PingFangSC-Semibold;
+            font-weight: 600;
+            text-align: left;
+            line-height: 30px;
+        }
+        .hero-subtitle {
+            color: #666666;
+            font-size: 13px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            line-height: 18px;
+            margin-top: 6px;
+            word-break: break-word;
+        }
+        .hero-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 64px;
+            height: 64px;
+        }
+
+        /* ============================================================
+           分区标题
+           ============================================================ */
+        .section-header {
+            display: flex;
+            align-items: center;
+        }
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .section-title {
+            color: #333333;
+            font-size: 16px;
+            font-family: PingFangSC-Semibold;
+            font-weight: 600;
+            text-align: left;
+            white-space: nowrap;
+            line-height: 22px;
+            margin-left: 8px;
+        }
+        .section-subtitle {
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: left;
+            line-height: 20px;
+            margin-top: 12px;
+            word-break: break-word;
+        }
+        .section-desc {
+            color: #999999;
+            font-size: 12px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            line-height: 17px;
+            margin-top: 4px;
+            word-break: break-word;
+        }
+
+        /* ============================================================
+           指标列表
+           ============================================================ */
+        .indicator-list {
+            margin-top: 12px;
+        }
+        .indicator-item {
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-top: 8px;
+            line-height: 22px;
+        }
+        .indicator-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin: 8px 8px 0 0;
+            flex-shrink: 0;
+        }
+        .indicator-dot--danger {
+            background-color: #F25C5C;
+        }
+        .indicator-dot--warning {
+            background-color: #FA9D3B;
+        }
+        .indicator-dot--info {
+            background-color: #2A7AE8;
+        }
+        .indicator-dot--success {
+            background-color: #3CC483;
+        }
+        .indicator-name {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            word-break: break-word;
+        }
+        .indicator-value {
+            flex: 1;
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            margin-left: 4px;
+            word-break: break-word;
+        }
+        .indicator-tag {
+            font-size: 12px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: center;
+            line-height: 17px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            flex-shrink: 0;
+        }
+        .indicator-tag--danger {
+            color: #F25C5C;
+            background-color: #FFF0F0;
+        }
+        .indicator-tag--warning {
+            color: #FA9D3B;
+            background-color: #FFF5E8;
+        }
+
+        /* ============================================================
+           建议条目
+           ============================================================ */
+        .suggestion-list {
+            margin-top: 12px;
+        }
+        .suggestion-item {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 10px;
+            line-height: 22px;
+        }
+        .suggestion-label {
+            color: #333333;
+            font-size: 14px;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            text-align: left;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .suggestion-text {
+            flex: 1;
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            line-height: 22px;
+            margin-left: 6px;
+            word-break: break-word;
+        }
+
+        /* ============================================================
+           文本内容
+           ============================================================ */
+        .text-content {
+            color: #666666;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            text-align: left;
+            line-height: 22px;
+            margin-top: 12px;
+            word-break: break-word;
+        }
+
+        /* ============================================================
+           底部脚注
+           ============================================================ */
+        .footer-note {
+            padding: 16px 16px 0 16px;
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <div class="page flex-col">
+
+        <!-- ==================== 导航栏 ==================== -->
+        <div class="group_1 flex-col">
+            <div class="box_1 flex-row">
+                <span class="text_1">10:19</span>
+                <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+                <span class="text_2">5G</span>
+                <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+            </div>
+            <div class="box_2 flex-row">
+                <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+                <span class="text_3">检验报告AI分析</span>
+                <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+            </div>
+        </div>
+
+        <!-- ==================== AI 指标深度解读头部 ==================== -->
+        <div class="hero-card">
+            <div class="hero-title">AI指标深度解读</div>
+            <div class="hero-subtitle">基于检验结果，AI 智能分析与临床解读</div>
+            <img class="hero-icon" src="../img/AI分析.png" referrerpolicy="no-referrer" />
+        </div>
+
+        <!-- ==================== 异常指标警报 ==================== -->
+        <div class="card flex-col">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="12" fill="#FFF0F0"/>
+                    <path d="M12 6V14M12 16V18" stroke="#F25C5C" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span class="section-title">异常指标警报</span>
+            </div>
+            <div class="section-subtitle">发现4项异常指标</div>
+            <div class="section-desc">检测到红细胞计数、白细胞计数、上皮细胞计数、管型计数显著超出正常范围，需重点关注。</div>
+
+            <div class="divider divider--mt12"></div>
+
+            <div class="indicator-list">
+                <div class="indicator-item">
+                    <span class="indicator-dot indicator-dot--danger"></span>
+                    <span class="indicator-name">红细胞计数</span>
+                    <span class="indicator-value">44.10 /ul</span>
+                    <span class="indicator-tag indicator-tag--danger">危急值</span>
+                </div>
+                <div class="indicator-item">
+                    <span class="indicator-dot indicator-dot--danger"></span>
+                    <span class="indicator-name">白细胞计数</span>
+                    <span class="indicator-value">19.30 /ul</span>
+                    <span class="indicator-tag indicator-tag--danger">危急值</span>
+                </div>
+                <div class="indicator-item">
+                    <span class="indicator-dot indicator-dot--warning"></span>
+                    <span class="indicator-name">上皮细胞计数</span>
+                    <span class="indicator-value">25 /ul</span>
+                    <span class="indicator-tag indicator-tag--warning">中度异常</span>
+                </div>
+                <div class="indicator-item">
+                    <span class="indicator-dot indicator-dot--danger"></span>
+                    <span class="indicator-name">管型计数</span>
+                    <span class="indicator-value">40.54 /ul</span>
+                    <span class="indicator-tag indicator-tag--danger">危急值</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== AI临床解读 ==================== -->
+        <div class="card flex-col">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="12" fill="#E8F3FF"/>
+                    <path d="M12 6C12 6 8 10 8 13C8 15.2091 9.79086 17 12 17C14.2091 17 16 15.2091 16 13C16 10 12 6 12 6Z" fill="#2A7AE8"/>
+                    <circle cx="12" cy="13" r="2" fill="white"/>
+                </svg>
+                <span class="section-title">AI临床解读</span>
+            </div>
+            <div class="section-subtitle">综合评估</div>
+            <div class="text-content">根据检验结果分析，患者存在明显的尿路感染迹象，伴有可能的肾脏损伤。</div>
+
+            <div class="divider divider--mt12"></div>
+
+            <div class="indicator-list">
+                <div class="indicator-item">
+                    <span class="indicator-dot indicator-dot--info"></span>
+                    <span class="indicator-value">白细胞显著升高提示急性感染</span>
+                </div>
+                <div class="indicator-item">
+                    <span class="indicator-dot indicator-dot--info"></span>
+                    <span class="indicator-value">红细胞显著升高提示可能存在血尿</span>
+                </div>
+                <div class="indicator-item">
+                    <span class="indicator-dot indicator-dot--info"></span>
+                    <span class="indicator-value">管型计数异常提示肾脏实质性病变</span>
+                </div>
+                <div class="indicator-item">
+                    <span class="indicator-dot indicator-dot--info"></span>
+                    <span class="indicator-value">上皮细胞增多符合尿路感染表现</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 诊断建议 ==================== -->
+        <div class="card flex-col">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="12" fill="#FFF5E8"/>
+                    <path d="M12 6L14.5 11.5H20.5L15.5 15.5L17.5 21.5L12 17.5L6.5 21.5L8.5 15.5L3.5 11.5H9.5L12 6Z" fill="#FA9D3B"/>
+                </svg>
+                <span class="section-title">诊断建议</span>
+            </div>
+            <div class="section-subtitle">优先处理建议</div>
+
+            <div class="divider divider--mt12"></div>
+
+            <div class="suggestion-list">
+                <div class="suggestion-item">
+                    <span class="suggestion-label">立即处理：</span>
+                    <span class="suggestion-text">建议紧急抗感染治疗，考虑使用广谱抗生素</span>
+                </div>
+                <div class="suggestion-item">
+                    <span class="suggestion-label">补充检查：</span>
+                    <span class="suggestion-text">建议进行尿培养+药敏试验，肾脏B超检查</span>
+                </div>
+                <div class="suggestion-item">
+                    <span class="suggestion-label">鉴别诊断：</span>
+                    <span class="suggestion-text">需排除肾小球肾炎、泌尿系结石等疾病</span>
+                </div>
+                <div class="suggestion-item">
+                    <span class="suggestion-label">监测建议：</span>
+                    <span class="suggestion-text">建议每日监测尿常规，3天后复查血常规</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 多指标关联分析 ==================== -->
+        <div class="card flex-col">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="12" fill="#EAF9F1"/>
+                    <circle cx="8" cy="10" r="3" fill="#3CC483"/>
+                    <circle cx="16" cy="10" r="3" fill="#3CC483"/>
+                    <circle cx="12" cy="17" r="3" fill="#3CC483"/>
+                    <path d="M10.5 11.5L11.5 15M13.5 11.5L12.5 15M9 15H15" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span class="section-title">多指标关联分析</span>
+            </div>
+            <div class="section-subtitle">综合评估</div>
+            <div class="text-content">白细胞、红细胞、管型计数异常组合，高度提示泌尿系统存在感染性病变合并肾实质受累，建议尽快完善相关检查并启动抗感染治疗。</div>
+        </div>
+
+        <!-- ==================== 底部脚注 ==================== -->
+        <div class="footer-note">
+            本分析由 AI 辅助生成，仅供参考，具体诊疗请以医生建议为准
+        </div>
+
+    </div>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.history.back();
+  });
+</script>
+
+</body>
+</html>

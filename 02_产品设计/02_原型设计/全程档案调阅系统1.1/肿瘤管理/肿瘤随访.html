@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>肿瘤随访记录</title>
+    <style>
+        /* ============================================================
+           全局重置 & 基础
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        body {
+            font-family: "PingFang SC", "苹方-简", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+            background-color: #F3F5F7;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .page {
+            width: 375px;
+            max-width: 100%;
+            background-color: #F3F5F7;
+            min-height: 100vh;
+            padding-bottom: 20px;
+            margin: 0 auto;
+        }
+
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-row { display: flex; flex-direction: row; }
+
+        /* ============================================================
+           导航栏
+           ============================================================ */
+        .group_1 {
+  background-color: rgba(255, 255, 255, 1);
+  padding: 14px 16px 7px 16px;
+}
+
+        .box_1 {
+  display: flex; flex-direction: row; align-items: center;
+  margin: 0 10px 0 24px;
+}
+        .status-spacer { flex: 1; }
+        .text_1 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 16px;
+  letter-spacing: 1.100000023841858px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+}
+        .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0;
+}
+        .text_2 {
+  overflow-wrap: break-word;
+  color: rgba(0, 0, 0, 1);
+  font-size: 12px;
+  letter-spacing: 0.925000011920929px;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 17px;
+  margin: 3px 0 0 6px;
+}
+        .image_1 {
+  width: 25px;
+  height: 13px;
+  margin: 5px 0 4px 6px;
+}
+
+        .box_2 {
+  margin-top: 15px;
+  display: flex; flex-direction: row;
+  align-items: center; flex-wrap: nowrap;
+}
+        .label_1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+          cursor: pointer;
+}
+        .text_3 {
+  flex: 1; min-width: 0;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+        .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+        /* ============================================================
+           卡片
+           ============================================================ */
+        .card {
+            background-color: #FFFFFF;
+            margin: 16px 16px 0 16px;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #E5E5E5;
+        }
+        .card:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #E5E5E5;
+            margin-top: 12px;
+        }
+        /* ============================================================
+           卡片头部（标题 + 图标）
+           ============================================================ */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: #096AFF;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: 500;
+            font-family: "PingFang SC", "苹方-简", "PingFangSC-Medium", sans-serif;
+            color: #333333;
+            line-height: 22px;
+        }
+
+        /* ============================================================
+           患者信息
+           ============================================================ */
+        .patient-info-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+        .patient-name {
+            color: #333333;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+        }
+        .patient-gender {
+            color: #333333;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin-left: 8px;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+        }
+        .patient-age {
+            color: #333333;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin-left: 8px;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+        }
+        .patient-meta {
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin-left: auto;
+            font-family: "PingFang SC", "苹方-简", sans-serif;
+        }
+
+        /* ============================================================
+           信息行 (label + value) - 遵循规范
+           ============================================================ */
+        .info-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            margin-top: 8px;
+        }
+        .info-row--first {
+            margin-top: 12px;
+        }
+
+        .info-label {
+            width: 136px;
+            flex-shrink: 0;
+            color: #333333;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: "PingFang SC", "苹方-简", "PingFangSC-Medium", sans-serif;
+            white-space: nowrap;
+        }
+        .info-value {
+            flex: 1;
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            font-family: "PingFang SC", "苹方-简", "PingFangSC-Regular", sans-serif;
+            word-break: break-word;
+        }
+        .info-value--blue {
+            color: #096AFF;
+            font-weight: 500;
+        }
+
+        /* 卡片1：患者基本信息 - 16px */
+        .patient-card .info-label {
+            font-size: 16px;
+            line-height: 22px;
+        }
+        .patient-card .info-value {
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        /* ============================================================
+           生活方式指导 - 标签 Regular 400
+           ============================================================ */
+        .lifestyle-card .info-row--first {
+            margin-top: 8px;
+        }
+        .lifestyle-card .info-label {
+            font-weight: 400;
+        }
+
+        /* ============================================================
+           体格检查 - 网格卡片（3列一行）
+           ============================================================ */
+        .metric-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        .metric-item {
+            background: #F4F6FB;
+            border-radius: 4px;
+            padding: 10px 4px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 56px;
+            text-align: center;
+        }
+
+        .metric-item .m-value {
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'PingFangSC-Medium', sans-serif;
+            color: #333333;
+            line-height: 22px;
+            letter-spacing: 0.3px;
+        }
+
+        .metric-item .m-value .m-unit {
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: #666666;
+            margin-left: 1px;
+        }
+
+        .metric-item .m-label {
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'PingFangSC-Regular', sans-serif;
+            color: #999999;
+            margin-top: 3px;
+            letter-spacing: 0.2px;
+        }
+
+        /* ============================================================
+           肿瘤标志物 - 虚线分隔样式
+           ============================================================ */
+        .dotted-row {
+            display: flex;
+            align-items: baseline;
+            padding: 8px 0;
+            min-height: 44px;
+        }
+
+        .dotted-name {
+            font-size: 14px;
+            font-weight: 400;
+            color: #333333;
+            line-height: 20px;
+            white-space: nowrap;
+        }
+
+        .dotted-line {
+            flex: 1;
+            min-width: 8px;
+            border-bottom: 1px dotted #D1D5DB;
+            margin: 0 8px;
+            align-self: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .dotted-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333333;
+            line-height: 20px;
+            white-space: nowrap;
+            text-align: right;
+        }
+
+        .dotted-unit {
+            font-size: 12px;
+            font-weight: 400;
+            color: #666666;
+            margin-left: 2px;
+        }
+
+        /* ============================================================
+           卡片纯文本内容（14px Regular #666666）
+           ============================================================ */
+        .content-text {
+            font-size: 14px;
+            font-weight: 400;
+            color: #666666;
+            line-height: 20px;
+            font-family: "PingFang SC", "苹方-简", "PingFangSC-Regular", sans-serif;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* ============================================================
+           底部脚注
+           ============================================================ */
+        .footer-note {
+            padding: 16px 16px 0 16px;
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            font-weight: 400;
+            font-family: "PingFang SC", "苹方-简", "PingFangSC-Regular", sans-serif;
+            line-height: 17px;
+        }
+
+        /* ============================================================
+           响应式适配
+           ============================================================ */
+        @media (max-width: 375px) {
+            .page {
+                width: 100%;
+            }
+        }
+        @media (max-width: 340px) {
+            .info-label {
+                width: 118px;
+            }
+            .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+            .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+            .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0;
+}
+            .metric-grid-3 {
+                gap: 6px;
+            }
+            .metric-item .m-value {
+                font-size: 14px;
+            }
+            .metric-item .m-value .m-unit {
+                font-size: 12px;
+            }
+            .lifestyle-card .info-label {
+                width: 100px;
+                font-size: 13px;
+            }
+            .lifestyle-card .info-value {
+                font-size: 13px;
+            }
+        }
+        @media (max-width: 320px) {
+            .text_3 {
+  flex: 1;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 22px;
+  margin: 4px 0 0 34px;
+}
+            .image_2 {
+  width: 78px;
+  height: 30px;
+  flex-shrink: 0;
+}
+            .thumbnail_1 {
+  width: 19px;
+  height: 12px;
+  margin: 5px 0;
+}
+            .info-label {
+                width: 90px;
+                font-size: 13px;
+            }
+            .info-value {
+                font-size: 13px;
+            }
+            .patient-meta {
+                margin-left: 0;
+                width: 100%;
+                margin-top: 4px;
+            }
+            .metric-grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page flex-col">
+
+        <!-- ==========================================================
+        导航栏
+        ========================================================== -->
+        <div class="group_1 flex-col">
+  <div class="box_1">
+    <span class="text_1">10:19</span>
+    <span class="status-spacer"></span>
+    <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+    <span class="text_2">5G</span>
+    <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+  </div>
+  <div class="box_2 flex-row">
+    <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+    <span class="text_3">肿瘤随访记录</span>
+    <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+  </div>
+</div>
+
+        <!-- ==========================================================
+        卡片1：患者基本信息
+        ========================================================== -->
+        <div class="card flex-col patient-card">
+            <div class="patient-info-row">
+                <span class="patient-name">自登</span>
+                <span class="patient-meta">档案编号：11200056</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">随访方式</span>
+                <span class="info-value">入户</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">随访日期</span>
+                <span class="info-value">2026-07-21</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">随访医生</span>
+                <span class="info-value">夏真</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">随访状态</span>
+                <span class="info-value">正常</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">下次随访日期</span>
+                <span class="info-value info-value--blue">2026-08-20</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片2：体格检查（3列一行）
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        <path d="M18 9l3 3-3 3"/>
+                        <path d="M6 15l-3-3 3-3"/>
+                    </svg>
+                </div>
+                <span class="card-title">体格检查</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="metric-grid-3">
+                <div class="metric-item">
+                    <span class="m-value">177 <span class="m-unit">cm</span></span>
+                    <span class="m-label">身高</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">56 <span class="m-unit">kg</span></span>
+                    <span class="m-label">体重</span>
+                </div>
+                <div class="metric-item">
+                    <span class="m-value">17.87 <span class="m-unit">kg/m²</span></span>
+                    <span class="m-label">体质指数</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片3：肿瘤四项检查
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2L9 5M6 2v20M6 2h12M18 2v20M18 2L15 5M6 22h12M6 10h12M6 14h12M6 18h12"/>
+                        <path d="M9 5h6"/>
+                    </svg>
+                </div>
+                <span class="card-title">肿瘤四项检查</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="dotted-row">
+                <span class="dotted-name">甲胎蛋白 (AFP)</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">5.36 <span class="dotted-unit">ng/ml</span></span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">癌胚抗原 (CEA)</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">5.2 <span class="dotted-unit">ng/ml</span></span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">糖类抗原125 (CA125)</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">6.97 <span class="dotted-unit">U/ml</span></span>
+            </div>
+            <div class="dotted-row">
+                <span class="dotted-name">组织多肽抗原 (TPA)</span>
+                <span class="dotted-line"></span>
+                <span class="dotted-value">6.2 <span class="dotted-unit">U/L</span></span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片4：生活方式指导
+        ========================================================== -->
+        <div class="card flex-col lifestyle-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M9 15l2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="card-title">生活方式指导</span>
+            </div>
+            <div class="divider"></div>
+
+            <!-- 日吸烟量（支） 每天 -->
+            <div class="info-row info-row--first">
+                <span class="info-label">日吸烟量（支）</span>
+                <span class="info-value">每天</span>
+            </div>
+
+            <!-- 日饮酒量（两） 45分钟 -->
+            <div class="info-row">
+                <span class="info-label">日饮酒量（两）</span>
+                <span class="info-value">45分钟</span>
+            </div>
+
+            <!-- 运动 2次/周|10分钟/次 -->
+            <div class="info-row">
+                <span class="info-label">运动</span>
+                <span class="info-value">2次/周|10分钟/次</span>
+            </div>
+
+            <!-- 目标运动 2次/周|10分钟/次 -->
+            <div class="info-row">
+                <span class="info-label">目标运动</span>
+                <span class="info-value">2次/周|10分钟/次</span>
+            </div>
+
+            <!-- 摄盐情况 重 -->
+            <div class="info-row">
+                <span class="info-label">摄盐情况</span>
+                <span class="info-value">重</span>
+            </div>
+
+            <!-- 心理调整 良好 -->
+            <div class="info-row">
+                <span class="info-label">心理调整</span>
+                <span class="info-value">良好</span>
+            </div>
+
+            <!-- 遵医行为 良好 -->
+            <div class="info-row">
+                <span class="info-label">遵医行为</span>
+                <span class="info-value">良好</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片6：目前情况
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <span class="card-title">目前情况</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="content-text">好转</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片7：指导内容
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="card-title">指导内容</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="content-text">督导随访、用药、饮食、康复、家床、住院、出诊</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        卡片8：随访管理
+        ========================================================== -->
+        <div class="card flex-col">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+                    </svg>
+                </div>
+                <span class="card-title">随访管理</span>
+            </div>
+            <div class="divider"></div>
+
+            <div class="info-row info-row--first">
+                <span class="info-label">卡氏评分</span>
+                <span class="info-value">70</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">核查医师</span>
+                <span class="info-value">夏真</span>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        底部脚注
+        ========================================================== -->
+        <div class="footer-note">
+            编号 11200056 · 恶性肿瘤随访 · 随访日期 2026-07-21
+        </div>
+
+    </div>
+
+<script>
+  document.querySelector('.label_1').addEventListener('click', function() {
+    window.location.href = '肿瘤管理列表.html';
+  });
+</script>
+
+</body>
+</html>
