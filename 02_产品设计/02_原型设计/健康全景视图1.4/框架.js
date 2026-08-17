@@ -19,29 +19,38 @@
 
   /* ================= 菜单配置（改菜单只需改这里） ================= */
   var MENU = [
-    { type: 'item', key: 'home', label: '首页',
-      icon: '<path d="M3 12L12 3l9 9M5 10v10h14V10"/>' },
-    { type: 'divider' },
-    { type: 'group', key: 'template', label: '模板管理',
-      icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>',
-      children: [] },
-    { type: 'divider' },
-    { type: 'item', key: 'page', label: '页面管理',
-      icon: '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>' },
+    { type: 'group', key: 'statistics', label: '数据统计',
+      icon: '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+      children: [
+        { key: 'clinical-stats', label: '临床数据统计' },
+        { key: 'ph-stats',       label: '公卫数据统计' }
+      ] },
     { type: 'divider' },
     { type: 'group', key: 'log', label: '日志管理',
       icon: '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>',
-      children: [] },
+      children: [
+        { key: 'access-log', label: '访问日志' },
+        { key: 'info-log',   label: '基本信息调阅日志' },
+        { key: 'emr-log',    label: '电子病历调阅日志' },
+        { key: 'hr-log',     label: '健康档案调阅日志' }
+      ] },
     { type: 'divider' },
-    { type: 'group', key: 'system', label: '系统设置',
+    { type: 'group', key: 'panorama', label: '全景配置',
+      icon: '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
+      children: [
+        { key: 'template',  label: '模板管理' },
+        { key: 'scene',     label: '场景配置',     url: '场景配置.html' },
+        { key: 'module',    label: '模块配置' },
+        { key: 'view-list', label: '概况视图配置', url: 'resident-view-list.html' }
+      ] },
+    { type: 'divider' },
+    { type: 'group', key: 'system', label: '系统管理',
       icon: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h0a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51h0a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v0a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>',
       children: [
-        { key: 'tuomin',    label: '脱敏配置',     url: '脱敏规则.html' },
-        { key: 'scene',     label: '场景配置',     url: '场景配置.html' },
-        { key: 'module',    label: '模块设置' },
         { key: 'common',    label: '通用设置' },
-        { key: 'msgpush',   label: '消息推送配置' },
-        { key: 'view-list', label: '视图配置',     url: 'resident-view-list.html' }
+        { key: 'tuomin',    label: '脱敏设置',     url: '脱敏规则.html' },
+        { key: 'watermark', label: '水印管理' },
+        { key: 'msgpush',   label: '消息推送设置' }
       ] }
   ];
 
