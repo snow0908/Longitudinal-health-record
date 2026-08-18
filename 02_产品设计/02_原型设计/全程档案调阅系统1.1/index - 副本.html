@@ -299,6 +299,7 @@ button:active {
   background: url(./img/SketchPng271ea8a8aaeb3057d93bfb565289a9037612c2df9cb9d9e17cea41c3ce9eb8f7.png)
     100% no-repeat;
   background-size: 100% 100%;
+  margin-top: 11px;
   padding: 8px 99px 8px 16px;
 }
 
@@ -349,42 +350,6 @@ button:active {
   line-height: 17px;
   margin-top: 4px;
 }
-
-/* ============================================================
-   基本信息卡片 - 人群标签（每种业务精简成一字，按业务类型着色）
-   - 轻量风格：浅色底 + 彩色字 + 同色细描边
-   - 鼠标悬停标签显示全称（title）
-   ============================================================ */
-.pop-tags {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin: 8px 16px 0 16px;
-}
-.pop-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 20px;
-  min-width: 20px;
-  padding: 0 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1;
-  font-family: PingFangSC-Medium;
-  white-space: nowrap;
-  border: 1px solid transparent;
-}
-.pop-tag--gao  { background-color: #FFF1F0; color: #E54B3C; border-color: #FFCCC7; }  /* 高血压 */
-.pop-tag--tang { background-color: #E8F1FF; color: #2F7DE0; border-color: #B3D4FF; }  /* 糖尿病 */
-.pop-tag--he   { background-color: #E6FBEE; color: #1A9E4A; border-color: #B7EBCC; }  /* 肺结核 */
-.pop-tag--xin  { background-color: #F3EEFF; color: #7B4FE0; border-color: #D4C5FF; }  /* 心血管 */
-.pop-tag--nao  { background-color: #FFF5E6; color: #D97400; border-color: #FFD79A; }  /* 脑卒中 */
-.pop-tag--lao  { background-color: #E6F9F9; color: #128A8A; border-color: #B7E8E8; }  /* 老年人 */
-.pop-tag--yun  { background-color: #FFF0F5; color: #D94C7E; border-color: #FFC9DA; }  /* 孕产妇 */
-.pop-tag--er   { background-color: #E6F8FB; color: #14A4B8; border-color: #B7E8EF; }  /* 儿童 */
 
 .section_4 {
   background-color: rgba(255, 255, 255, 1);
@@ -1126,7 +1091,7 @@ button:active {
 }
 
 /* ============================================================
-   健康档案模块统一排版（参照第一排 group_24 / 第二排 group_25）
+   公共卫生模块统一排版（参照第一排 group_24 / 第二排 group_25）
    - 每行等宽三列，卡片间距一致
    - 卡片内容垂直居中
    - 图标/文字间距统一
@@ -1193,7 +1158,7 @@ button:active {
 .group_31 .box_10 { background-color: #FDEBD0; margin-left: 0; }
 .group_31 .box_11 { background-color: #E0F2F1; margin-left: 0; }
 
-/* 健康档案卡片内图标统一：居中、无额外 margin */
+/* 公共卫生卡片内图标统一：居中、无额外 margin */
 .group_26 .icon_9,
 .group_26 .icon_10,
 .group_26 .icon_11,
@@ -1215,7 +1180,7 @@ button:active {
   align-self: center;
 }
 
-/* 健康档案卡片内文字统一：居中对齐、统一顶间距、统一行高 */
+/* 公共卫生卡片内文字统一：居中对齐、统一顶间距、统一行高 */
 .group_26 .text-group_9,
 .group_26 .text-group_10,
 .group_26 .text-group_11,
@@ -1359,6 +1324,30 @@ function goToModule(moduleName) {
   }
 }
 
+    /**
+     * 诊疗服务 / 诊疗明细 切换（图标点击）
+     */
+    function initMedToggle() {
+      var toggleIcon = document.getElementById('medToggleIcon');
+      var titleEl = document.getElementById('medTitle');
+      var serviceView = document.getElementById('medServiceView');
+      var detailView = document.getElementById('medDetailView');
+      var isDetail = false;
+
+      toggleIcon.addEventListener('click', function() {
+        isDetail = !isDetail;
+        if (isDetail) {
+          titleEl.textContent = '检查用药';
+          serviceView.style.display = 'none';
+          detailView.style.display = 'block';
+        } else {
+          titleEl.textContent = '就医记录';
+          serviceView.style.display = 'block';
+          detailView.style.display = 'none';
+        }
+      });
+    }
+    document.addEventListener('DOMContentLoaded', initMedToggle);
     </script>  </head>
   <body>
     <div class="page flex-col">
@@ -1418,12 +1407,6 @@ function goToModule(moduleName) {
               <span class="text-group_3">张自信</span>
             </div>
           </div>
-          <!-- 人群标签：每种业务精简成一字，按业务类型着色 -->
-          <div class="pop-tags">
-            <span class="pop-tag pop-tag--gao" title="高血压">高</span>
-            <span class="pop-tag pop-tag--tang" title="糖尿病">糖</span>
-            <span class="pop-tag pop-tag--he" title="肺结核">核</span>
-          </div>
           <div class="text-wrapper_1 flex-col">
             <span class="text_6">出生日期：1995-05-15</span>
             <span class="text_7">身份证号：5136***********4610</span>
@@ -1461,52 +1444,89 @@ function goToModule(moduleName) {
         </div>
       </div>
       <div class="section_4 flex-col">
-        <span class="text_10">诊疗服务</span>
+        <div class="flex-row justify-between align-center" style="margin-right:0;">
+          <span class="text_10" id="medTitle">就医记录</span>
+          <img class="icon_2" id="medToggleIcon" referrerpolicy="no-referrer" src="./img/SketchPng1172282e1d3fcd9336c282dc6f18f3113db2e489a4159f4c31b1f876901025ac.png" style="cursor:pointer;" />
+        </div>
 
-        <!-- 诊疗服务：6 张卡片，2 排 × 3 展示 -->
-        <div class="group_24 flex-row justify-between">
-          <div class="section_5 flex-row" onclick="goToModule('住院记录')">
-            <div class="image-text_89 flex-col">
-              <img class="icon_7" referrerpolicy="no-referrer" src="./img/SketchPngab72d92ac89f0589ee68a74a5f438a33de4ad1af692d3965a8ee1b25ea6220d9.png" />
-              <span class="text-group_7">住院记录</span>
+        <!-- 默认：诊疗服务 -->
+        <div id="medServiceView">
+          <div class="group_24 flex-row justify-between">
+            <div class="section_5 flex-row" onclick="goToModule('住院记录')">
+              <div class="image-text_89 flex-col">
+                <img class="icon_7" referrerpolicy="no-referrer" src="./img/SketchPngab72d92ac89f0589ee68a74a5f438a33de4ad1af692d3965a8ee1b25ea6220d9.png" />
+                <span class="text-group_7">住院记录</span>
+              </div>
+            </div>
+            <div class="group_5 flex-row" onclick="goToModule('门急诊记录')">
+              <div class="image-text_88 flex-col">
+                <img class="icon_6" referrerpolicy="no-referrer" src="./img/SketchPngd7d961e174cd2580432a89e1e96fb0e23609b454bce614e307d740514472e72a.png" />
+                <span class="text-group_6">门诊记录</span>
+              </div>
+            </div>
+            <div class="group_3 flex-row" onclick="goToModule('住院病案')">
+              <div class="image-text_86 flex-col">
+                <img class="icon_4" referrerpolicy="no-referrer" src="./img/Data-Copy-28.png" />
+                <span class="text-group_4">住院病案</span>
+              </div>
             </div>
           </div>
-          <div class="group_5 flex-row" onclick="window.location.href='门诊记录/门诊记录.html'">
-            <div class="image-text_88 flex-col">
-              <img class="icon_6" referrerpolicy="no-referrer" src="./img/SketchPngd7d961e174cd2580432a89e1e96fb0e23609b454bce614e307d740514472e72a.png" />
-              <span class="text-group_6">门诊记录</span>
+          <div class="group_25 flex-row justify-between">
+            <div class="block_5 flex-row" onclick="window.location.href='病案首页/病案首页列表.html'">
+              <div class="image-text_90 flex-col">
+                <img class="label_3" referrerpolicy="no-referrer" src="./img/Data-Edit-28.png" />
+                <span class="text-group_19">门诊病案</span>
+              </div>
             </div>
-          </div>
-          <div class="group_3 flex-row" onclick="goToModule('检查报告')">
-            <div class="image-text_86 flex-col">
-              <img class="icon_4" referrerpolicy="no-referrer" src="./img/SketchPng048998f2fed52d0f69d009298c15988c04c3da45be3240ec1f87be0bd503d8eb.png" />
-              <span class="text-group_4">检查报告</span>
+            <div class="block_6 flex-row" style="visibility:hidden;">
+              <div class="image-text_91 flex-col">
+                <img class="label_2" referrerpolicy="no-referrer" src="./img/SketchPng7743c35e0eb282bf528cf0be7e49c732d7a37d2e73e1e48bdc6caf2b4cd235e8.png" />
+                <span class="text-group_20">占位</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="group_24 flex-row justify-between">
-          <div class="group_4 flex-row" onclick="goToModule('检验报告')">
-            <div class="image-text_87 flex-col">
-              <img class="icon_5" referrerpolicy="no-referrer" src="./img/SketchPngadfb875a6847037a642503d1875fc36c3356332f184f855aeb4b32ad15c6ab73.png" />
-              <span class="text-group_5">检验报告</span>
+
+        <!-- 切换：诊疗明细 -->
+        <div id="medDetailView" style="display:none;">
+          <div class="group_24 flex-row justify-between">
+            <div class="group_3 flex-row" onclick="goToModule('检查报告')">
+              <div class="image-text_86 flex-col">
+                <img class="icon_4" referrerpolicy="no-referrer" src="./img/SketchPng048998f2fed52d0f69d009298c15988c04c3da45be3240ec1f87be0bd503d8eb.png" />
+                <span class="text-group_4">检查报告</span>
+              </div>
+            </div>
+            <div class="group_4 flex-row" onclick="goToModule('检验报告')">
+              <div class="image-text_87 flex-col">
+                <img class="icon_5" referrerpolicy="no-referrer" src="./img/SketchPngadfb875a6847037a642503d1875fc36c3356332f184f855aeb4b32ad15c6ab73.png" />
+                <span class="text-group_5">检验报告</span>
+              </div>
+            </div>
+            <div class="group_5 flex-row" onclick="goToModule('门急诊用药')">
+              <div class="image-text_88 flex-col">
+                <img class="icon_6" referrerpolicy="no-referrer" src="./img/SketchPng1ca2c99f46d0059151d9197535edf47a9bbffe15aa4e9a513132810283a8377f.png" />
+                <span class="text-group_6">门诊用药</span>
+              </div>
             </div>
           </div>
-          <div class="group_5 flex-row" style="background-color:#FFF4F4;" onclick="goToModule('门急诊用药')">
-            <div class="image-text_88 flex-col">
-              <img class="icon_6" referrerpolicy="no-referrer" src="./img/SketchPng1ca2c99f46d0059151d9197535edf47a9bbffe15aa4e9a513132810283a8377f.png" />
-              <span class="text-group_6">门诊用药</span>
+          <div class="group_25 flex-row justify-between">
+            <div class="section_5 flex-row" onclick="goToModule('住院用药')">
+              <div class="image-text_89 flex-col">
+                <img class="icon_7" referrerpolicy="no-referrer" src="./img/SketchPng7743c35e0eb282bf528cf0be7e49c732d7a37d2e73e1e48bdc6caf2b4cd235e8.png" />
+                <span class="text-group_7">住院用药</span>
+              </div>
             </div>
-          </div>
-          <div class="section_5 flex-row" onclick="goToModule('住院用药')">
-            <div class="image-text_89 flex-col">
-              <img class="icon_7" referrerpolicy="no-referrer" src="./img/SketchPng7743c35e0eb282bf528cf0be7e49c732d7a37d2e73e1e48bdc6caf2b4cd235e8.png" />
-              <span class="text-group_7">住院用药</span>
+            <div class="block_5 flex-row" style="visibility:hidden;">
+              <div class="image-text_90 flex-col">
+                <img class="label_3" referrerpolicy="no-referrer" src="./img/SketchPng1ca2c99f46d0059151d9197535edf47a9bbffe15aa4e9a513132810283a8377f.png" />
+                <span class="text-group_19">占位</span>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="text-wrapper_11 flex-row">
-          <span class="text_11">健康档案</span>
+          <span class="text_11">公共服务</span>
         </div>
         <div class="group_26 flex-row justify-between">
           <div class="box_1 flex-row" onclick="goToModule('居民档案')">

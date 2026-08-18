@@ -66,7 +66,7 @@
     <button class="btn btn-primary" onclick="saveSafebox()">保存设置</button>
 </div>
 
-<!-- 底部抽屉弹框 -->
+<!-- 底部抽屉 -->
 <div class="drawer-mask" id="drawerMask" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
     <div class="drawer-handle"></div>
@@ -80,9 +80,6 @@
         </div>
     </div>
     <div class="drawer-body" id="drawerBody"></div>
-    <div class="drawer-footer" id="drawerFooter">
-        <button class="btn btn-primary" onclick="confirmDrawerMode()">确定</button>
-    </div>
 </div>
 
 <!-- Toast -->
@@ -240,42 +237,20 @@ function openShieldDrawer(moduleId) {
 
     document.getElementById('drawerBody').innerHTML = `
         <div class="drawer-module-info">
-            <div class="info-icon" style="background:${m.color}; color:${m.iconColor}">${getModuleSvgIcon(m.id)}</div>
-            <div>
-                <div class="info-name">${m.name}</div>
-                <div class="info-count">共 ${m.subItems.length} 条记录${blockedCount > 0 ? ` · 已屏蔽 ${blockedCount} 条` : ''}</div>
-            </div>
+            <div class="info-count">${m.name} · 共 ${m.subItems.length} 条记录${blockedCount > 0 ? ` · 已屏蔽 ${blockedCount} 条` : ''}</div>
         </div>
-        <div id="shieldOptions">
+        <div class="shield-options">
             <div class="shield-option" onclick="selectDrawerMode('none')">
-                <div class="shield-option-icon none">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-                </div>
-                <div class="shield-option-content">
-                    <div class="shield-option-title">不屏蔽</div>
-                    <div class="shield-option-desc">该模块数据可被正常调阅</div>
-                </div>
-                <div class="shield-option-radio ${tempDrawerMode === 'none' ? 'checked' : ''}" id="radio-none"></div>
+                <span class="shield-option-title">不屏蔽</span>
+                <span class="shield-option-radio ${tempDrawerMode === 'none' ? 'checked' : ''}" id="radio-none"></span>
             </div>
             <div class="shield-option" onclick="selectDrawerMode('partial')">
-                <div class="shield-option-icon partial">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"/></svg>
-                </div>
-                <div class="shield-option-content">
-                    <div class="shield-option-title">部分屏蔽</div>
-                    <div class="shield-option-desc">选择特定记录进行屏蔽，可按时间筛选</div>
-                </div>
-                <div class="shield-option-radio ${tempDrawerMode === 'partial' ? 'checked' : ''}" id="radio-partial"></div>
+                <span class="shield-option-title">部分屏蔽</span>
+                <span class="shield-option-radio ${tempDrawerMode === 'partial' ? 'checked' : ''}" id="radio-partial"></span>
             </div>
             <div class="shield-option" onclick="selectDrawerMode('all')">
-                <div class="shield-option-icon all">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"/></svg>
-                </div>
-                <div class="shield-option-content">
-                    <div class="shield-option-title">全部屏蔽</div>
-                    <div class="shield-option-desc">该模块全部数据不可被调阅</div>
-                </div>
-                <div class="shield-option-radio ${tempDrawerMode === 'all' ? 'checked danger' : ''}" id="radio-all"></div>
+                <span class="shield-option-title">全部屏蔽</span>
+                <span class="shield-option-radio ${tempDrawerMode === 'all' ? 'checked danger' : ''}" id="radio-all"></span>
             </div>
         </div>
     `;
@@ -292,21 +267,9 @@ function closeDrawer() {
 }
 
 function selectDrawerMode(mode) {
-    tempDrawerMode = mode;
-    document.getElementById('radio-none').className = 'shield-option-radio' + (mode === 'none' ? ' checked' : '');
-    document.getElementById('radio-partial').className = 'shield-option-radio' + (mode === 'partial' ? ' checked' : '');
-    const radioAll = document.getElementById('radio-all');
-    radioAll.className = 'shield-option-radio' + (mode === 'all' ? ' checked danger' : '');
-}
-
-function confirmDrawerMode() {
-    if (!currentDrawerModuleId || !tempDrawerMode) {
-        closeDrawer();
-        return;
-    }
+    if (!currentDrawerModuleId) return;
 
     const moduleId = currentDrawerModuleId;
-    const mode = tempDrawerMode;
     const state = loadState();
     const m = state.modules[moduleId];
     const moduleDef = moduleData.find(x => x.id === moduleId);
@@ -318,12 +281,10 @@ function confirmDrawerMode() {
     } else if (mode === 'none') {
         m.blockedItems = [];
     }
-    // mode === 'partial': keep existing blockedItems, user will edit in sub page
 
     saveState(state);
     closeDrawer();
 
-    // If partial mode, navigate to sub-item page
     if (mode === 'partial') {
         sessionStorage.setItem('safebox_sub_module', moduleId);
         setTimeout(() => { window.location.href = 'safebox-sub.html'; }, 300);

@@ -779,7 +779,7 @@ body {
     height: 14px;
 }
 
-/* ===== 底部抽屉弹框 ===== */
+/* ===== 底部抽屉 ===== */
 .drawer-mask {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -787,7 +787,7 @@ body {
     z-index: 300;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s var(--ease);
+    transition: opacity 0.2s var(--ease);
 }
 
 .drawer-mask.show {
@@ -797,16 +797,14 @@ body {
 
 .drawer {
     position: fixed;
-    bottom: 0;
-    left: 50%;
+    bottom: 0; left: 50%;
     transform: translate(-50%, 100%);
     width: 100%;
     max-width: 375px;
     background: var(--card-bg);
-    border-radius: 16px 16px 0 0;
+    border-radius: 12px 12px 0 0;
     z-index: 301;
-    transition: transform 0.35s var(--ease);
-    max-height: 75vh;
+    transition: transform 0.25s var(--ease);
     display: flex;
     flex-direction: column;
 }
@@ -816,38 +814,41 @@ body {
 }
 
 .drawer-handle {
-    width: 36px;
+    width: 32px;
     height: 4px;
     border-radius: 44px;
-    background: var(--border);
-    margin: 10px auto 6px;
+    background: #E0E0E0;
+    margin: 8px auto 0;
     flex-shrink: 0;
 }
 
 .drawer-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 6px 16px 14px;
-    border-bottom: 1px solid var(--divider);
+    justify-content: center;
+    padding: 12px 16px 8px;
     flex-shrink: 0;
+    position: relative;
 }
 
 .drawer-title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
     font-family: PingFangSC-Medium, 'PingFang SC', sans-serif;
+    color: var(--text-primary);
 }
 
 .drawer-close {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
     width: 20px;
     height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border-radius: 50%;
-    transition: opacity 0.15s var(--ease);
 }
 
 .drawer-close:active {
@@ -855,66 +856,40 @@ body {
 }
 
 .drawer-close svg {
-    width: 20px;
-    height: 20px;
-    color: var(--text-secondary);
+    width: 18px;
+    height: 18px;
+    color: var(--text-tertiary);
 }
 
 .drawer-body {
-    padding: 12px 16px;
-    overflow-y: auto;
+    padding: 4px 16px 16px;
     flex: 1;
-    -webkit-overflow-scrolling: touch;
 }
 
+/* 模块信息（精简：一行小字） */
 .drawer-module-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    background: #F4F6FB;
-    border-radius: 4px;
-    margin-bottom: 12px;
-}
-
-.drawer-module-info .info-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.drawer-module-info .info-icon svg {
-    width: 20px;
-    height: 20px;
+    margin-bottom: 4px;
 }
 
 .drawer-module-info .info-name {
-    font-size: 14px;
-    font-weight: 500;
-    font-family: PingFangSC-Medium, 'PingFang SC', sans-serif;
-    color: var(--text-primary);
+    display: none;
 }
 
 .drawer-module-info .info-count {
-    font-size: 12px;
-    color: var(--text-tertiary);
-    margin-top: 2px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--divider);
 }
 
-/* 抽屉中的屏蔽模式选项 */
+/* 屏蔽模式选项 */
 .shield-option {
     display: flex;
     align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--divider);
+    justify-content: space-between;
+    padding: 13px 0;
     cursor: pointer;
-    gap: 12px;
-    transition: opacity 0.15s var(--ease);
-    min-height: 36px;
+    border-bottom: 1px solid var(--divider);
 }
 
 .shield-option:last-child {
@@ -922,60 +897,24 @@ body {
 }
 
 .shield-option:active {
-    opacity: 0.6;
-}
-
-.shield-option-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.shield-option-icon svg {
-    width: 16px;
-    height: 16px;
-}
-
-.shield-option-icon.none { background: #F4F6FB; color: var(--text-secondary); }
-.shield-option-icon.partial { background: var(--warning-light); color: var(--warning); }
-.shield-option-icon.all { background: var(--danger-light); color: var(--danger); }
-
-.shield-option-content {
-    flex: 1;
+    background: rgba(0,0,0,0.03);
 }
 
 .shield-option-title {
-    font-size: 14px;
-    font-weight: 500;
-    font-family: PingFangSC-Medium, 'PingFang SC', sans-serif;
+    font-size: 15px;
     color: var(--text-primary);
-    margin-bottom: 2px;
-}
-
-.shield-option-desc {
-    font-size: 12px;
-    color: var(--text-secondary);
-    line-height: 1.4;
 }
 
 .shield-option-radio {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    border: 0.833px solid var(--text-tertiary);
+    border: 1.5px solid #D0D0D0;
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s var(--ease);
 }
 
 .shield-option-radio.checked {
-    border: 5px solid var(--primary);
+    border: 4.5px solid var(--primary);
 }
 
 .shield-option-radio.checked.danger {
@@ -983,14 +922,7 @@ body {
 }
 
 .drawer-footer {
-    padding: 12px 16px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    border-top: 1px solid var(--divider);
-    flex-shrink: 0;
-}
-
-.drawer-footer .btn {
-    width: 100%;
+    display: none;
 }
 
 /* ===== 子项勾选独立页面 ===== */
@@ -1614,7 +1546,7 @@ body {
     border-radius: 8px;
     padding: 13px 14px;
     font-size: 18px;
-    letter-spacing: 6px;
+    /* letter-spacing: 6px; */
     outline: none;
     transition: all 0.2s var(--ease);
     -webkit-text-security: disc;

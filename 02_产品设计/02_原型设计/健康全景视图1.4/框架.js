@@ -61,8 +61,8 @@
   var orgName = scriptTag.getAttribute('data-org') || '温江区第一人民医院';
 
   /* ================= 顶部导航栏 ================= */
+  /* 注意：此处是 topbar 容器的内部内容，外层 div.topbar 由 inject() 创建，勿重复包裹 */
   var TOPBAR_HTML = `
-<div class="topbar">
   <img class="tb-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3' y='3' width='7' height='7' rx='1.5' fill='white'/%3E%3Crect x='14' y='3' width='7' height='7' rx='1.5' fill='white'/%3E%3Crect x='3' y='14' width='7' height='7' rx='1.5' fill='white'/%3E%3Crect x='14' y='14' width='7' height='7' rx='1.5' fill='white'/%3E%3C/svg%3E" alt="">
   <span class="tb-sysname">${sysName}</span>
   <span class="tb-org">${orgName}</span>
@@ -75,8 +75,7 @@
   <img class="tb-icon2" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='8' r='4' stroke='white' stroke-width='1.5' fill='none'/%3E%3Cpath d='M5.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5' stroke='white' stroke-width='1.5' fill='none'/%3E%3C/svg%3E" alt="">
   <img class="tb-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25 25'%3E%3Ccircle cx='12.5' cy='12.5' r='12.5' fill='rgba(255,255,255,0.25)'/%3E%3Ccircle cx='12.5' cy='10' r='4' fill='white'/%3E%3Cellipse cx='12.5' cy='21' rx='7' ry='4' fill='white'/%3E%3C/svg%3E" alt="">
   <span class="tb-user">admin</span>
-  <svg class="tb-arrow" viewBox="0 0 10 5"><polygon points="0,0 5,5 10,0" fill="rgba(255,255,255,0.6)"/></svg>
-</div>`;
+  <svg class="tb-arrow" viewBox="0 0 10 5"><polygon points="0,0 5,5 10,0" fill="rgba(255,255,255,0.6)"/></svg>`;
 
   /* ================= 左侧菜单栏 ================= */
   function buildSidebar() {

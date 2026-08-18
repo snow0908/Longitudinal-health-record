@@ -476,7 +476,7 @@
            ============================================================ */
         const RECORDS = [
             {
-                id:1, status:'pending', statusText:'待就诊', statusTag:'warning', name:'张自强', gender:'男', tags:[{c:'消', n:'消化管理'}],
+                id:1, status:'pending', statusText:'待就诊', statusTag:'warning', name:'张自强', gender:'男',
                 diag:'急性肠胃炎', hospital:'内蒙古国际蒙医医院', dept:'消化内科',
                 date:'2023-11-23', time:'09:30', type:'门诊', payment:'城镇职工医保', totalFee:'486.50', selfFee:'138.00',
                 diags:[
@@ -505,7 +505,7 @@
                 ]
             },
             {
-                id:2, status:'cancel', statusText:'已退号', statusTag:'cancel', name:'李建国', gender:'男', tags:[{c:'高', n:'高血压管理'}],
+                id:2, status:'cancel', statusText:'已退号', statusTag:'cancel', name:'李建国', gender:'男',
                 diag:'高血压复诊', hospital:'呼和浩特市第一医院', dept:'心血管内科',
                 date:'2023-11-15', time:'14:00', type:'门诊', payment:'城乡居民医保', totalFee:'120.00', selfFee:'45.00',
                 diags:[
@@ -529,7 +529,7 @@
                 ]
             },
             {
-                id:3, status:'done', statusText:'已就诊', statusTag:'success', name:'王秀兰', gender:'女', tags:[{c:'糖', n:'糖尿病管理'},{c:'高', n:'高血压管理'}],
+                id:3, status:'done', statusText:'已就诊', statusTag:'success', name:'王秀兰', gender:'女',
                 diag:'2型糖尿病', hospital:'北京协和医院', dept:'内分泌科',
                 date:'2023-10-08', time:'09:00', type:'门诊', payment:'公费医疗', totalFee:'8,560.00', selfFee:'2,100.00',
                 diags:[
@@ -556,7 +556,7 @@
                 ]
             },
             {
-                id:4, status:'overdue', statusText:'已转入住院', statusTag:'danger', name:'赵国强', gender:'男', tags:[{c:'心', n:'心血管管理'},{c:'高', n:'高血压管理'},{c:'糖', n:'糖尿病管理'}],
+                id:4, status:'overdue', statusText:'已转入住院', statusTag:'danger', name:'赵国强', gender:'男',
                 diag:'急性心肌梗死', hospital:'内蒙古自治区人民医院', dept:'急诊科',
                 date:'2023-09-20', time:'22:48', type:'急诊', payment:'自费', totalFee:'12,380.00', selfFee:'3,500.00',
                 diags:[
@@ -655,9 +655,6 @@
             document.getElementById('hdStatus').textContent = r.statusText || '—';
             document.getElementById('hdName').textContent = r.name || '—';
             document.getElementById('hdGender').textContent = r.gender ? ('· ' + r.gender) : '';
-            document.getElementById('hdTags').innerHTML = (r.tags || []).map(function(t){
-                return '<span class="pop-tag" title="' + t.n + '">' + t.c + '</span>';
-            }).join('');
             document.getElementById('hdHosp').textContent = r.hospital;
             document.getElementById('hdDept').textContent = r.dept;
             document.getElementById('hdTime').textContent = r.date + ' ' + r.time;
@@ -940,7 +937,7 @@
            事件绑定
            ============================================================ */
         document.getElementById('btnBack').addEventListener('click', function(){
-            window.location.href = '病案首页列表.html';
+            window.location.href = '门诊记录.html';
         });
         document.getElementById('btnCircle').addEventListener('click', function(){
             showToast('设置');
