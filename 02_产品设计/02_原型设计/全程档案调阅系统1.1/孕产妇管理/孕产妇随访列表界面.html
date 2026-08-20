@@ -34,19 +34,38 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { max-width: 375px; margin: 0 auto; position: relative; overflow-x: hidden; }
+    body {
+      max-width: 375px; margin: 0 auto; position: relative; overflow-x: hidden;
+      background-color: var(--gray-50);
+      background-image: linear-gradient(180deg,
+          #E85A8F 0%,
+          #F080AA 20%,
+          #F9B4D2 35%,
+          #F9C2DA 42%,
+          #F9C9DE 48%,
+          #F9D0E2 54%,
+          #F9D7E6 60%,
+          #F9DEEB 66%,
+          #F9E5EF 72%,
+          #F9ECF3 79%,
+          #F9F3F7 86%,
+          #F9F7F9 93%,
+          var(--gray-50) 100%);
+      background-repeat: no-repeat;
+      background-size: 100% 465px;
+    }
     .flex-col { display: flex; flex-direction: column; }
     .flex-row { display: flex; flex-direction: row; }
     .justify-between { justify-content: space-between; }
     .align-center { align-items: center; }
 
-    /* ===== 顶部渐变头部 (高度 273px) ===== */
+    /* ===== 顶部渐变头部 (高度 273px) — 同儿童管理：渐变置于 body 背景，头部透明 ===== */
     .patient-header {
       position: relative;
       overflow: hidden;
       height: 273px;
       color: white;
-      background: linear-gradient(135deg, #E85A8F 0%, #F080AA 60%, #F9B4D2 100%);
+      background: transparent;
       padding: 0;
       display: flex;
       flex-direction: column;
@@ -285,10 +304,9 @@
     .archive-tabs {
       display: flex;
       gap: 10px;
-      padding: 10px 16px 6px;
+      padding: 0px 16px 6px;
       overflow-x: auto;
       scrollbar-width: none;
-      background: var(--gray-50);
       margin-top: 0;  /* 紧挨头部，头部高度 273px，padding-top 10px 使按钮距顶部 283px */
     }
     .archive-tabs::-webkit-scrollbar { display: none; }
@@ -332,7 +350,7 @@
        孕产妇档案详情入口卡片
        ============================================================ */
     .archive-card {
-      margin: 12px 16px 14px;
+      margin: 0px 16px 14px;
       position: relative;
       z-index: 4;
       background: #FFFFFF;

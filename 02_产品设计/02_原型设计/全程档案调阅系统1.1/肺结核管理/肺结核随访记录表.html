@@ -118,12 +118,12 @@
       padding: 16px;
     }
 
-    /* ---------- Divider ---------- */
+    /* ---------- Divider（参照慢阻肺随访） ---------- */
     .divider {
-      width: 343px; height: 1px; background-color: #E5E5E5;
+      width: 100%; height: 1px; background-color: #E5E5E5;
+      margin-top: 12px;
     }
     .divider--mt12 { margin-top: 12px; }
-    .divider--mt11 { margin-top: 11px; }
     .divider--thin {
       background-color: #EEEEEE;
     }
@@ -153,27 +153,30 @@
 
     /* ============================================================
        信息行：左侧固定 136px（标签） + 右侧自适应（值）
+       参照慢阻肺随访：标签 14px/500、值 14px/400，患者卡 16px 覆盖
        ============================================================ */
     .info-row {
       display: flex; flex-direction: row; align-items: flex-start;
       margin: 8px 0 0 0;
     }
+    .info-row--first { margin: 12px 0 0 0; }
     .info-row--mt11 { margin: 11px 0 0 0; }
-    .info-row--mt12 { margin: 12px 0 0 0; }
 
     .info-label {
       width: 136px; flex-shrink: 0;
-      color: #333333; font-size: 16px; font-family: PingFangSC-Medium;
-      font-weight: 500; text-align: left; white-space: nowrap; line-height: 22px;
+      color: #333333; font-size: 14px; font-family: PingFangSC-Medium;
+      font-weight: 500; text-align: left; white-space: nowrap; line-height: 20px;
     }
     .info-value {
       flex: 1;
-      color: #666666; font-size: 16px; font-family: PingFangSC-Regular;
-      font-weight: 400; text-align: left; white-space: nowrap; line-height: 22px;
+      color: #666666; font-size: 14px; font-family: PingFangSC-Regular;
+      font-weight: 400; text-align: left; word-break: break-word; line-height: 20px;
     }
     .info-value--blue {
       color: #096AFF;
     }
+    .patient-card .info-label { font-size: 16px; line-height: 22px; }
+    .patient-card .info-value { font-size: 16px; line-height: 22px; }
 
     /* ============================================================
        分区标题（参照 gaoxueyaguanli2 .text_42 / .text_20 / .text_22 等）
@@ -183,6 +186,42 @@
       font-weight: 500; text-align: left; white-space: nowrap; line-height: 22px;
     }
 
+    /* ---------- 卡片标题（参照慢阻肺随访 .card-title） ---------- */
+    .card-title {
+      color: #333333; font-size: 16px; font-family: PingFangSC-Medium;
+      font-weight: 500; text-align: left; white-space: nowrap; line-height: 22px;
+    }
+
+    /* ---------- 卡片纯文本内容（参照慢阻肺随访 .content-text） ---------- */
+    .content-text {
+      font-size: 14px; font-weight: 400; color: #666666; line-height: 20px;
+      font-family: PingFangSC-Regular; word-break: break-word;
+      overflow-wrap: break-word; flex: 1; min-width: 0;
+    }
+
+    /* ---------- 生活方式卡：标签 Regular 400（参照慢阻肺随访） ---------- */
+    .lifestyle-card .info-label { font-weight: 400; }
+
+    /* ---------- 色框（参照慢阻肺随访 .med-compliance-box：依从性/不良反应） ---------- */
+    .med-compliance-box {
+      background-color: #F6FAFF; border-radius: 8px;
+      border: 1px solid #AFD0FF;
+      margin-top: 12px; padding: 8px 12px; align-items: center;
+    }
+    .med-compliance-label {
+      font-size: 14px; font-weight: 400; color: #666666;
+      font-family: PingFangSC-Regular; line-height: 22px;
+      white-space: nowrap;
+    }
+    .med-compliance-value {
+      font-size: 14px; font-weight: 400; color: #666666;
+      font-family: PingFangSC-Regular; line-height: 22px;
+    }
+    .med-compliance-divider {
+      width: 1px; height: 14px; background-color: #D9D9D9;
+      margin: 0 12px; flex-shrink: 0;
+    }
+
     /* ---------- 症状内容（参照 gaoxueyaguanli2 .text-wrapper_7） ---------- */
     .symptom-content {
       color: #666666; font-size: 14px; font-family: PingFangSC-Regular;
@@ -190,135 +229,6 @@
       margin-top: 12px;
     }
 
-    /* ============================================================
-       用药表格（参照 gaoxueyaguanli2 .box_3）
-       ============================================================ */
-    .med-table-header {
-      margin: 15px 0 0 0;
-    }
-    .med-th-name {
-      color: #333333; font-size: 14px; font-family: PingFangSC-Medium;
-      font-weight: 500; text-align: left; white-space: nowrap; line-height: 22px;
-    }
-    .med-th-dose {
-      color: #333333; font-size: 14px; font-family: PingFangSC-Medium;
-      font-weight: 500; text-align: left; white-space: nowrap; line-height: 22px;
-      margin-left: 117px;
-    }
-    .med-th-freq {
-      color: #333333; font-size: 14px; font-family: PingFangSC-Medium;
-      font-weight: 500; text-align: left; white-space: nowrap; line-height: 22px;
-      margin-left: 30px;
-    }
-    .med-row {
-      margin-top: 10px;
-    }
-    .med-name {
-      color: #666666; font-size: 14px; font-family: PingFangSC-Regular;
-      font-weight: 400; text-align: left; white-space: nowrap; line-height: 22px;
-      margin-top: 1px;
-    }
-    .med-dose {
-      color: #666666; font-size: 14px; font-family: PingFangSC-Regular;
-      font-weight: 400; text-align: right; white-space: nowrap; line-height: 22px;
-      margin: 1px 0 0 89px;
-    }
-    .med-freq {
-      color: #666666; font-size: 14px; font-family: PingFangSC-Regular;
-      font-weight: 400; text-align: right; white-space: nowrap; line-height: 22px;
-      margin: 1px 0 0 63px;
-    }
-    .med-divider {
-      background-color: #EEEEEE; width: 343px; height: 1px; margin-top: 10px;
-    }
-
-    /* 服药依从性信息条（参照 gaoxueyaguanli2 .box_16） */
-    .med-compliance-bar {
-      background-color: #F6FAFF;
-      border-radius: 8px;
-      border: 1px solid #AFCFFF;
-      margin-top: 12px;
-      padding: 8px 15px;
-    }
-    .med-compliance-text {
-      color: #666666; font-size: 14px; font-family: PingFangSC-Regular;
-      font-weight: 400; text-align: left; white-space: nowrap; line-height: 22px;
-    }
-    .med-compliance-divider {
-      width: 1px; height: 14px; background-color: #CCCCCC;
-      margin: 4px 43px;
-    }
-
-    /* ============================================================
-       体征双列（参照 gaoxueyaguanli2 .list_2）
-       ============================================================ */
-    .dual-list {
-      margin: 12px 0 0 0;
-    }
-    .dual-left-col { margin-right: 80px; }
-    .dual-label {
-      color: #333333; font-size: 14px; font-family: PingFangSC-Regular;
-      font-weight: 400; text-align: left; white-space: nowrap; line-height: 20px;
-    }
-    .dual-value {
-      color: #666666; font-size: 14px; font-family: PingFangSC-Regular;
-      font-weight: 400; text-align: left; white-space: nowrap; line-height: 20px;
-    }
-    .dual-gap { margin-top: 8px; }
-
-    .single-row {
-      margin: 8px 0 0 0;
-    }
-    .single-label {
-      color: #333333; font-size: 14px; font-family: PingFangSC-Regular;
-      font-weight: 400; text-align: left; white-space: nowrap; line-height: 20px;
-    }
-    .single-value {
-      color: #666666; font-size: 14px; font-family: PingFangSC-Regular;
-      font-weight: 400; text-align: left; white-space: nowrap; line-height: 20px;
-    }
-
-    /* ============================================================
-       末行标签（参照 gaoxueyaguanli2 .text_18 / .text_19）
-       ============================================================ */
-    .trailing-label {
-      color: #333333; font-size: 16px; font-family: PingFangSC-Medium;
-      font-weight: 500; text-align: left; white-space: nowrap; line-height: 22px;
-      margin: 8px 0 0 0;
-    }
-
-    /* ============================================================
-       块文本（停止治疗、全程管理）
-       ============================================================ */
-    .block-label {
-      color: #666666; font-size: 14px; font-family: PingFangSC-Regular;
-      font-weight: 400; text-align: left; white-space: nowrap; line-height: 20px;
-    }
-    .block-value {
-      color: #666666; font-size: 14px; font-family: PingFangSC-Medium;
-      font-weight: 500; text-align: left; white-space: nowrap; line-height: 20px;
-    }
-    .block-text {
-      color: #666666; font-size: 14px; font-family: PingFangSC-Regular;
-      font-weight: 400; text-align: left; line-height: 20px;
-      margin-top: 4px;
-    }
-
-    /* ============================================================
-       全程管理情况 —— 换行展示样式
-       ============================================================ */
-    .mgmt-block-item {
-      display: block;
-      color: #666666;
-      font-size: 14px;
-      font-family: PingFangSC-Regular;
-      font-weight: 400;
-      text-align: left;
-      line-height: 22px;
-      margin-top: 8px;
-      white-space: normal;
-      word-break: break-all;
-    }
 
     /* ============================================================
        底部脚注
@@ -351,7 +261,7 @@
 </div>
 
     <!-- ==================== 卡片1：患者信息 + 随访基本信息 ==================== -->
-    <div class="card flex-col">
+    <div class="card flex-col patient-card">
       <div class="flex-row">
         <span class="patient-name">周*风</span>
         <span class="patient-gender">男</span>
@@ -392,12 +302,12 @@
       <span class="symptom-content">咳嗽咳痰、咳血或血痰</span>
     </div>
 
-    <!-- ==================== 卡片3：生活方式评估 ==================== -->
-    <div class="card flex-col">
-      <span class="section-title">生活方式评估</span>
-      <div class="divider divider--mt11"></div>
+    <!-- ==================== 卡片3：生活方式评估（参照慢阻肺随访 lifestyle-card） ==================== -->
+    <div class="card flex-col lifestyle-card">
+      <span class="card-title">生活方式评估</span>
+      <div class="divider"></div>
 
-      <div class="info-row info-row--mt12">
+      <div class="info-row info-row--first">
         <span class="info-label">吸烟</span>
         <span class="info-value">5/3 支/天</span>
       </div>
@@ -407,12 +317,12 @@
       </div>
     </div>
 
-    <!-- ==================== 卡片4：用药 ==================== -->
+    <!-- ==================== 卡片4：用药（不良反应 & 并发症以慢阻肺色框风格置于卡内） ==================== -->
     <div class="card flex-col">
-      <span class="section-title">用药</span>
-      <div class="divider divider--mt12"></div>
+      <span class="card-title">用药</span>
+      <div class="divider"></div>
 
-      <div class="info-row info-row--mt11">
+      <div class="info-row info-row--first">
         <span class="info-label">化疗方案</span>
         <span class="info-value" style="color:#999999;">—</span>
       </div>
@@ -428,26 +338,23 @@
         <span class="info-label">漏服药次数</span>
         <span class="info-value">3次</span>
       </div>
-    </div>
 
-    <!-- ==================== 卡片5：药物不良反应 & 并发症 ==================== -->
-    <div class="card flex-col">
-      <div class="info-row" style="margin-top:0;">
-        <span class="info-label">药物不良反应</span>
-        <span class="info-value">无</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">并发症或合并症</span>
-        <span class="info-value">无</span>
+      <!-- 色框：药物不良反应 | 并发症或合并症（参照慢阻肺随访 服药依从性色框） -->
+      <div class="med-compliance-box flex-row">
+        <span class="med-compliance-label">药物不良反应：</span>
+        <span class="med-compliance-value">无</span>
+        <span class="med-compliance-divider"></span>
+        <span class="med-compliance-label">并发症或合并症：</span>
+        <span class="med-compliance-value">无</span>
       </div>
     </div>
 
     <!-- ==================== 卡片6：转诊 ==================== -->
     <div class="card flex-col">
-      <span class="section-title">转诊</span>
-      <div class="divider divider--mt12"></div>
+      <span class="card-title">转诊</span>
+      <div class="divider"></div>
 
-      <div class="info-row info-row--mt11">
+      <div class="info-row info-row--first">
         <span class="info-label">科别</span>
         <span class="info-value" style="color:#999999;">—</span>
       </div>
@@ -463,8 +370,10 @@
 
     <!-- ==================== 卡片7：处理意见 ==================== -->
     <div class="card flex-col">
-      <span class="section-title">处理意见</span>
-      <div class="info-row info-row--mt11">
+      <span class="card-title">处理意见</span>
+      <div class="divider"></div>
+
+      <div class="info-row info-row--first">
         <span class="info-label">意见</span>
         <span class="info-value" style="color:#999999;">—</span>
       </div>
@@ -472,8 +381,10 @@
 
     <!-- ==================== 卡片8：停止治疗及原因 ==================== -->
     <div class="card flex-col">
-      <span class="section-title">停止治疗及原因</span>
-      <div class="info-row" style="margin-top:8px;">
+      <span class="card-title">停止治疗及原因</span>
+      <div class="divider"></div>
+
+      <div class="info-row info-row--first">
         <span class="info-label">停止治疗时间</span>
         <span class="info-value">2025年3月26日</span>
       </div>
@@ -483,14 +394,16 @@
       </div>
     </div>
 
-    <!-- ==================== 卡片9：全程管理情况 ==================== -->
+    <!-- ==================== 卡片9：全程管理情况（参照慢阻肺随访 content-text） ==================== -->
     <div class="card flex-col">
-      <span class="section-title">全程管理情况</span>
-      <div class="mgmt-block-item">应访视患者 5 次，实际访视 5 次</div>
-      <div class="mgmt-block-item">患者在疗程中，应服药 20 次，实际服药 17 次，服药率 80%</div>
+      <span class="card-title">全程管理情况</span>
+      <div class="divider"></div>
 
-      <div class="divider divider--mt12 divider--thin"></div>
-      <div class="info-row info-row--mt11">
+      <div class="content-text" style="margin-top:12px;">应访视患者 5 次，实际访视 5 次</div>
+      <div class="content-text" style="margin-top:8px;">患者在疗程中，应服药 20 次，实际服药 17 次，服药率 80%</div>
+
+      <div class="divider divider--thin"></div>
+      <div class="info-row">
         <span class="info-label">评估医生签名</span>
         <span class="info-value">刘耀文</span>
       </div>

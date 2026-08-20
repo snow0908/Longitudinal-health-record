@@ -268,27 +268,14 @@
            严格遵循 §4.2 字号层级 + §4.1 字体家族字重
            ============================================================ */
 
-        /* 分组小标题 — 升级为H2级别段落标题 */
+        /* 分组小标题 — 与第一次产前随访.html 辅助检查分组标题一致（无前置蓝色符号） */
         .lab-group-title {
             font-size: 14px;             /* 分组标题用H3 = 14px */
-            font-weight: 500;            /* Medium = 500 区分层级 */
+            font-weight: 600;            /* 与参考文件 lab-sub-title 一致：Semibold = 600 */
             font-family: PingFangSC-Medium;
-            color: #666666;             /* Text Secondary 作为分组标识 */
+            color: #374151;             /* var(--gray-700) 与参考文件 lab-sub-title 一致 */
             line-height: 20px;
-            margin: 12px 0 8px 0;       /* 分组间距 md+sm */
-            position: relative;
-            padding-left: 10px;
-        }
-        .lab-group-title::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 3px;
-            height: 12px;
-            background-color: #096AFF;   /* Primary色竖线装饰 */
-            border-radius: 1px;
+            margin: 16px 0 4px 0;       /* 与参考文件 lab-sub-title 一致：分组间距 */
         }
         .lab-group-title:first-child {
             margin-top: 4px;

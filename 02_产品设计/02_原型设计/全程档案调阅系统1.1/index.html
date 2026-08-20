@@ -1126,39 +1126,17 @@ button:active {
 }
 
 /* ============================================================
-   健康档案模块统一排版（参照第一排 group_24 / 第二排 group_25）
-   - 每行等宽三列，卡片间距一致
-   - 卡片内容垂直居中
-   - 图标/文字间距统一
+   健康档案模块统一排版
+   - 每行等宽三列，卡片间距一致，图标/文字垂直居中
+   - 每个模块独立背景色（hbg-N），仅作视觉点缀，与排列顺序解耦
    ============================================================ */
-.group_26,
-.group_27,
-.group_28,
-.group_31 {
+.health-grid {
   width: 311px;
   margin-top: 12px;
   display: flex;
   justify-content: space-between;
 }
-
-.group_26 .box_1,
-.group_26 .box_2,
-.group_26 .box_3,
-.group_27 .box_4,
-.group_27 .box_6,
-.group_27 .box_5,
-.group_28 .box_7,
-.group_28 .box_8,
-.group_28 .box_9,
-.group_28 .box_10,
-.group_28 .box_11,
-.group_28 .box_12,
-.group_29 .box_11,
-.group_29 .box_12,
-.group_29 .box_13,
-.group_29 .box_14,
-.group_31 .box_15,
-.group_31 .box_10 {
+.health-box {
   width: 95px;
   flex-shrink: 0;
   display: flex;
@@ -1169,79 +1147,52 @@ button:active {
   min-height: 72px;
   border: 1px solid rgba(238, 238, 238, 1);
   border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s;
 }
-
-/* 各模块独立背景色 */
-.group_26 .box_1 { background-color: rgba(235, 245, 255, 1); }
-.group_26 .box_2 { background-color: rgba(230, 254, 245, 1); }
-.group_26 .box_3 { background-color: #F5F2FF; }
-.group_27 .box_4 { background-color: #E6FEF5;}
-.group_27 .box_6 { background-color: #FFF7ED }
-.group_27 .box_5 { background-color: #E8F0FE; }
-.group_28 .box_7 { background-color: #f4f4f4; }
-.group_28 .box_8 { background-color: #E6F7FB; }
-.group_28 .box_9 { background-color: #FFFBEB; }
-.group_28 .box_10 { background-color: #FFF2ED; }
-.group_28 .box_11 { background-color: #F3EEFF; }
-.group_28 .box_12 { background-color: #fff4f4; }
-.group_29 .box_10 { background-color: #EEF2FF; }
-.group_29 .box_11 { background-color: #ECFDF5; }
-.group_29 .box_12 { background-color: #E0F7FA; }
-.group_29 .box_13 { background-color: #FADBD8; }
-.group_29 .box_14 { background-color: #F0E6F6; }
-.group_31 .box_15 { background-color: #F5B785; }
-.group_31 .box_10 { background-color: #FDEBD0; margin-left: 0; }
-.group_31 .box_11 { background-color: #E0F2F1; margin-left: 0; }
-
-/* 健康档案卡片内图标统一：居中、无额外 margin */
-.group_26 .icon_9,
-.group_26 .icon_10,
-.group_26 .icon_11,
-.group_27 .icon_12,
-.group_27 .icon_14,
-.group_27 .icon_13,
-.group_28 .icon_15,
-.group_28 .icon_16,
-.group_28 .icon_17,
-.group_29 .icon_22,
-.group_29 .icon_23,
-.group_29 .icon_24,
-.group_31 .icon_25,
-.group_31 .icon_18
- {
+.health-box:active { opacity: 0.7; }
+.health-box .h-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.health-box .h-icon {
   width: 28px;
   height: 28px;
   margin: 0 auto;
   align-self: center;
 }
-
-/* 健康档案卡片内文字统一：居中对齐、统一顶间距、统一行高 */
-.group_26 .text-group_9,
-.group_26 .text-group_10,
-.group_26 .text-group_11,
-.group_27 .text-group_12,
-.group_27 .text-group_14,
-.group_27 .text-group_13,
-.group_28 .text-group_15,
-.group_28 .text-group_16,
-.group_28 .text-group_17,
-.group_29 .text-group_21,
-.group_29 .text-group_22,
-.group_29 .text-group_23,
-.group_31 .text-group_24,
-.group_31 .text-group_18 {
+.health-box .h-text {
   margin-top: 8px;
   text-align: center;
   line-height: 20px;
   white-space: nowrap;
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
 }
-
-/* 老年人自理能力评估：取消固定宽高，避免换行后高度塌陷 */
-.group_31 .text-group_18 {
-  width: auto;
-  height: auto;
+.health-box.h-multiline .h-text {
   white-space: normal;
 }
+
+/* 各模块独立背景色（hbg-N） */
+.hbg-1  { background-color: #EBF5FF; }  /* 居民档案 */
+.hbg-2  { background-color: #E6FEF5; }  /* 健康体检 */
+.hbg-3  { background-color: #F0F6FF; }  /* 儿童管理 */
+.hbg-4  { background-color: #FFEDEB; }  /* 妇女保健 */
+.hbg-5  { background-color: #F5F2FF; }  /* 高血压 */
+.hbg-6  { background-color: #E6FEF5; }  /* 糖尿病 */
+.hbg-7  { background-color: #FFF7ED; }  /* 中医管理 */
+.hbg-8  { background-color: #E6F7FB; }  /* 慢阻肺 */
+.hbg-9  { background-color: #FFFBEB; }  /* 肺结核 */
+.hbg-10 { background-color: #FFF2ED; }  /* 高危管理 */
+.hbg-11 { background-color: #F3EEFF; }  /* 肿瘤管理 */
+.hbg-12 { background-color: #FFF2F2; }  /* 心脑血管 */
+.hbg-13 { background-color: #EEF2FF; }  /* 老年人自理能力评估 */
+.hbg-14 { background-color: #ECFDF5; }  /* 健康教育 */
+.hbg-15 { background-color: #E0F7FA; }  /* 预防接种 */
 
 .tab-bar_1 {
   background-color: rgba(255, 255, 255, 1);
@@ -1339,8 +1290,8 @@ function goToModule(moduleName) {
     '检验报告':     '检验报告列表/检验报告列表.html',
     '居民档案':     '#',
     '健康体检':     '#',
-    '高血压管理':   '#',
-    '糖尿病管理':   '#',
+    '高血压':       '#',
+    '糖尿病':       '#',
     '中医管理':     '#',
     '儿童管理':     '儿童管理/儿童管理.html',
     '妇女保健':     '孕产妇管理/孕产妇随访列表界面.html',
@@ -1508,174 +1459,165 @@ function goToModule(moduleName) {
         <div class="text-wrapper_11 flex-row">
           <span class="text_11">健康档案</span>
         </div>
-        <div class="group_26 flex-row justify-between">
-          <div class="box_1 flex-row" onclick="goToModule('居民档案')">
-            <div class="image-text_92 flex-col">
+        <div class="health-grid">
+          <div class="health-box hbg-1" onclick="goToModule('居民档案')">
+            <div class="h-inner">
               <img
-                class="icon_9"
+                class="h-icon"
                 referrerpolicy="no-referrer"
                 src="./img/SketchPng48553ee9e01b9523a8e352321b1eba89fc663f37616b0fc08451853e500b6189.png"
               />
-              <span class="text-group_9">居民档案</span>
+              <span class="h-text">居民档案</span>
             </div>
           </div>
-          <div class="box_2 flex-row" onclick="goToModule('健康体检')">
-            <div class="image-text_93 flex-col">
+          <div class="health-box hbg-2" onclick="goToModule('健康体检')">
+            <div class="h-inner">
               <img
-                class="icon_10"
+                class="h-icon"
                 referrerpolicy="no-referrer"
                 src="./img/SketchPngbfd30af396d3bd6107869a25f5b27088a40c15d0791da9b10d331ece6f71b5e2.png"
               />
-              <span class="text-group_10">健康体检</span>
+              <span class="h-text">健康体检</span>
             </div>
           </div>
-          <div class="box_3 flex-row" onclick="goToModule('高血压管理')">
-            <div class="image-text_94 flex-col">
+          <div class="health-box hbg-3" onclick="goToModule('儿童管理')">
+            <div class="h-inner">
               <img
-                class="icon_11"
+                class="h-icon"
+                referrerpolicy="no-referrer"
+                src="./img/Infant-28.png"
+              />
+              <span class="h-text">儿童管理</span>
+            </div>
+          </div>
+        </div>
+        <div class="health-grid">
+          <div class="health-box hbg-4" onclick="goToModule('妇女保健')">
+            <div class="h-inner">
+              <img
+                class="h-icon"
+                referrerpolicy="no-referrer"
+                src="./img/Woman-05-28.png"
+              />
+              <span class="h-text">妇女保健</span>
+            </div>
+          </div>
+          <div class="health-box hbg-5" onclick="goToModule('高血压')">
+            <div class="h-inner">
+              <img
+                class="h-icon"
                 referrerpolicy="no-referrer"
                 src="./img/SketchPngf721dd0a71dc1905f3dc309d2ae814387a5ac388cfb63c6f8df83a92056aea30.png"
               />
-              <span class="text-group_11">高血压管理</span>
+              <span class="h-text">高血压</span>
             </div>
           </div>
-        </div>
-        <div class="group_27 flex-row justify-between">
-          <div class="box_4 flex-row" onclick="goToModule('糖尿病管理')">
-            <div class="image-text_95 flex-col">
+          <div class="health-box hbg-6" onclick="goToModule('糖尿病')">
+            <div class="h-inner">
               <img
-                class="icon_12"
+                class="h-icon"
                 referrerpolicy="no-referrer"
                 src="./img/SketchPngbaa4050861335bfb92e3ca62d4f4cc7988abf83dd3ada588e9f2183492e8eaa4.png"
               />
-              <span class="text-group_12">糖尿病管理</span>
-            </div>
-          </div>
-          <div class="box_6 flex-row" onclick="goToModule('中医管理')">
-            <div class="image-text_96 flex-col">
-              <img
-                class="icon_14"
-                referrerpolicy="no-referrer"
-                src="./img/SketchPngbb6ae69a8ab01c0870812479e3f2e8a363d90be4cfbb444c6d98e0574cab10f7.png"
-              />
-              <span class="text-group_14">中医管理</span>
-            </div>
-          </div>
-          <div class="box_5 flex-row" onclick="goToModule('儿童管理')">
-            <div class="image-text_97 flex-col">
-              <img
-                class="icon_13"
-                referrerpolicy="no-referrer"
-                src="./img/Baby-02-28.png"
-              />
-              <span class="text-group_13">儿童管理</span>
+              <span class="h-text">糖尿病</span>
             </div>
           </div>
         </div>
-        <div class="group_28 flex-row">
-          <div class="box_7 flex-row" onclick="goToModule('妇女保健')">
-            <div class="image-text_98 flex-col">
+        <div class="health-grid">
+          <div class="health-box hbg-9" onclick="goToModule('肺结核')">
+            <div class="h-inner">
               <img
-                class="icon_15"
-                referrerpolicy="no-referrer"
-                src="./img/Woman-06-28.png"
-              />
-              <span class="text-group_15">妇女保健</span>
-            </div>
-          </div>
-          <div class="box_8 flex-row" onclick="goToModule('慢阻肺')">
-            <div class="image-text_99 flex-col">
-              <img
-                class="icon_16"
-                referrerpolicy="no-referrer"
-                src="./img/Lungs-28.png"
-              />
-              <span class="text-group_16">慢阻肺</span>
-            </div>
-          </div>
-          <div class="box_9 flex-row" onclick="goToModule('肺结核')">
-            <div class="image-text_100 flex-col">
-              <img
-                class="icon_17"
+                class="h-icon"
                 referrerpolicy="no-referrer"
                 src="./img/Lungs-28 (1).png"
               />
-              <span class="text-group_17">肺结核</span>
+              <span class="h-text">肺结核</span>
             </div>
           </div>
-        </div>
-        <div class="group_28 flex-row">
-          <div class="box_10 flex-row" onclick="goToModule('高危管理')">
-            <div class="image-text_98 flex-col">
+          <div class="health-box hbg-11" onclick="goToModule('肿瘤管理')">
+            <div class="h-inner">
               <img
-                class="icon_15"
-                referrerpolicy="no-referrer"
-                src="./img/Warning-Shield-28.png"
-              />
-              <span class="text-group_15">高危管理</span>
-            </div>
-          </div>
-          <div class="box_11 flex-row" onclick="goToModule('肿瘤管理')">
-            <div class="image-text_99 flex-col">
-              <img
-                class="icon_16"
+                class="h-icon"
                 referrerpolicy="no-referrer"
                 src="./img/Ribbon-28.png"
               />
-              <span class="text-group_16">肿瘤管理</span>
+              <span class="h-text">肿瘤管理</span>
             </div>
           </div>
-          <div class="box_12 flex-row" onclick="goToModule('心脑血管')">
-            <div class="image-text_100 flex-col">
+          <div class="health-box hbg-12" onclick="goToModule('心脑血管')">
+            <div class="h-inner">
               <img
-                class="icon_17"
+                class="h-icon"
                 referrerpolicy="no-referrer"
                 src="./img/Heart-01-28.png"
               />
-              <span class="text-group_17">心脑血管</span>
+              <span class="h-text">心脑血管</span>
             </div>
           </div>
         </div>
-        <div class="group_29 flex-row">
-          <div class="box_10 flex-row" onclick="goToModule('老年人自理能力评估')">
-            <div class="image-text_101 flex-col">
+        <div class="health-grid">
+          <div class="health-box hbg-8" onclick="goToModule('慢阻肺')">
+            <div class="h-inner">
               <img
-                class="icon_18"
+                class="h-icon"
+                referrerpolicy="no-referrer"
+                src="./img/Lungs-28.png"
+              />
+              <span class="h-text">慢阻肺</span>
+            </div>
+          </div>
+          <div class="health-box hbg-10" onclick="goToModule('高危管理')">
+            <div class="h-inner">
+              <img
+                class="h-icon"
+                referrerpolicy="no-referrer"
+                src="./img/Warning-Shield-28.png"
+              />
+              <span class="h-text">高危管理</span>
+            </div>
+          </div>
+          <div class="health-box hbg-13 h-multiline" onclick="goToModule('老年人自理能力评估')">
+            <div class="h-inner">
+              <img
+                class="h-icon"
                 referrerpolicy="no-referrer"
                 src="./img/Old-Man-28.png"
               />
-              <span class="text-group_18">
-                老年人自理
-                <br />
-                能力评估
-              </span>
+              <span class="h-text">老年人自理<br />能力评估</span>
             </div>
           </div>
-          <div class="box_11 flex-row" onclick="goToModule('健康教育')">
-            <div class="image-text_101 flex-col">
+        </div>
+        <div class="health-grid">
+          <div class="health-box hbg-7" onclick="goToModule('中医管理')">
+            <div class="h-inner">
               <img
-                class="icon_18"
+                class="h-icon"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPngbb6ae69a8ab01c0870812479e3f2e8a363d90be4cfbb444c6d98e0574cab10f7.png"
+              />
+              <span class="h-text">中医管理</span>
+            </div>
+          </div>
+          <div class="health-box hbg-14" onclick="goToModule('健康教育')">
+            <div class="h-inner">
+              <img
+                class="h-icon"
                 referrerpolicy="no-referrer"
                 src="./img/Conference-Speaker-28.png"
               />
-              <span class="text-group_18">
-                健康教育
-              </span>
+              <span class="h-text">健康教育</span>
             </div>
           </div>
-          <div class="box_12 flex-row" onclick="goToModule('预防接种')">
-            <div class="image-text_101 flex-col">
+          <div class="health-box hbg-15" onclick="goToModule('预防接种')">
+            <div class="h-inner">
               <img
-                class="icon_18"
+                class="h-icon"
                 referrerpolicy="no-referrer"
                 src="./img/Syringe-02-28.png"
               />
-              <span class="text-group_18">
-                预防接种
-              </span>
+              <span class="h-text">预防接种</span>
             </div>
           </div>
-
         </div>
         
       </div>

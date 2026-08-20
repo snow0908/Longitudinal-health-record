@@ -52,6 +52,9 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
+        html {
+            background-color: var(--gray-50);
+        }
         body {
             max-width: 375px;
             margin: 0 auto;
@@ -70,6 +73,22 @@
         /* ---------- Page ---------- */
         .page {
             background-color: var(--gray-50);
+            background-image: linear-gradient(180deg,
+                #E85A8F 0%,
+                #F080AA 20%,
+                #F9B4D2 35%,
+                #F9C2DA 42%,
+                #F9C9DE 48%,
+                #F9D0E2 54%,
+                #F9D7E6 60%,
+                #F9DEEB 66%,
+                #F9E5EF 72%,
+                #F9ECF3 79%,
+                #F9F3F7 86%,
+                #F9F7F9 93%,
+                var(--gray-50) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 465px;
             position: relative;
             width: 375px;
             margin: 0 auto;
@@ -176,14 +195,14 @@
         .nav-action:active { background: rgba(255,255,255,0.35); }
 
         /* ============================================================
-           患者头部（渐变背景）— 与孕产妇随访列表页完全一致
+           患者头部（渐变背景）— 同孕产妇随访列表页：渐变置于 .page 背景，头部透明
            ============================================================ */
         .patient-header {
             position: relative;
             overflow: hidden;
             height: 273px;
             color: white;
-            background: linear-gradient(135deg, #E85A8F 0%, #F080AA 60%, #F9B4D2 100%);
+            background: transparent;
             padding: 0;
             display: flex;
             flex-direction: column;
