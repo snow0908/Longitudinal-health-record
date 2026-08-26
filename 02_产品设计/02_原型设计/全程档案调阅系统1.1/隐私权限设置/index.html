@@ -8,56 +8,61 @@
 </head>
 <body>
 
-<!-- 状态栏 -->
-<div class="status-bar">
-    <span>9:41</span>
-    <div class="status-bar-icons">
-        <div class="signal-bars">
-            <span></span><span></span><span></span><span></span>
-        </div>
-        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000000">
-            <path d="M8 2.5C10.5 2.5 12.8 3.5 14.5 5.2L13.5 6.2C12.1 4.9 10.1 4 8 4C5.9 4 3.9 4.9 2.5 6.2L1.5 5.2C3.2 3.5 5.5 2.5 8 2.5Z" fill="currentColor"/>
-            <path d="M8 6C9.4 6 10.7 6.5 11.7 7.5L10.7 8.5C10 7.8 9 7.5 8 7.5C7 7.5 6 7.8 5.3 8.5L4.3 7.5C5.3 6.5 6.6 6 8 6Z" fill="currentColor"/>
-            <circle cx="8" cy="10" r="1.5" fill="currentColor"/>
-        </svg>
-        <div class="battery">
-            <div class="battery-fill"></div>
-        </div>
-    </div>
-</div>
-
-<!-- 导航栏 -->
-<div class="nav-bar">
-    <div class="nav-back" onclick="goBack()">
-        <img src="../img/返回.png" alt="返回" style="width:24px;height:24px">
-    </div>
-    <span class="nav-title">隐私权限管理</span>
-    <div class="nav-action" onclick="openSettings()">
-        <img src="../img/设置.png" alt="设置" style="width: 62px;height:24px">
-    </div>
-</div>
-
-<!-- 主页内容 -->
-<div class="page">
-    <div class="privacy-header">
-        <div class="shield-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <path d="M9 12l2 2 4-4"/>
+<!-- 渐变 Hero 区：状态栏 + 导航 + Banner + 统计 -->
+<div class="hero-wrapper">
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-bar-icons">
+            <div class="signal-bars">
+                <span></span><span></span><span></span><span></span>
+            </div>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000000">
+                <path d="M8 2.5C10.5 2.5 12.8 3.5 14.5 5.2L13.5 6.2C12.1 4.9 10.1 4 8 4C5.9 4 3.9 4.9 2.5 6.2L1.5 5.2C3.2 3.5 5.5 2.5 8 2.5Z" fill="currentColor"/>
+                <path d="M8 6C9.4 6 10.7 6.5 11.7 7.5L10.7 8.5C10 7.8 9 7.5 8 7.5C7 7.5 6 7.8 5.3 8.5L4.3 7.5C5.3 6.5 6.6 6 8 6Z" fill="currentColor"/>
+                <circle cx="8" cy="10" r="1.5" fill="currentColor"/>
             </svg>
+            <div class="battery">
+                <div class="battery-fill"></div>
+            </div>
         </div>
-        <h2>健康档案隐私保护</h2>
-        <p>管理您的健康档案调阅权限，全方位保护个人隐私</p>
-        <div class="header-tags">
-            <span>数据加密传输</span>
-            <span class="tag-dot"></span>
-            <span>访问可追溯</span>
-            <span class="tag-dot"></span>
-            <span>符合国家卫健委数据安全规范</span>
-        </div>
-        <div class="header-decoration"></div>
     </div>
 
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+        <div class="nav-back" onclick="goBack()">
+            <img src="../img/返回.png" alt="返回" style="width:24px;height:24px">
+        </div>
+        <span class="nav-title">隐私权限管理</span>
+        <div class="nav-action" onclick="openSettings()">
+            <img src="../img/设置.png" alt="设置" style="width: 62px;height:24px">
+        </div>
+    </div>
+
+    <!-- Banner：家庭成员卡片同款加深突出 -->
+    <div class="privacy-header">
+        <div class="privacy-header-inner">
+            <div class="ph-row">
+                <div class="shield-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <div class="ph-copy">
+                    <h2>健康档案<span class="accent">隐私保护</span></h2>
+                    <p>管理您的健康档案调阅权限，全方位保护个人隐私</p>
+                </div>
+            </div>
+            <div class="header-tags">
+                <span class="tag-pill">数据加密传输</span>
+                <span class="tag-pill">访问可追溯</span>
+                <span class="tag-pill">符合卫健委数据安全规范</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 统计条 -->
     <div class="stat-bar">
         <div class="stat-item">
             <div class="stat-num" id="statOrg">0</div>
@@ -72,6 +77,10 @@
             <div class="stat-label">安全锁</div>
         </div>
     </div>
+</div>
+
+<!-- 主页内容 -->
+<div class="page">
 
     <div class="section-label">隐私设置</div>
 

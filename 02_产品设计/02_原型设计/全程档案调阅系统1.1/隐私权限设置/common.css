@@ -73,6 +73,14 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+/* ===== 渐变 Hero 区（顶部 → 统计条，与个人中心 section_1 一体式渐变统一） ===== */
+.hero-wrapper {
+    background: url('../个人中心/img/SketchPnge0c4edcb06512e3ae6511283034b05ddf99dea47214b0b49b29debf312b8ade4.png') 100% no-repeat;
+    background-size: 100% 100%;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
 /* ===== 状态栏 ===== */
 .status-bar {
     display: flex;
@@ -81,7 +89,7 @@ body {
     padding: 10px 24px 4px;
     font-size: 13px;
     font-weight: 600;
-    background: #fff;
+    background: transparent;
     letter-spacing: 0.02em;
 }
 
@@ -138,9 +146,8 @@ body {
     align-items: center;
     justify-content: center;
     padding: 14px 16px 7px;
-    background: #FFFFFF;
-    position: sticky;
-    top: 0;
+    background: transparent;
+    position: relative;
     z-index: 100;
 }
 
@@ -174,9 +181,10 @@ body {
 
 .nav-title {
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     font-family: PingFangSC-Medium, 'PingFang SC', sans-serif;
     color: #333333;
+    letter-spacing: 0.2px;
 }
 
 .nav-action {
@@ -204,8 +212,7 @@ body {
 
 /* ===== 页面容器 ===== */
 .page {
-    padding: 16px;
-    padding-bottom: 100px;
+    padding: 0 16px 100px;
     animation: fadeIn 0.3s var(--ease);
 }
 
@@ -214,118 +221,113 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* ===== 隐私主页 — Hero卡片 ===== */
+/* ===== 隐私主页 — Banner（家庭成员管理卡片同款加深突出） ===== */
 .privacy-header {
-    background: linear-gradient(135deg, #096AFF 0%, #3D8BFF 50%, #5AA0FF 100%);
-    border-radius: var(--radius);
-    padding: 24px 16px;
-    color: #fff;
-    margin-bottom: 16px;
     position: relative;
-    overflow: hidden;
+    margin: 8px 16px 12px;
+    padding: 4px;
+    background: url('../个人中心/img/SketchPng47c8cb17e51aeecd72751e4bb3ac8cc3aed974701dc76803c294f928135dae05.png') 100% no-repeat;
+    background-size: 100% 100%;
+    border-radius: 12px;
+    color: var(--text-primary);
 }
 
-.privacy-header::after {
-    content: '';
-    position: absolute;
-    top: -30px;
-    right: -30px;
-    width: 120px;
-    height: 120px;
-    background: rgba(255,255,255,0.12);
-    border-radius: 50%;
+/* 内层卡片（家庭成员管理 group_1 同款浅色底） */
+.privacy-header-inner {
+    background: url('../个人中心/img/SketchPng66d51ba55f1c1a676a37810597e14686d02f6c03fbe9ae191e9acefb0c0575d0.png') 100% no-repeat;
+    background-size: 100% 100%;
+    border-radius: 10px;
+    padding: 14px 12px 12px;
 }
 
-.privacy-header::before {
-    content: '';
-    position: absolute;
-    bottom: -40px;
-    right: 50px;
-    width: 80px;
-    height: 80px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 50%;
+/* 顶部一行：徽章 + 标题/描述 水平紧凑排列 */
+.privacy-header .ph-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
+/* 扁平盾牌徽章（与个人中心列表图标视觉重量一致） */
 .privacy-header .shield-wrap {
-    position: absolute;
-    top: 20px;
-    right: 16px;
-    width: 44px;
-    height: 44px;
-    background: rgba(255,255,255,0.18);
-    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1;
+    background: linear-gradient(135deg, #E4EEFF 0%, #C9DEFF 100%);
+    border: 1px solid rgba(9, 106, 255, 0.12);
+}
+.privacy-header .shield-wrap svg {
+    width: 20px;
+    height: 20px;
+    color: var(--primary);
 }
 
-.privacy-header .shield-wrap svg {
-    width: 26px;
-    height: 26px;
-    color: #fff;
+.privacy-header .ph-copy {
+    flex: 1;
+    min-width: 0;
 }
 
 .privacy-header h2 {
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 17px;
+    font-weight: 600;
     font-family: PingFangSC-Medium, 'PingFang SC', sans-serif;
-    margin-bottom: 6px;
-    position: relative;
-    z-index: 1;
+    color: var(--text-primary);
+    letter-spacing: 0.2px;
+    line-height: 1.35;
+}
+.privacy-header h2 .accent {
+    color: var(--primary);
 }
 
 .privacy-header p {
-    font-size: 14px;
-    opacity: 0.9;
-    position: relative;
-    z-index: 1;
-    line-height: 1.6;
-    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-top: 1px;
 }
 
-.privacy-header .header-decoration {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
-}
-
+/* 标签 chip — 淡蓝扁平胶囊（与个人中心 chip 风格统一） */
 .header-tags {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    opacity: 0.75;
+    gap: 6px;
+    margin-top: 12px;
     flex-wrap: wrap;
     position: relative;
     z-index: 1;
 }
-
-.header-tags .tag-dot {
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.5);
-    flex-shrink: 0;
+.header-tags .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--primary);
+    padding: 4px 9px;
+    background: rgba(228, 238, 255, 0.80);
+    border: 1px solid rgba(9, 106, 255, 0.15);
+    border-radius: 44px;
+    white-space: nowrap;
 }
 
-/* ===== 统计条 ===== */
+/* ===== 统计条（融入 Hero 渐变背景） ===== */
 .stat-bar {
     display: flex;
     gap: 8px;
-    margin-bottom: 16px;
+    padding: 0 16px;
 }
 
 .stat-item {
     flex: 1;
-    background: var(--card-bg);
+    background: rgba(255, 255, 255, 0.35);
     border-radius: var(--radius);
-    padding: 14px 8px;
+    padding: 12px 8px;
     text-align: center;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
 }
 
 .stat-item:active {
@@ -333,10 +335,10 @@ body {
 }
 
 .stat-num {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 500;
     font-family: PingFangSC-Medium, 'PingFang SC', sans-serif;
-    color: var(--primary);
+    color: var(--text-primary);
     line-height: 1.2;
     font-feature-settings: 'tnum';
 }
@@ -347,7 +349,7 @@ body {
 
 .stat-label {
     font-size: 12px;
-    color: var(--text-tertiary);
+    color: var(--text-secondary);
     margin-top: 4px;
     font-weight: 400;
 }

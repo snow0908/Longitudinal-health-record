@@ -1,0 +1,77 @@
+// ===== 查看页：主从表（机构+日期+类型 → 业务模块+服务内容）=====
+var viewExpanded = {}; // {groupKey: true/false}
+
+function collectBlockedRows() {
+  // 从所有模块的配置中收集被屏蔽的记录，并附加模块名
+  var state = loadSafeboxState();
+  var rows = [];
+  ['diag', 'health'].forEach(function (group) {
+    (MODULES[group] || []).forEach(function (m) {
+      var st = state[m.id] || { mode: 'none', blocked: [] };
+      var blocked = Array.isArray(st.blocked) ? st.blocked : [];
+      if (st.mode === 'all') {
+        m.records.forEach(function (r) {
+          rows.push({ org: r.org, date: r.date, type: r.type, mod: m.name, rec: r.name });
+        });
+      } else if (st.mode === 'partial') {
+        m.records.forEach(function (r) {
+          if (blocked.indexOf(r.name) !== -1) {
+            rows.push({ org: r.org, date: r.date, type: r.type, mod: m.name, rec: r.name });
+          }
+        });
+      }
+    });
+  });
+  return rows;
+}
+
+function renderViewTable() {
+  var tbody = document.getElementById('viewTableBody');
+  if (!tbody) return;
+  var rows = collectBlockedRows();
+  if (rows.length === 0) {
+    tbody.innerHTML = '<div class="view-empty">暂无屏蔽记录，请在编辑页设置需要屏蔽的档案</div>';
+    return;
+  }
+  // 按 (org, date, type) 分组
+  var groups = {};
+  rows.forEach(function (r) {
+    var key = r.org + '|' + r.date + '|' + r.type;
+    if (!groups[key]) groups[key] = { org: r.org, date: r.date, type: r.type, items: [] };
+    groups[key].items.push({ mod: r.mod, rec: r.rec });
+  });
+  var keys = Object.keys(groups);
+  var out = '';
+  for (var i = 0; i < keys.length; i++) {
+    var g = groups[keys[i]];
+    var expanded = !!viewExpanded[keys[i]];
+    var rowCls = 'view-table-row' + (expanded ? ' expanded' : '');
+    var noStr = String(i + 1).padStart(2, '0');
+    out += '<div class="' + rowCls + '" onclick="toggleViewGroup(\'' + keys[i] + '\')">';
+    out += '<span class="vr-toggle">' + (expanded ? '−' : '+') + '</span>';
+    out += '<span class="vr-no">' + noStr + '</span>';
+    out += '<span class="vr-org">' + g.org + '</span>';
+    out += '<span class="vr-date">' + g.date + '</span>';
+    out += '<span class="vr-type">' + g.type + '</span>';
+    out += '</div>';
+
+    if (expanded) {
+      out += '<div class="view-detail">';
+      out += '<div class="view-detail-head"><span class="vd-mod">业务模块</span><span class="vd-name">服务内容</span></div>';
+      g.items.forEach(function (it, idx) {
+        var subNo = String(idx + 1).padStart(2, '0');
+        out += '<div class="view-detail-row">';
+        out += '<span class="vd-mod">' + subNo + '　' + it.mod + '</span>';
+        out += '<span class="vd-name">' + it.rec + '</span>';
+        out += '</div>';
+      });
+      out += '</div>';
+    }
+  }
+  tbody.innerHTML = out;
+}
+
+function toggleViewGroup(key) {
+  viewExpanded[key] = !viewExpanded[key];
+  renderViewTable();
+}
