@@ -157,7 +157,6 @@
 }
 
 .text_8-0 {
-  width: 144px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
   font-size: 16px;
@@ -169,7 +168,6 @@
 }
 
 .text_9-0 {
-  width: 144px;
   overflow-wrap: break-word;
   font-size: 16px;
   font-family: PingFangSC-Medium;
@@ -265,7 +263,7 @@
 }
 
 .text-wrapper_5 {
-  width: 238px;
+  width: 228px;
   margin: 8px 105px 0 0;
 }
 
@@ -902,3 +900,189 @@
   line-height: 17px;
   margin-top: 3px;
 }
+
+/* ============================================================
+   检验结果 — 临床微生物学检查（柔和精简版）
+   - 无边框卡片，卡片之间以分割线隔断
+   - 药敏结果展开后为浅蓝色面板（#F6FAFF / 边框 #AFCFFF）
+   - 卡片默认收起，点击展开药敏表（.expanded）
+   ============================================================ */
+
+/* 标本条目：无边框，靠分割线隔断 */
+.specimen-card {
+  background: transparent;
+  padding: 14px 2px 12px;
+  margin-top: 0;
+  border: none;
+  border-radius: 0;
+}
+
+.specimen-card + .specimen-card {
+  border-top: 1px solid #F0F1F3;
+}
+
+.specimen-card[data-drugs] {
+  cursor: pointer;
+}
+
+/* 主行：细菌名称 + 状态标签 */
+.specimen-bacteria {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bacteria-name {
+  font-size: 15px;
+  font-family: PingFangSC-Medium;
+  color: #333;
+  line-height: 21px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.specimen-status {
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: 3px;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  line-height: 18px;
+  flex-shrink: 0;
+}
+.specimen-status.positive {
+  background: #F0F6FF;
+  color: #6E9EF2;
+}
+.specimen-status.negative {
+  background: #F4F5F7;
+  color: #8A94A6;
+}
+
+.specimen-resist {
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: 3px;
+  background: #F4F5F7;
+  color: #8A94A6;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  line-height: 18px;
+  flex-shrink: 0;
+}
+
+/* 副信息行：拉丁学名 + 耐药提示 */
+.bacteria-sub {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+}
+
+.bacteria-latin {
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  color: #A0A6B0;
+  line-height: 18px;
+}
+
+.specimen-warn {
+  font-size: 12px;
+  color: #8A94A6;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+/* 摘要行：单行灰字 */
+.specimen-summary {
+  display: flex;
+  align-items: center;
+}
+
+.summary-text {
+  flex: 1;
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  color: #8A94A6;
+  line-height: 18px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.specimen-arrow {
+  margin-left: 8px;
+  color: #C7C9CE;
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.specimen-card.expanded .specimen-arrow {
+  transform: rotate(90deg);
+}
+
+/* 药敏表：默认收起，点击卡片展开为浅蓝色面板 */
+.drug-table {
+  display: none;
+  margin-top: 10px;
+}
+.specimen-card.expanded .drug-table {
+  display: block;
+  background: #F6FAFF;
+  border: 1px solid #AFCFFF;
+  border-radius: 8px;
+  padding: 2px 12px;
+}
+
+.drug-row {
+  display: flex;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid #E3EEFC;
+}
+.drug-row:last-child {
+  border-bottom: none;
+}
+
+.drug-name {
+  flex: 1;
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  color: #333;
+  line-height: 20px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drug-mic {
+  margin-right: 12px;
+  color: #8A94A6;
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  min-width: 48px;
+  text-align: center;
+  line-height: 18px;
+  flex-shrink: 0;
+}
+
+.drug-result {
+  font-size: 13px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  min-width: 36px;
+  text-align: center;
+  flex-shrink: 0;
+}
+/* 敏感为主题蓝，中介 / 耐药用中性灰深浅区分 */
+.drug-result.sensitive    { color: #2378F5; }
+.drug-result.intermediate { color: #8A94A6; }
+.drug-result.resistant    { color: #4A5B75; }

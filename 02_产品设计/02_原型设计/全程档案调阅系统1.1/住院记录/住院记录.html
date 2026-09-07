@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>住院记录</title>
+    <script src="./flexible.js"></script>
+    <link rel="stylesheet" type="text/css" href="./common.css" />
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+    <style>
+      /* ============================================================
+         住院记录列表 —— 沿用门诊记录列表样式（Lanhu 基准）
+         覆盖项：适配住院数据（诊断名称较长、4 张卡片）
+         数据来源：就诊索引事件表 TB_SY_JZS（CHZJZLXBM = 3）
+         ============================================================ */
+      .list_1 { height: auto; }
+
+      /* 诊断名称：放开固定宽度，过长省略 */
+      .text_6-0, .text_6-1, .text_6-2, .text_6-3 {
+        width: auto;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      /* 入院时间行 */
+      .text-wrapper_2-0, .text-wrapper_2-1, .text-wrapper_2-2, .text-wrapper_2-3 {
+        margin: 4px 0 0 0;
+      }
+      /* 机构 + 科室行：容纳较长医院名称 */
+      .group_3-0, .group_3-1, .group_3-2, .group_3-3 {
+        margin: 8px 16px 0 0;
+      }
+      .image-text_3-0, .image-text_3-1, .image-text_3-2, .image-text_3-3 {
+        width: 170px;
+      }
+      .text-group_4-0, .text-group_4-1, .text-group_4-2, .text-group_4-3 {
+        width: auto;
+      }
+
+      /* ---------- 第四张卡片（危重状态，红色）样式 ---------- */
+      .list-items_1-3 {
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 8px;
+        margin-bottom: 16px;
+        padding: 16px 16px 16px 16px;
+      }
+      .text-wrapper_1-3 { width: 311px; }
+      .text_6-3 {
+        overflow-wrap: break-word;
+        color: rgba(51, 51, 51, 1);
+        font-size: 16px;
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        text-align: left;
+        white-space: nowrap;
+        line-height: 22px;
+      }
+      .text_7-3 {
+        overflow-wrap: break-word;
+        font-size: 14px;
+        font-family: PingFangSC-Regular;
+        text-align: left;
+        white-space: nowrap;
+        line-height: 20px;
+        margin-top: 1px;
+        color: rgba(242, 43, 38, 1);
+      }
+      .text-wrapper_2-3 { margin: 4px 0 0 0; }
+      .text_8-3 {
+        overflow-wrap: break-word;
+        color: rgba(102, 102, 102, 1);
+        font-size: 14px;
+        font-family: PingFangSC-Regular;
+        text-align: left;
+        white-space: nowrap;
+        line-height: 20px;
+      }
+      .group_3-3 { margin: 8px 16px 0 0; }
+      .thumbnail_4-3 { width: 14px; height: 14px; margin: 3px 0 3px 0; }
+      .image-text_3-3 { width: 170px; margin-left: 4px; }
+      .text-group_3-3 {
+        overflow-wrap: break-word;
+        color: rgba(102, 102, 102, 1);
+        font-size: 14px;
+        font-family: PingFangSC-Regular;
+        text-align: left;
+        white-space: nowrap;
+        line-height: 20px;
+      }
+      .thumbnail_5-3 { width: 10px; height: 6px; margin: 7px 0 7px 0; }
+      .image-text_4-3 { width: 74px; margin-left: 8px; }
+      .thumbnail_6-3 { width: 14px; height: 14px; margin: 3px 0 3px 0; }
+      .text-group_4-3 {
+        overflow-wrap: break-word;
+        color: rgba(102, 102, 102, 1);
+        font-size: 14px;
+        font-family: PingFangSC-Regular;
+        text-align: left;
+        white-space: nowrap;
+        line-height: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page flex-col">
+      <div class="group_1 flex-col">
+        <div class="box_1 flex-row">
+          <span class="text_1">10:19</span>
+          <img
+            class="thumbnail_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng704147f8b978587e16053c0aff2e7a89010fce4b1451e830bc244c0f5237adc5.png"
+          />
+          <span class="text_2">5G</span>
+          <img
+            class="image_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPngb44e7965ccfb0dcdb8b19278c26b84b1f1e92d5ae3c4c02730dc831e2478c8ee.png"
+          />
+        </div>
+        <div class="box_2 flex-row">
+          <img
+            class="label_1"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng1f264f6d2d7519387132cd8cedd70f26e20a37499e604d10ad41e07e06c00a98.png"
+          />
+          <span class="text_3">住院记录</span>
+          <img
+            class="image_2"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng1351788870940f46d7266f53b69d89b18357240c5dc52af155ce338c959c0152.png"
+          />
+        </div>
+      </div>
+      <div class="group_2 flex-col">
+        <div class="box_3 flex-col">
+          <div class="section_1 flex-row justify-between">
+            <div class="image-text_1 flex-row justify-between">
+              <img
+                class="thumbnail_2"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPng5e886a804a5fad2452e7bd67f63c18f8cf083a291365eb2923d590a7c81268e0.png"
+              />
+              <span class="text-group_1">查询日期</span>
+            </div>
+            <span class="text_4">2023-09-21～2023-11-25</span>
+          </div>
+          <img
+            class="image_3"
+            referrerpolicy="no-referrer"
+            src="./img/SketchPng834c12bb1d7718fa2ed606c5418c900b02750bc05228bf36313128ce8fbcfffa.png"
+          />
+          <div class="section_2 flex-row justify-between">
+            <div class="image-text_2 flex-row justify-between">
+              <img
+                class="thumbnail_3"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPng5e886a804a5fad2452e7bd67f63c18f8cf083a291365eb2923d590a7c81268e0.png"
+              />
+              <span class="text-group_2">查询医院</span>
+            </div>
+            <span class="text_5">全部</span>
+          </div>
+        </div>
+        <div class="list_1 flex-col">
+          <!-- 记录 1：王秀兰 · 2型糖尿病酮症酸中毒 · 在院 -->
+          <div class="list-items_1-0 flex-col">
+            <div class="text-wrapper_1-0 flex-row justify-between">
+              <span class="text_6-0">2型糖尿病酮症酸中毒</span>
+              <span class="text_7-0">在院</span>
+            </div>
+            <div class="text-wrapper_2-0 flex-row">
+              <span class="text_8-0">2023-11-18&nbsp;09:30</span>
+            </div>
+            <div class="group_3-0 flex-row">
+              <img
+                class="thumbnail_4-0"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPngaaa99f43d9f3567d003bfe2b41d9567dae54b968007c925bd79d37a60f814a98.png"
+              />
+              <div class="image-text_3-0 flex-row justify-between">
+                <span class="text-group_3-0">北京协和医院</span>
+                <img
+                  class="thumbnail_5-0"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPngc891ace8076a01a72fc2d1fc002415dfdc9222033354ed54e4cf4c18dbbba84e.png"
+                />
+              </div>
+              <div class="image-text_4-0 flex-row justify-between">
+                <img
+                  class="thumbnail_6-0"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPngbb247a7fc8ec76c615b464a7d82e82ebbbec08803aabbacfe5277be7b21c8ad3.png"
+                />
+                <span class="text-group_4-0">内分泌科</span>
+              </div>
+            </div>
+          </div>
+          <!-- 记录 2：李建国 · 慢性阻塞性肺疾病急性加重 · 转院 -->
+          <div class="list-items_1-1 flex-col">
+            <div class="text-wrapper_1-1 flex-row justify-between">
+              <span class="text_6-1">慢性阻塞性肺疾病急性加重</span>
+              <span class="text_7-1">转院</span>
+            </div>
+            <div class="text-wrapper_2-1 flex-row">
+              <span class="text_8-1">2023-10-12&nbsp;14:20</span>
+            </div>
+            <div class="group_3-1 flex-row">
+              <img
+                class="thumbnail_4-1"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPngaaa99f43d9f3567d003bfe2b41d9567dae54b968007c925bd79d37a60f814a98.png"
+              />
+              <div class="image-text_3-1 flex-row justify-between">
+                <span class="text-group_3-1">内蒙古国际蒙医医院</span>
+                <img
+                  class="thumbnail_5-1"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPngc891ace8076a01a72fc2d1fc002415dfdc9222033354ed54e4cf4c18dbbba84e.png"
+                />
+              </div>
+              <div class="image-text_4-1 flex-row justify-between">
+                <img
+                  class="thumbnail_6-1"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPngbb247a7fc8ec76c615b464a7d82e82ebbbec08803aabbacfe5277be7b21c8ad3.png"
+                />
+                <span class="text-group_4-1">呼吸内科</span>
+              </div>
+            </div>
+          </div>
+          <!-- 记录 3：赵国强 · 急性下壁心肌梗死 · 已出院 -->
+          <div class="list-items_1-2 flex-col">
+            <div class="text-wrapper_1-2 flex-row justify-between">
+              <span class="text_6-2">急性下壁心肌梗死</span>
+              <span class="text_7-2">已出院</span>
+            </div>
+            <div class="text-wrapper_2-2 flex-row">
+              <span class="text_8-2">2023-09-21&nbsp;02:30</span>
+            </div>
+            <div class="group_3-2 flex-row">
+              <img
+                class="thumbnail_4-2"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPngaaa99f43d9f3567d003bfe2b41d9567dae54b968007c925bd79d37a60f814a98.png"
+              />
+              <div class="image-text_3-2 flex-row justify-between">
+                <span class="text-group_3-2">内蒙古自治区人民医院</span>
+                <img
+                  class="thumbnail_5-2"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPngc891ace8076a01a72fc2d1fc002415dfdc9222033354ed54e4cf4c18dbbba84e.png"
+                />
+              </div>
+              <div class="image-text_4-2 flex-row justify-between">
+                <img
+                  class="thumbnail_6-2"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPngbb247a7fc8ec76c615b464a7d82e82ebbbec08803aabbacfe5277be7b21c8ad3.png"
+                />
+                <span class="text-group_4-2">心血管内科</span>
+              </div>
+            </div>
+          </div>
+          <!-- 记录 4：孙桂兰 · 急性脑梗死 · 危重 -->
+          <div class="list-items_1-3 flex-col">
+            <div class="text-wrapper_1-3 flex-row justify-between">
+              <span class="text_6-3">急性脑梗死</span>
+              <span class="text_7-3">危重</span>
+            </div>
+            <div class="text-wrapper_2-3 flex-row">
+              <span class="text_8-3">2023-11-25&nbsp;16:40</span>
+            </div>
+            <div class="group_3-3 flex-row">
+              <img
+                class="thumbnail_4-3"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPngaaa99f43d9f3567d003bfe2b41d9567dae54b968007c925bd79d37a60f814a98.png"
+              />
+              <div class="image-text_3-3 flex-row justify-between">
+                <span class="text-group_3-3">内蒙古国际蒙医医院</span>
+                <img
+                  class="thumbnail_5-3"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPngc891ace8076a01a72fc2d1fc002415dfdc9222033354ed54e4cf4c18dbbba84e.png"
+                />
+              </div>
+              <div class="image-text_4-3 flex-row justify-between">
+                <img
+                  class="thumbnail_6-3"
+                  referrerpolicy="no-referrer"
+                  src="./img/SketchPngbb247a7fc8ec76c615b464a7d82e82ebbbec08803aabbacfe5277be7b21c8ad3.png"
+                />
+                <span class="text-group_4-3">神经内科</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // 返回按钮：点击返回首页
+      var backBtn = document.querySelector('.label_1');
+      if (backBtn) {
+        backBtn.style.cursor = 'pointer';
+        backBtn.addEventListener('click', function () {
+          window.location.href = '../index.html';
+        });
+      }
+
+      // 列表卡片点击跳转至住院记录详情（按记录 id 传参）
+      var cardMap = { 'list-items_1-0': 1, 'list-items_1-1': 2, 'list-items_1-2': 3, 'list-items_1-3': 4 };
+      Object.keys(cardMap).forEach(function (cls) {
+        var el = document.querySelector('.' + cls);
+        if (el) {
+          el.style.cursor = 'pointer';
+          el.addEventListener('click', function () {
+            window.location.href = '住院记录详情.html?id=' + cardMap[cls];
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

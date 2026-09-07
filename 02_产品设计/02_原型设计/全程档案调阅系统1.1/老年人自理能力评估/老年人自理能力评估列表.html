@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>老年人自理能力评估</title>
+  <style>
+    /* ============================================================
+       老年人自理能力评估 列表页
+       基准宽度：375px，样式规范与 病案首页列表 / 高血压专项 一致
+       评分标准：0-3分可自理；4-8分轻度依赖；9-18分中度依赖；≥19分不能自理
+       ============================================================ */
+
+    /* ---------- Reset & Base ---------- */
+    * { box-sizing: border-box; flex-shrink: 0; margin: 0; padding: 0; }
+    body {
+      font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+      background-color: #F3F5F7;
+      -webkit-font-smoothing: antialiased;
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    .flex-col { display: flex; flex-direction: column; }
+    .flex-row { display: flex; flex-direction: row; }
+    .justify-between { display: flex; justify-content: space-between; }
+    .align-center { display: flex; align-items: center; }
+
+    /* ---------- Page ---------- */
+    .page {
+      background-color: #F3F5F7;
+      position: relative;
+      width: 100%;
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding-bottom: 16px;
+    }
+
+    /* ============================================================
+       导航栏
+       ============================================================ */
+    .group_1 {
+      background-color: rgba(255, 255, 255, 1);
+      padding: 14px 16px 7px 16px;
+    }
+    .box_1 {
+      display: flex; flex-direction: row; align-items: center;
+      margin: 0 10px 0 24px;
+    }
+    .status-spacer { flex: 1; }
+    .text_1 {
+      overflow-wrap: break-word;
+      color: rgba(0, 0, 0, 1);
+      font-size: 16px;
+      letter-spacing: 1.100000023841858px;
+      font-family: PingFangSC-Semibold;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+      line-height: 22px;
+    }
+    .thumbnail_1 { width: 19px; height: 12px; margin: 5px 0; }
+    .text_2 {
+      overflow-wrap: break-word;
+      color: rgba(0, 0, 0, 1);
+      font-size: 12px;
+      letter-spacing: 0.925000011920929px;
+      font-family: PingFangSC-Semibold;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+      line-height: 17px;
+      margin: 3px 0 0 6px;
+    }
+    .image_1 { width: 25px; height: 13px; margin: 5px 0 4px 6px; }
+    .box_2 {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+    .label_1 { width: 24px; height: 24px; flex-shrink: 0; cursor: pointer; }
+    .text_3 {
+      flex: 1; min-width: 0;
+      overflow-wrap: break-word;
+      color: rgba(51, 51, 51, 1);
+      font-size: 16px;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+      line-height: 22px;
+      margin: 4px 0 0 34px;
+    }
+    .image_2 { width: 78px; height: 30px; flex-shrink: 0; }
+
+    /* ============================================================
+       筛选栏（查询日期 / 评估医师）
+       ============================================================ */
+    .filter-card {
+      background-color: #FFFFFF;
+      padding: 11px 16px;
+    }
+    .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .filter-label {
+      display: flex;
+      align-items: center;
+      color: rgba(51, 51, 51, 1);
+      font-size: 16px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      line-height: 22px;
+    }
+    .filter-label img { width: 16px; height: 16px; margin-right: 6px; }
+    .filter-value {
+      color: rgba(102, 102, 102, 1);
+      font-size: 16px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      line-height: 22px;
+    }
+    .filter-divider {
+      width: 100%;
+      height: 1px;
+      display: block;
+      margin: 11px 0;
+    }
+
+    /* ============================================================
+       列表容器
+       ============================================================ */
+    .list-container {
+      width: 343px;
+      align-self: center;
+      margin-top: 16px;
+    }
+
+    /* ============================================================
+       评估记录卡片
+       ============================================================ */
+    .list-card {
+      background-color: #FFFFFF;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      padding: 12px 16px 16px 16px;
+      cursor: pointer;
+    }
+    .list-card:active { opacity: 0.7; }
+
+    /* ---------- 第一行：评估日期 + 自理能力等级标签 ---------- */
+    .card-date {
+      color: #666666; font-size: 14px; font-family: PingFangSC-Regular;
+      font-weight: 400; text-align: left; white-space: nowrap; line-height: 20px;
+    }
+    .level-tag {
+      font-size: 12px; font-family: PingFangSC-Regular;
+      font-weight: 400; white-space: nowrap;
+      padding: 2px 12px; border-radius: 12px; line-height: 18px;
+      border: 1px solid;
+    }
+    .level-tag--ok      { color: #15CF6E; border-color: #15CF6E; background-color: #F0FDF6; }
+    .level-tag--light   { color: #FF9500; border-color: #FF9500; background-color: #FFF8EE; }
+    .level-tag--mid     { color: #096AFF; border-color: #096AFF; background-color: #F0F6FF; }
+    .level-tag--severe  { color: #F22B26; border-color: #F22B26; background-color: #FEF1F1; }
+
+    /* ---------- 第二行：评估医师 + 评估机构 ---------- */
+    .card-mid-row {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .card-mid-row .icon-svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      stroke: #096AFF;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .card-mid-row .icon-doctor { margin-right: 4px; }
+    .card-mid-row .icon-arrow {
+      margin: 0 10px;
+      stroke: #999999;
+      stroke-width: 2.5;
+    }
+    .card-mid-row .icon-hospital { margin-right: 4px; }
+    .card-doctor,
+    .card-org {
+      color: #666666;
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+    .card-org {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+
+    /* ---------- 第三行：合计评分 ---------- */
+    .score-block {
+      background-color: #F4F6FB;
+      border-radius: 6px;
+      margin-top: 12px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .score-block-label {
+      color: #666666;
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      line-height: 20px;
+    }
+    .score-block-value {
+      display: flex;
+      align-items: baseline;
+    }
+    .score-block-value b {
+      font-size: 20px;
+      font-family: PingFangSC-Semibold;
+      font-weight: 600;
+      line-height: 26px;
+    }
+    .score-block-value em {
+      font-style: normal;
+      font-size: 12px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      color: #999999;
+      margin-left: 1px;
+    }
+
+    /* ============================================================
+       底部脚注
+       ============================================================ */
+    .footer-note {
+      padding: 16px 16px 0 16px;
+      text-align: center;
+      font-size: 12px; color: #999999;
+      font-family: PingFangSC-Regular; font-weight: 400;
+      line-height: 17px;
+    }
+
+    /* ---------- 响应式 ---------- */
+    @media (max-width: 375px) {
+      .list-container { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page flex-col">
+
+    <!-- ==================== 导航栏 ==================== -->
+    <div class="group_1 flex-col">
+      <div class="box_1 flex-row">
+        <span class="text_1">10:19</span>
+        <span class="status-spacer"></span>
+        <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+        <span class="text_2">5G</span>
+        <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+      </div>
+      <div class="box_2 flex-row">
+        <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" />
+        <span class="text_3">老年人自理能力评估</span>
+        <img class="image_2" referrerpolicy="no-referrer" src="../img/设置.png" />
+      </div>
+    </div>
+
+    <!-- ==================== 筛选栏 ==================== -->
+    <div class="filter-card flex-col">
+      <div class="filter-row">
+        <div class="filter-label">
+          <img referrerpolicy="no-referrer" src="../img/过滤.png" />
+          <span>查询日期</span>
+        </div>
+        <span class="filter-value">2025-09-07 ～ 2026-09-07</span>
+      </div>
+      <img class="filter-divider" referrerpolicy="no-referrer" src="../img/分割线.png" />
+      <div class="filter-row">
+        <div class="filter-label">
+          <img referrerpolicy="no-referrer" src="../img/过滤.png" />
+          <span>评估医师</span>
+        </div>
+        <span class="filter-value">全部</span>
+      </div>
+    </div>
+
+    <!-- ==================== 评估记录列表 ==================== -->
+    <div class="list-container flex-col">
+
+      <!-- ========== 记录 1：轻度依赖（合计 4 分） ========== -->
+      <div class="list-card flex-col" data-id="1">
+        <div class="card-top-row flex-row justify-between">
+          <span class="card-date">2026-09-07</span>
+          <span class="level-tag level-tag--light">轻度依赖</span>
+        </div>
+        <div class="card-mid-row">
+          <svg class="icon-svg icon-doctor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="card-doctor">夏亮</span>
+          <svg class="icon-svg icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 6 15 12 9 18"/>
+          </svg>
+          <svg class="icon-svg icon-hospital" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="12" y1="9" x2="12" y2="15"/>
+          </svg>
+          <span class="card-org">望京社区卫生服务中心</span>
+        </div>
+        <div class="score-block">
+          <span class="score-block-label">合计评分</span>
+          <span class="score-block-value"><b style="color:#FF9500">4</b><em>分</em></span>
+        </div>
+      </div>
+
+      <!-- ========== 记录 2：可自理（合计 0 分） ========== -->
+      <div class="list-card flex-col" data-id="2">
+        <div class="card-top-row flex-row justify-between">
+          <span class="card-date">2026-06-15</span>
+          <span class="level-tag level-tag--ok">可自理</span>
+        </div>
+        <div class="card-mid-row">
+          <svg class="icon-svg icon-doctor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="card-doctor">刘玉玉</span>
+          <svg class="icon-svg icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 6 15 12 9 18"/>
+          </svg>
+          <svg class="icon-svg icon-hospital" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="12" y1="9" x2="12" y2="15"/>
+          </svg>
+          <span class="card-org">望京社区卫生服务中心</span>
+        </div>
+        <div class="score-block">
+          <span class="score-block-label">合计评分</span>
+          <span class="score-block-value"><b style="color:#15CF6E">0</b><em>分</em></span>
+        </div>
+      </div>
+
+      <!-- ========== 记录 3：中度依赖（合计 17 分） ========== -->
+      <div class="list-card flex-col" data-id="3">
+        <div class="card-top-row flex-row justify-between">
+          <span class="card-date">2026-03-20</span>
+          <span class="level-tag level-tag--mid">中度依赖</span>
+        </div>
+        <div class="card-mid-row">
+          <svg class="icon-svg icon-doctor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="card-doctor">张永健</span>
+          <svg class="icon-svg icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 6 15 12 9 18"/>
+          </svg>
+          <svg class="icon-svg icon-hospital" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="12" y1="9" x2="12" y2="15"/>
+          </svg>
+          <span class="card-org">望京社区卫生服务中心</span>
+        </div>
+        <div class="score-block">
+          <span class="score-block-label">合计评分</span>
+          <span class="score-block-value"><b style="color:#096AFF">17</b><em>分</em></span>
+        </div>
+      </div>
+
+      <!-- ========== 记录 4：不能自理（合计 26 分） ========== -->
+      <div class="list-card flex-col" data-id="4">
+        <div class="card-top-row flex-row justify-between">
+          <span class="card-date">2025-12-08</span>
+          <span class="level-tag level-tag--severe">不能自理</span>
+        </div>
+        <div class="card-mid-row">
+          <svg class="icon-svg icon-doctor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="card-doctor">夏亮</span>
+          <svg class="icon-svg icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 6 15 12 9 18"/>
+          </svg>
+          <svg class="icon-svg icon-hospital" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="12" y1="9" x2="12" y2="15"/>
+          </svg>
+          <span class="card-org">望京社区卫生服务中心</span>
+        </div>
+        <div class="score-block">
+          <span class="score-block-label">合计评分</span>
+          <span class="score-block-value"><b style="color:#F22B26">26</b><em>分</em></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== 底部脚注 ==================== -->
+    <div class="footer-note">
+      共 4 条评估记录
+    </div>
+
+  </div>
+
+  <script>
+    /* 返回首页 */
+    document.querySelector('.label_1').addEventListener('click', function () {
+      window.location.href = '../index.html';
+    });
+
+    /* 列表卡片点击跳转详情页 */
+    document.querySelectorAll('.list-card').forEach(function (card) {
+      card.addEventListener('click', function () {
+        window.location.href = '老年人自理能力评估详情.html?id=' + card.dataset.id;
+      });
+    });
+  </script>
+
+</body>
+</html>

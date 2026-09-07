@@ -140,7 +140,7 @@
 
 .list_1 {
   width: 343px;
-  height: 350px;
+  height: auto;
   align-self: center;
   margin-top: 16px;
 }
@@ -304,6 +304,98 @@
   line-height: 20px;
 }
 
+.list-items_1-3 {
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  padding: 16px 123px 16px 16px;
+}
+
+.text_4-3 {
+  width: 204px;
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 16px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 22px;
+}
+
+.text_5-3 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+  margin: 4px 86px 0 0;
+}
+
+.image-text_3-3 {
+  width: 144px;
+  margin: 8px 60px 0 0;
+}
+
+.thumbnail_4-3 {
+  width: 14px;
+  height: 14px;
+  margin: 3px 0 3px 0;
+}
+
+.text-group_3-3 {
+  overflow-wrap: break-word;
+  color: rgba(102, 102, 102, 1);
+  font-size: 14px;
+  font-family: PingFangSC-Regular;
+  font-weight: NaN;
+  text-align: left;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+/* ============================================================
+   检验类别标签
+   - 标题行改为 flex：标题自适应省略 + 类别胶囊标签靠右
+   - 类别枚举：一般临床检验 / 血液学检查 / 临床化学检查 /
+               临床免疫学检查 / 临床微生物学检查
+   ============================================================ */
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.title-row .text_4-0,
+.title-row .text_4-1,
+.title-row .text_4-2,
+.title-row .text_4-3 {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lab-category-tag {
+  flex-shrink: 0;
+  max-width: 130px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #E8F1FF;
+  color: #2378F5;
+  font-size: 11px;
+  font-family: PingFangSC-Regular;
+  line-height: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ============================================================
    AI报告解读 — 渐变胶囊按钮
    - 三段式：左圆形图标｜中文字（标题+副标题）｜右装饰圆
@@ -311,7 +403,8 @@
    ============================================================ */
 .list-items_1-0,
 .list-items_1-1,
-.list-items_1-2 {
+.list-items_1-2,
+.list-items_1-3 {
   position: relative;
   padding: 16px 16px 12px 16px !important;
 }

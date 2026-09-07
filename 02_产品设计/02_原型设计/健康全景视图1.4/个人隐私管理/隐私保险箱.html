@@ -3,5187 +3,990 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>隐私保险箱</title>
+    <title>隐私保险箱 · 优化版</title>
     <script>
 (function flexible(window, document) {
   function resetFontSize() {
     const size = (document.documentElement.clientWidth / 1440) * 37.5;
     document.documentElement.style.fontSize = size + 'px';
   }
-
-  // reset root font size on page show or resize
   window.addEventListener('pageshow', resetFontSize);
   window.addEventListener('resize', resetFontSize);
 })(window, document);
-
     </script>
     <style>
-body * {
-  box-sizing: border-box;
-  flex-shrink: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma,
     Arial, PingFang SC-Light, Microsoft YaHei;
+  background-color: #ffffff;
 }
-input {
-  background-color: transparent;
-  border: 0;
-}
-button {
-  margin: 0;
-  padding: 0;
-  border: 1px solid transparent;
-  outline: none;
-  background-color: transparent;
-}
+button { border: 0; outline: none; background: transparent; cursor: pointer; font-family: inherit; }
+input { outline: none; font-family: inherit; }
 
-button:active {
-  opacity: 0.6;
-}
-.flex-col {
-  display: flex;
-  flex-direction: column;
-}
-.flex-row {
-  display: flex;
-  flex-direction: row;
-}
-.justify-start {
-  display: flex;
-  justify-content: flex-start;
-}
-.justify-center {
-  display: flex;
-  justify-content: center;
-}
+.page { display: flex; width: 1440px; min-height: 900px; background: #ffffff; }
+.side { width: 216px; flex-shrink: 0; padding: 11px 0 0 0; }
+.side-title { display: flex; align-items: center; height: 25px; margin-left: 12px; }
+.side-title svg { width: 16px; height: 16px; margin-right: 8px; }
+.side-title span { font-size: 18px; font-family: PingFangSC-Medium; font-weight: 500; color: #262626; line-height: 25px; }
+.side-menu { background: #fff; width: 216px; height: 852px; margin-top: 12px; padding-top: 5px; border-radius: 4px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+.side-item { height: 32px; line-height: 32px; padding-left: 12px; font-size: 14px; color: #262626; letter-spacing: 0.3px; cursor: pointer; }
+.side-item.active { background: rgba(224, 239, 255, 1); color: rgba(0, 122, 255, 1); }
+.divider { width: 1px; background: #F0F0F0; flex-shrink: 0; }
+.main { flex: 1; padding: 18px 24px 40px 16px; min-width: 0; background: #ffffff; }
 
-.justify-end {
-  display: flex;
-  justify-content: flex-end;
-}
-.justify-evenly {
-  display: flex;
-  justify-content: space-evenly;
-}
-.justify-around {
-  display: flex;
-  justify-content: space-around;
-}
-.justify-between {
-  display: flex;
-  justify-content: space-between;
-}
-.align-start {
-  display: flex;
-  align-items: flex-start;
-}
-.align-center {
-  display: flex;
-  align-items: center;
-}
-.align-end {
-  display: flex;
-  align-items: flex-end;
-}
+.hd { display: flex; align-items: center; justify-content: space-between; height: 33px; }
+.hd-title { font-size: 20px; font-family: PingFangSC-Medium; font-weight: 600; color: #262626; line-height: 28px; }
+.hd-actions { display: flex; gap: 8px; }
+.btn { height: 32px; padding: 0 18px; font-size: 14px; border-radius: 4px; line-height: 30px; display: inline-flex; align-items: center; justify-content: center; }
+.btn-ghost { background: #fff; border: 1px solid rgba(217, 217, 217, 1); color: #595959; }
+.btn-primary { background: rgba(0, 122, 255, 1); color: #fff; }
+.btn-outline-blue { background: #fff; border: 1px solid rgba(0, 122, 255, 1); color: rgba(0, 122, 255, 1); }
+.btn:active { opacity: 0.7; }
 
+.tip-bar { display: flex; align-items: center; background: rgba(255, 251, 230, 1); border: 1px solid rgba(255, 229, 143, 1); border-radius: 4px; height: 36px; margin-top: 12px; padding: 0 12px; }
+.tip-bar svg { width: 16px; height: 16px; flex-shrink: 0; }
+.tip-bar span { font-size: 13px; color: #595959; margin-left: 8px; }
+.tip-bar b { color: rgba(254, 166, 0, 1); font-weight: 500; }
+
+.sec { display: flex; align-items: center; margin-top: 20px; height: 24px; }
+.sec::before { content: ''; display: block; width: 4px; height: 16px; background: rgba(0, 122, 255, 1); margin-right: 8px; border-radius: 2px; }
+.sec span { font-size: 16px; font-family: PingFangSC-Medium; font-weight: 500; color: #262626; }
+.sec .sec-extra { margin-left: auto; font-size: 12px; color: #8c8c8c; font-weight: 400; }
+
+.role-card { display: flex; background: #fff; border-radius: 8px; margin-top: 16px; padding: 18px 20px; align-items: center; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); }
+.role-lead { width: 280px; flex-shrink: 0; }
+.role-lead .t1 { font-size: 15px; font-family: PingFangSC-Medium; font-weight: 500; color: #262626; line-height: 22px; }
+.role-lead .t2 { font-size: 12px; color: #8c8c8c; line-height: 20px; margin-top: 4px; }
+.role-item { flex: 1; display: flex; align-items: center; padding: 0 16px; border-left: 1px solid #F0F0F0; }
+.role-item:first-of-type { border-left: none; }
+.role-ico { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.role-ico svg { width: 20px; height: 20px; }
+.role-ico.ok { background: #F6FFED; }
+.role-ico.no { background: #FFF1F0; }
+.role-txt { margin-left: 12px; }
+.role-txt .r1 { font-size: 14px; color: #262626; font-family: PingFangSC-Medium; font-weight: 500; line-height: 22px; }
+.role-txt .r2 { font-size: 12px; line-height: 20px; margin-top: 2px; }
+.role-txt .r2.ok { color: #52C41A; }
+.role-txt .r2.no { color: #F5222D; }
+
+.stat-row { display: flex; gap: 16px; margin-top: 16px; }
+.stat-card { flex: 1; background: #fff; border-radius: 8px; padding: 16px 20px; display: flex; align-items: center; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); }
+.stat-num { font-size: 28px; font-family: PingFangSC-Medium; font-weight: 600; color: rgba(0, 122, 255, 1); line-height: 36px; }
+.stat-num.lock { color: #F5222D; }
+.stat-label { margin-left: 14px; }
+.stat-label .s1 { font-size: 14px; color: #262626; line-height: 22px; }
+.stat-label .s2 { font-size: 12px; color: #8c8c8c; line-height: 20px; }
+
+.range-card { background: #fff; border-radius: 8px; margin-top: 16px; padding: 14px 20px; display: flex; align-items: center; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); }
+.range-card .r-ico { width: 36px; height: 36px; border-radius: 8px; background: #E6F4FF; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.range-card .r-ico svg { width: 18px; height: 18px; }
+.range-card .r-txt { margin-left: 12px; flex: 1; }
+.range-card .r-t1 { font-size: 14px; color: #262626; line-height: 22px; }
+.range-card .r-t1 b { color: rgba(0, 122, 255, 1); font-weight: 500; }
+.range-card .r-t2 { font-size: 12px; color: #8c8c8c; line-height: 20px; margin-top: 2px; }
+.range-card .r-edit { font-size: 13px; color: rgba(0, 122, 255, 1); cursor: pointer; }
+
+.v-group { background: #fff; border-radius: 8px; margin-top: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); }
+.v-group-hd { display: flex; align-items: center; height: 46px; padding: 0 16px; background: #FAFCFF; border-bottom: 1px solid #EBF3FF; cursor: pointer; }
+.v-group-hd .arrow { transition: transform 0.2s; width: 14px; height: 14px; margin-right: 10px; flex-shrink: 0; }
+.v-group.closed .arrow { transform: rotate(-90deg); }
+.v-group-hd .org { font-size: 14px; font-family: PingFangSC-Medium; font-weight: 500; color: #262626; }
+.v-group-hd .meta { font-size: 12px; color: #8c8c8c; margin-left: 16px; }
+.v-group-hd .cnt { margin-left: auto; font-size: 12px; color: #F5222D; background: #FFF1F0; border-radius: 10px; padding: 1px 10px; }
+.v-group-body { display: block; }
+.v-group.closed .v-group-body { display: none; }
+.v-item { display: flex; align-items: center; min-height: 46px; padding: 6px 16px; border-bottom: 1px solid #F7F7F7; }
+.v-item:last-child { border-bottom: none; }
+.v-lock { width: 28px; height: 28px; border-radius: 6px; background: #FFF1F0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.v-lock svg { width: 14px; height: 14px; }
+.v-name { margin-left: 12px; width: 300px; flex-shrink: 0; }
+.v-name .n1 { font-size: 14px; color: #262626; line-height: 22px; }
+.v-name .n2 { font-size: 12px; color: #8c8c8c; line-height: 18px; }
+.v-path { font-size: 12px; color: #8c8c8c; flex: 1; }
+.v-tags { display: flex; gap: 6px; flex-shrink: 0; }
+.v-tag { font-size: 12px; padding: 1px 8px; border-radius: 2px; line-height: 20px; }
+.v-tag.doc { color: #F5222D; background: #FFF1F0; }
+.v-tag.fam { color: #FA8C16; background: #FFF7E6; }
+.v-remove { margin-left: 16px; font-size: 13px; color: rgba(0, 122, 255, 1); flex-shrink: 0; }
+.v-empty { background: #fff; border-radius: 8px; margin-top: 12px; padding: 56px 0; text-align: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04); }
+.v-empty .e1 { font-size: 14px; color: #8c8c8c; }
+.v-empty .e2 { font-size: 12px; color: #BFBFBF; margin-top: 6px; }
+
+.scope-row { display: flex; align-items: center; margin-top: 12px; font-size: 14px; color: #262626; flex-wrap: wrap; gap: 12px; }
+.scope-tabs { display: inline-flex; gap: 0; background: #F5F5F5; border-radius: 4px; padding: 3px; }
+.scope-tab { height: 28px; padding: 0 14px; font-size: 13px; color: #595959; border-radius: 3px; cursor: pointer; line-height: 22px; }
+.scope-tab.active { background: #fff; color: rgba(0, 122, 255, 1); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); font-family: PingFangSC-Medium; font-weight: 500; }
+.scope-custom { display: none; align-items: center; gap: 8px; margin-top: 12px; padding: 12px 16px; background: #fff; border-radius: 6px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+.scope-custom.show { display: flex; }
+.scope-custom label { font-size: 13px; color: #595959; }
+.scope-custom input[type=date] { height: 30px; padding: 0 10px; border: 1px solid #D9D9D9; border-radius: 4px; font-size: 13px; color: #262626; background: #fff; }
+.scope-custom .t-line { width: 16px; height: 1px; background: #D9D9D9; }
+.scope-hint { font-size: 12px; color: #8c8c8c; margin-top: 8px; }
+
+.tab-bar { display: flex; align-items: flex-end; margin-top: 16px; border-bottom: 1px solid #E5E5E5; height: 33px; }
+.tab { height: 32px; min-width: 96px; padding: 0 18px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #595959; background: #F5F5F5; border-radius: 6px 6px 0 0; margin-right: 2px; cursor: pointer; }
+.tab.active { background: #fff; color: rgba(0, 122, 255, 1); font-family: PingFangSC-Medium; font-weight: 500; position: relative; box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.04); }
+.tab.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: #fff; }
+
+.mod-card { background: #fff; border-radius: 8px; margin-top: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); }
+.mod-card.open { box-shadow: 0 6px 20px rgba(0, 122, 255, 0.10); }
+.mod-hd { display: flex; align-items: center; height: 60px; padding: 0 16px; cursor: pointer; }
+.mod-hd .arrow { width: 14px; height: 14px; margin-right: 12px; flex-shrink: 0; transition: transform 0.2s; }
+.mod-card.open .mod-hd .arrow { transform: rotate(90deg); }
+.mod-ico { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.mod-ico svg { width: 18px; height: 18px; }
+.mod-info { margin-left: 12px; width: 260px; flex-shrink: 0; }
+.mod-info .m1 { font-size: 15px; font-family: PingFangSC-Medium; font-weight: 500; color: #262626; line-height: 22px; }
+.mod-info .m2 { font-size: 12px; color: #8c8c8c; line-height: 18px; }
+.mod-status { flex: 1; display: flex; align-items: center; }
+.st-tag { font-size: 12px; padding: 2px 10px; border-radius: 2px; line-height: 20px; }
+.st-tag.none { color: #8c8c8c; background: #F5F5F5; }
+.st-tag.partial { color: #FA8C16; background: #FFF7E6; }
+.st-tag.all { color: #F5222D; background: #FFF1F0; }
+.mod-ops { display: flex; gap: 8px; flex-shrink: 0; }
+.op-btn { height: 28px; padding: 0 14px; font-size: 13px; border-radius: 4px; border: 1px solid rgba(217, 217, 217, 1); color: #595959; background: #fff; }
+.op-btn.primary { color: rgba(0, 122, 255, 1); border-color: rgba(0, 122, 255, 1); }
+.op-btn.danger { color: #F5222D; border-color: #F5222D; }
+.op-btn.danger:active { opacity: 0.7; }
+
+.mod-bd { display: none; border-top: 1px solid #F0F0F0; }
+.mod-card.open .mod-bd { display: block; }
+.bd-toolbar { display: flex; align-items: center; height: 44px; padding: 0 16px; background: #FAFAFA; border-bottom: 1px solid #F0F0F0; }
+.bd-search { display: flex; align-items: center; width: 240px; height: 28px; background: #fff; border: 1px solid #D9D9D9; border-radius: 4px; padding: 0 8px; }
+.bd-search svg { width: 13px; height: 13px; flex-shrink: 0; }
+.bd-search input { border: 0; flex: 1; font-size: 13px; margin-left: 6px; color: #262626; background: transparent; }
+.bd-search input::placeholder { color: #BFBFBF; }
+.bd-sel { margin-left: auto; font-size: 12px; color: #8c8c8c; }
+.bd-sel b { color: #F5222D; font-weight: 500; }
+.bd-checkall { display: flex; align-items: center; margin-left: 16px; font-size: 13px; color: #595959; cursor: pointer; }
+.bd-checkall input { margin-right: 6px; accent-color: rgba(0, 122, 255, 1); }
+
+.rec-row { display: flex; align-items: center; min-height: 46px; padding: 6px 16px; border-bottom: 1px solid #F7F7F7; }
+.rec-row:last-child { border-bottom: none; }
+.rec-row.blocked { background: #FFFBF8; }
+.rec-row.out-of-range { opacity: 0.55; }
+.rec-cb { width: 16px; height: 16px; accent-color: rgba(0, 122, 255, 1); cursor: pointer; flex-shrink: 0; }
+.rec-cb:disabled { cursor: not-allowed; }
+.rec-name { margin-left: 12px; flex: 1; min-width: 0; }
+.rec-name .n1 { font-size: 14px; color: #262626; line-height: 22px; }
+.rec-name .n1 .lock-ico { display: inline-block; vertical-align: -2px; margin-left: 6px; width: 13px; height: 13px; }
+.rec-name .n1 .oor-tag { display: inline-block; vertical-align: 1px; margin-left: 6px; font-size: 11px; color: #8c8c8c; background: #F5F5F5; border-radius: 2px; padding: 0 6px; line-height: 18px; }
+.rec-name .n2 { font-size: 12px; color: #8c8c8c; line-height: 18px; }
+.rec-col { font-size: 13px; color: #595959; flex-shrink: 0; }
+.rec-col.date { width: 180px; }
+.rec-col.org { width: 220px; }
+.rec-col.doc { width: 80px; }
+
+.grp { border-bottom: 1px solid #F0F0F0; }
+.grp:last-child { border-bottom: none; }
+.grp-hd { display: flex; align-items: center; min-height: 46px; padding: 6px 16px; background: #FAFCFF; }
+.grp-hd .rec-name .n1 { font-family: PingFangSC-Medium; font-weight: 500; }
+.grp-badge { font-size: 11px; color: rgba(0, 122, 255, 1); background: #E6F4FF; border-radius: 2px; padding: 0 6px; margin-left: 8px; line-height: 18px; }
+.grp-children { padding-left: 30px; background: #fff; }
+.grp-children .rec-row { border-bottom: 1px dashed #F2F2F2; }
+.grp-children .rec-row:last-child { border-bottom: none; }
+.grp-children .rec-name .n1 { font-size: 13px; }
+.child-branch { width: 14px; height: 14px; border-left: 1px solid #D9D9D9; border-bottom: 1px solid #D9D9D9; margin-left: 4px; flex-shrink: 0; }
+
+/* 编辑页表格表头 */
+.bd-table-hd { display: flex; align-items: center; height: 36px; padding: 0 16px; background: #FAFAFA; border-bottom: 1px solid #F0F0F0; }
+.bd-table-hd .th { font-size: 12px; color: #8c8c8c; line-height: 18px; }
+.bd-table-hd .th.name { flex: 1; min-width: 0; padding-left: 28px; }
+.bd-table-hd .th.date { width: 180px; flex-shrink: 0; }
+.bd-table-hd .th.org  { width: 220px; flex-shrink: 0; }
+.bd-table-hd .th.doc  { width: 80px;  flex-shrink: 0; }
+
+/* 就诊时间 - Label 样式 */
+.time-label { display: inline-flex; align-items: center; padding: 3px 10px; background: #fff; border: 1px solid #E6E8EB; border-radius: 4px; font-size: 12px; line-height: 18px; color: #4A5266; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.time-label .sep { color: #BFBFBF; margin: 0 6px; }
+
+/* 卡片右上"共 X 条数据"统计 */
+.mod-total { display: inline-flex; align-items: center; padding: 2px 10px; background: #F5F7FA; border-radius: 4px; font-size: 12px; color: #595959; line-height: 20px; }
+.mod-total b { color: #262626; font-weight: 500; margin: 0 2px; }
+.mod-total.dim { color: #BFBFBF; }
+.mod-total.dim b { color: #BFBFBF; }
+
+/* 工具栏筛选控件 */
+.tb-label { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; background: #E6F4FF; color: #2378F5; border-radius: 14px; font-size: 12px; line-height: 28px; }
+.tb-date { display: inline-flex; align-items: center; height: 28px; padding: 0 6px 0 10px; border: 1px solid #D9D9D9; border-radius: 4px; font-size: 13px; color: #595959; background: #fff; cursor: pointer; gap: 4px; }
+.tb-date input { border: 0; outline: none; font-family: inherit; font-size: 13px; color: #262626; background: transparent; padding: 0; width: 90px; }
+.tb-date .cal-ico { width: 14px; height: 14px; color: #8c8c8c; }
+
+/* 编辑页模块头简化（移除色块图标，标题+条数平行展示） */
+.mod-hd .mod-ico { display: none; }
+.mod-hd .mod-info { width: auto; flex: 0 0 auto; display: flex; align-items: center; gap: 0; }
+.mod-hd .mod-info .m1 { display: inline-flex; align-items: center; font-size: 15px; }
+.mod-hd .mod-info .m1 .mod-no { color: #262626; margin-right: 8px; }
+.mod-hd .mod-info .m1 .cat-name { color: #262626; }
+.mod-hd .mod-info .m2 { margin-left: 12px; font-size: 12px; color: #8c8c8c; line-height: 22px; }
+
+/* 工具栏右侧总条数区 */
+.bd-toolbar-right { display: inline-flex; align-items: center; gap: 12px; font-size: 13px; color: #595959; }
+.bd-total { display: inline-flex; align-items: center; }
+.bd-total b { color: #262626; font-weight: 500; margin: 0 2px; }
+
+.mask { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); display: none; align-items: center; justify-content: center; z-index: 99; }
+.mask.show { display: flex; }
+.modal { width: 420px; background: #fff; border-radius: 8px; padding: 24px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18); }
+.modal .mt { display: flex; align-items: center; font-size: 16px; font-family: PingFangSC-Medium; font-weight: 500; color: #262626; }
+.modal .mt svg { width: 20px; height: 20px; margin-right: 8px; }
+.modal .mc { font-size: 13px; color: #595959; line-height: 22px; margin: 12px 0 0 28px; }
+.modal .mc b { color: #F5222D; font-weight: 500; }
+.modal .mf { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+
+.toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.75); color: #fff; font-size: 13px; padding: 8px 20px; border-radius: 4px; display: none; z-index: 100; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); }
+.toast.show { display: block; }
     </style>
-    <style>
-.page {
-  background-color: rgba(245, 245, 245, 1);
-  position: relative;
-  width: 1440px;
-  height: 900px;
-  overflow: hidden;
-}
-
-.group_1 {
-  position: relative;
-  width: 1440px;
-  height: 900px;
-  background: url(./img/SketchPngbbec49b1f922b51ad65d23d77d594344399a5b944b0523a4c2d28f24de9aee0d.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-}
-
-.box_1 {
-  width: 216px;
-  height: 889px;
-  margin-top: 11px;
-}
-
-.box_2 {
-  width: 100px;
-  height: 25px;
-  margin-left: 12px;
-}
-
-.thumbnail_1 {
-  width: 16px;
-  height: 16px;
-  margin-top: 5px;
-}
-
-.text_1 {
-  width: 72px;
-  height: 25px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 18px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 25px;
-}
-
-.box_3 {
-  background-color: rgba(255, 255, 255, 1);
-  width: 216px;
-  height: 852px;
-  margin-top: 12px;
-}
-
-.text_2 {
-  width: 58px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.text-wrapper_1 {
-  background-color: rgba(224, 239, 255, 1);
-  height: 32px;
-  margin-top: 5px;
-  width: 216px;
-}
-
-.text_3 {
-  width: 70px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(0, 122, 255, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.text_4 {
-  width: 72px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.text_5 {
-  width: 72px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 10px 0 729px 12px;
-}
-
-.box_4 {
-  background-color: rgba(217, 217, 217, 1);
-  width: 1px;
-  height: 900px;
-}
-
-.box_5 {
-  width: 1200px;
-  height: 506px;
-  margin: 11px 12px 0 11px;
-}
-
-.group_2 {
-  width: 1199px;
-  height: 33px;
-  margin-left: 1px;
-}
-
-.text_6 {
-  width: 90px;
-  height: 25px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 18px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 25px;
-}
-
-.text-wrapper_2 {
-  height: 32px;
-  border: 1px solid rgba(0, 122, 255, 1);
-  margin-top: 1px;
-  width: 60px;
-}
-
-.text_7 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(0, 122, 255, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 16px;
-}
-
-.group_3 {
-  background-color: rgba(255, 251, 230, 1);
-  border-radius: 2px;
-  width: 1200px;
-  height: 32px;
-  border: 1px solid rgba(255, 229, 143, 1);
-  margin-top: 12px;
-}
-
-.thumbnail_2 {
-  width: 20px;
-  height: 20px;
-  margin: 6px 0 0 8px;
-}
-
-.text-wrapper_3 {
-  width: 240px;
-  height: 20px;
-  overflow-wrap: break-word;
-  font-size: 0;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 20px;
-  margin: 6px 924px 0 8px;
-}
-
-.text_8 {
-  width: 240px;
-  height: 20px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 20px;
-}
-
-.text_9 {
-  width: 240px;
-  height: 20px;
-  overflow-wrap: break-word;
-  color: rgba(254, 166, 0, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 20px;
-}
-
-.group_4 {
-  width: 76px;
-  height: 24px;
-  margin-top: 12px;
-}
-
-.group_5 {
-  background-color: rgba(0, 122, 255, 1);
-  width: 4px;
-  height: 16px;
-  margin-top: 4px;
-}
-
-.text_10 {
-  width: 64px;
-  height: 24px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 16px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 24px;
-}
-
-.text-wrapper_4 {
-  width: 266px;
-  height: 22px;
-  margin-top: 8px;
-}
-
-.text_11 {
-  width: 238px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_12 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.group_6 {
-  width: 76px;
-  height: 24px;
-  margin-top: 16px;
-}
-
-.box_6 {
-  background-color: rgba(0, 122, 255, 1);
-  width: 4px;
-  height: 16px;
-  margin-top: 4px;
-}
-
-.text_13 {
-  width: 64px;
-  height: 24px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 16px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 24px;
-}
-
-.text-wrapper_5 {
-  width: 205px;
-  height: 22px;
-  margin-top: 8px;
-}
-
-.text_14 {
-  width: 70px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_15 {
-  width: 135px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.image_1 {
-  width: 1200px;
-  height: 32px;
-  margin-top: 9px;
-  display: none;
-}
-
-.image-wrapper_1 {
-  height: 32px;
-  background: url(./img/SketchPngbbd80506cd44a76ddeb344fba021657d6e86b94d17b09450f374147a1523e8c7.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  width: 1200px;
-  display: none;
-}
-
-.image_2 {
-  width: 1200px;
-  height: 1px;
-  display: none;
-}
-
-.image_3 {
-  width: 1200px;
-  height: 1px;
-  display: none;
-}
-
-.image-wrapper_2 {
-  height: 32px;
-  background: url(./img/SketchPngab8e42052a5f489129c98b40e4cfe4d5e8ebc6aa6d1ba971e6da80f7de6b8059.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  width: 1200px;
-  display: none;
-}
-
-.image_4 {
-  width: 1200px;
-  height: 1px;
-  margin-top: 31px;
-  display: none;
-}
-
-.image-wrapper_3 {
-  height: 32px;
-  background: url(./img/SketchPngbbd80506cd44a76ddeb344fba021657d6e86b94d17b09450f374147a1523e8c7.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  margin-top: 122px;
-  width: 1200px;
-  display: none;
-}
-
-.image_5 {
-  width: 1200px;
-  height: 1px;
-  display: none;
-}
-
-.image_6 {
-  width: 1200px;
-  height: 1px;
-  display: none;
-}
-
-.image-wrapper_4 {
-  height: 32px;
-  background: url(./img/SketchPngab8e42052a5f489129c98b40e4cfe4d5e8ebc6aa6d1ba971e6da80f7de6b8059.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  width: 1200px;
-  display: none;
-}
-
-.image_7 {
-  width: 1200px;
-  height: 1px;
-  margin-top: 31px;
-  display: none;
-}
-
-.box_7 {
-  position: absolute;
-  left: 228px;
-  top: 232px;
-  width: 1200px;
-  height: 656px;
-  background: none;
-}
-
-.box_8 {
-  width: 929px;
-  height: 97px;
-  margin: 1px 0 0 40px;
-}
-
-.block_1 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 97px;
-}
-
-.block_2 {
-  width: 28px;
-  height: 87px;
-  margin: 5px 0 0 12px;
-}
-
-.text_16 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text-group_1 {
-  width: 17px;
-  height: 55px;
-  margin: 10px 0 0 6px;
-}
-
-.text_17 {
-  width: 17px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_18 {
-  width: 17px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-.block_3 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 97px;
-  margin-left: 12px;
-}
-
-.block_4 {
-  width: 196px;
-  height: 87px;
-  margin: 5px 0 0 12px;
-}
-
-.text_19 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text-group_2 {
-  width: 196px;
-  height: 55px;
-  margin-top: 10px;
-}
-
-.text_20 {
-  width: 112px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_21 {
-  width: 196px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-.block_5 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 97px;
-  margin-left: 237px;
-}
-
-.block_6 {
-  width: 91px;
-  height: 87px;
-  margin: 5px 0 0 12px;
-}
-
-.text_22 {
-  width: 91px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text-group_3 {
-  width: 82px;
-  height: 55px;
-  margin-top: 10px;
-}
-
-.text_23 {
-  width: 82px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_24 {
-  width: 82px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-.block_7 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 97px;
-  margin-left: 222px;
-}
-
-.block_8 {
-  width: 91px;
-  height: 87px;
-  margin: 5px 0 0 12px;
-}
-
-.text_25 {
-  width: 91px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text-group_4 {
-  width: 28px;
-  height: 55px;
-  margin-top: 10px;
-}
-
-.text_26 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_27 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-.text-wrapper_6 {
-  height: 32px;
-  background: url(./img/SketchPnge36d04f53e12aa83f7629bf6713ac224dac46a5f1962a9441b04258363795108.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  width: 1176px;
-  margin: 13px 0 0 12px;
-}
-
-.text_28 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.box_9 {
-  width: 1176px;
-  height: 32px;
-  background: url(./img/SketchPng74a7347d90b73564c4cd69b0d9da1ba74511b617062df159da2f861b53680151.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  margin-left: 12px;
-}
-
-.image_8 {
-  width: 1176px;
-  height: 1px;
-}
-
-.text_29 {
-  width: 15px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 4px 0 5px 19px;
-}
-
-.image_9 {
-  width: 1176px;
-  height: 1px;
-  margin-left: 12px;
-}
-
-.box_10 {
-  width: 1176px;
-  height: 32px;
-  background: url(./img/SketchPng119b638b28e148b4ab3ff5fb78bc58ad32d28fbc5d55159996865fac8caa0bf4.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  margin-left: 12px;
-}
-
-.text_30 {
-  width: 17px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 18px;
-}
-
-.image_10 {
-  width: 1176px;
-  height: 1px;
-  margin-top: 4px;
-}
-
-.box_11 {
-  width: 847px;
-  height: 64px;
-  margin: 13px 0 371px 59px;
-}
-
-.text-group_5 {
-  width: 17px;
-  height: 55px;
-  margin-top: 4px;
-}
-
-.text_31 {
-  width: 17px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_32 {
-  width: 17px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-.block_9 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 64px;
-  margin-left: 17px;
-}
-
-.text-group_6 {
-  width: 196px;
-  height: 55px;
-  margin: 4px 0 0 12px;
-}
-
-.text_33 {
-  width: 112px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_34 {
-  width: 196px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-.block_10 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 64px;
-  margin-left: 237px;
-}
-
-.text-group_7 {
-  width: 82px;
-  height: 55px;
-  margin: 4px 0 0 12px;
-}
-
-.text_35 {
-  width: 82px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_36 {
-  width: 82px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-.block_11 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 64px;
-  margin-left: 231px;
-}
-
-.text-group_8 {
-  width: 28px;
-  height: 55px;
-  margin: 4px 0 0 12px;
-}
-
-.text_37 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_38 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-.box_12 {
-  position: absolute;
-  left: 12px;
-  top: 110px;
-  width: 1176px;
-  height: 98px;
-  background: url(./img/SketchPng4102a131766629ca6eeb6461b4c6c0ce9e4e899b90188d9559aa5b9f79b7e713.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-}
-
-.block_12 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 97px;
-  margin: 1px 0 0 52px;
-}
-
-.text-group_9 {
-  width: 56px;
-  height: 87px;
-  margin: 6px 0 0 12px;
-}
-
-.text_39 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_40 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 10px;
-}
-
-.text_41 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-.block_13 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 97px;
-  margin: 1px 0 0 309px;
-}
-
-.text-group_10 {
-  width: 182px;
-  height: 87px;
-  margin: 6px 551px 0 12px;
-}
-
-.text_42 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.text_43 {
-  width: 182px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 10px;
-}
-
-.text_44 {
-  width: 126px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-.image-wrapper_5 {
-  height: 203px;
-  background: url(./img/SketchPng69e8b4042e698ee05e037ab2a5f3340a9d81b777be53f90003fea4af7db08291.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  width: 16px;
-  position: absolute;
-  left: 0;
-  top: -69px;
-}
-
-.image_11 {
-  width: 16px;
-  height: 203px;
-}
-
-    </style>
-    <style>
-body * {
-  box-sizing: border-box;
-  flex-shrink: 0;
-}
-body {
-  font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma,
-    Arial, PingFang SC-Light, Microsoft YaHei;
-}
-input {
-  background-color: transparent;
-  border: 0;
-}
-button {
-  margin: 0;
-  padding: 0;
-  border: 1px solid transparent;
-  outline: none;
-  background-color: transparent;
-}
-
-button:active {
-  opacity: 0.6;
-}
-.s2-flex-col {
-  display: flex;
-  flex-direction: column;
-}
-.s2-flex-row {
-  display: flex;
-  flex-direction: row;
-}
-.s2-justify-start {
-  display: flex;
-  justify-content: flex-start;
-}
-.s2-justify-center {
-  display: flex;
-  justify-content: center;
-}
-
-.s2-justify-end {
-  display: flex;
-  justify-content: flex-end;
-}
-.s2-justify-evenly {
-  display: flex;
-  justify-content: space-evenly;
-}
-.s2-justify-around {
-  display: flex;
-  justify-content: space-around;
-}
-.s2-justify-between {
-  display: flex;
-  justify-content: space-between;
-}
-.s2-align-start {
-  display: flex;
-  align-items: flex-start;
-}
-.s2-align-center {
-  display: flex;
-  align-items: center;
-}
-.s2-align-end {
-  display: flex;
-  align-items: flex-end;
-}
-
-    </style>
-    <style>
-.s2-page {
-  background-color: rgba(245, 245, 245, 1);
-  position: relative;
-  width: 1440px;
-  height: 900px;
-  overflow: hidden;
-}
-
-.s2-group_1 {
-  position: relative;
-  width: 1440px;
-  height: 900px;
-  background: url(./img/SketchPngbbec49b1f922b51ad65d23d77d594344399a5b944b0523a4c2d28f24de9aee0d.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-}
-
-.s2-box_1 {
-  width: 216px;
-  height: 889px;
-  margin-top: 11px;
-}
-
-.s2-box_2 {
-  width: 100px;
-  height: 25px;
-  margin-left: 12px;
-}
-
-.s2-thumbnail_1 {
-  width: 16px;
-  height: 16px;
-  margin-top: 5px;
-}
-
-.s2-text_1 {
-  width: 72px;
-  height: 25px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 18px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 25px;
-}
-
-.s2-box_3 {
-  background-color: rgba(255, 255, 255, 1);
-  width: 216px;
-  height: 852px;
-  margin-top: 12px;
-}
-
-.s2-text-wrapper_1 {
-  height: 32px;
-  width: 216px;
-}
-
-.s2-text_2 {
-  width: 58px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.s2-text-wrapper_2 {
-  background-color: rgba(224, 239, 255, 1);
-  height: 32px;
-  width: 216px;
-}
-
-.s2-text_3 {
-  width: 70px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(0, 122, 255, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.s2-text-wrapper_3 {
-  height: 32px;
-  width: 216px;
-}
-
-.s2-text_4 {
-  width: 72px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.s2-text-wrapper_4 {
-  height: 32px;
-  margin-bottom: 724px;
-  width: 216px;
-}
-
-.s2-text_5 {
-  width: 72px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.s2-box_4 {
-  background-color: rgba(217, 217, 217, 1);
-  width: 1px;
-  height: 900px;
-}
-
-.s2-box_5 {
-  width: 1212px;
-  height: 889px;
-  margin: 11px 0 0 11px;
-}
-
-.s2-box_6 {
-  width: 1199px;
-  height: 33px;
-  margin-left: 1px;
-}
-
-.s2-text_6 {
-  width: 90px;
-  height: 25px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 18px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 25px;
-}
-
-.s2-text-wrapper_5 {
-  background-color: rgba(255, 255, 255, 1);
-  height: 32px;
-  border: 1px solid rgba(217, 217, 217, 1);
-  width: 60px;
-  margin: 1px 0 0 981px;
-}
-
-.s2-text_7 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 16px;
-}
-
-.s2-text-wrapper_6 {
-  background-color: rgba(0, 122, 255, 1);
-  height: 32px;
-  width: 60px;
-  margin: 1px 0 0 8px;
-}
-
-.s2-text_8 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(255, 255, 255, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 16px;
-}
-
-.s2-box_7 {
-  background-color: rgba(255, 251, 230, 1);
-  border-radius: 2px;
-  width: 1200px;
-  height: 32px;
-  border: 1px solid rgba(255, 229, 143, 1);
-  margin-top: 12px;
-}
-
-.s2-thumbnail_2 {
-  width: 20px;
-  height: 20px;
-  margin: 6px 0 0 8px;
-}
-
-.s2-text-wrapper_7 {
-  width: 240px;
-  height: 20px;
-  overflow-wrap: break-word;
-  font-size: 0;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 20px;
-  margin: 6px 924px 0 8px;
-}
-
-.s2-text_9 {
-  width: 240px;
-  height: 20px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 20px;
-}
-
-.s2-text_10 {
-  width: 240px;
-  height: 20px;
-  overflow-wrap: break-word;
-  color: rgba(254, 166, 0, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 20px;
-}
-
-.s2-box_8 {
-  width: 76px;
-  height: 24px;
-  margin-top: 12px;
-}
-
-.s2-group_2 {
-  background-color: rgba(0, 122, 255, 1);
-  width: 4px;
-  height: 16px;
-  margin-top: 4px;
-}
-
-.s2-text_11 {
-  width: 64px;
-  height: 24px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 16px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 24px;
-}
-
-.s2-box_9 {
-  width: 414px;
-  height: 32px;
-  margin-top: 12px;
-}
-
-.s2-text_12 {
-  width: 238px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 4px;
-}
-
-.s2-section_1 {
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 2px;
-  width: 176px;
-  height: 32px;
-  border: 1px solid rgba(217, 217, 217, 1);
-}
-
-.s2-text_13 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 8px;
-}
-
-.s2-thumbnail_3 {
-  width: 16px;
-  height: 16px;
-  margin: 8px 8px 0 0;
-}
-
-.s2-box_10 {
-  width: 76px;
-  height: 24px;
-  margin-top: 16px;
-}
-
-.s2-section_2 {
-  background-color: rgba(0, 122, 255, 1);
-  width: 4px;
-  height: 16px;
-  margin-top: 4px;
-}
-
-.s2-text_14 {
-  width: 64px;
-  height: 24px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 16px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 24px;
-}
-
-.s2-box_11 {
-  width: 1200px;
-  height: 32px;
-  margin-top: 12px;
-  display: flex;
-  align-items: flex-end;
-  border-bottom: 1px solid #E5E5E5;
-}
-
-.s2-image_1 {
-  display: none;
-}
-
-.s2-text-wrapper_8 {
-  height: 32px;
-  background: none;
-  width: 88px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #FFFFFF;
-  border: 1px solid #E5E5E5;
-  border-bottom: none;
-  border-radius: 6px 6px 0 0;
-  cursor: pointer;
-}
-
-.s2-text_15 {
-  width: auto;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(0, 122, 255, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: center;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 0;
-}
-
-.s2-text-wrapper_9 {
-  background-color: rgba(245, 245, 245, 1);
-  border-radius: 6px 6px 0px 0px;
-  height: 32px;
-  border: 1px solid rgba(217, 217, 217, 1);
-  width: 88px;
-  margin: 0 0 0 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.s2-text_16 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 16px;
-}
-
-.s2-box_12 {
-  width: 1212px;
-  height: 648px;
-}
-
-.s2-box_13 {
-  width: 332px;
-  height: 584px;
-  margin-top: 12px;
-}
-
-.s2-group_3 {
-  width: 332px;
-  height: 72px;
-}
-
-.s2-text-group_1 {
-  width: 70px;
-  height: 67px;
-}
-
-.s2-text_17 {
-  width: 70px;
-  height: 32px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: center;
-  line-height: 32px;
-}
-
-.s2-text_18 {
-  width: 70px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: center;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 13px;
-}
-
-.s2-box_14 {
-  width: 262px;
-  height: 67px;
-  margin-top: 5px;
-}
-
-.s2-group_4 {
-  width: 214px;
-  height: 22px;
-}
-
-.s2-thumbnail_4 {
-  width: 16px;
-  height: 16px;
-  margin-top: 3px;
-}
-
-.s2-text_19 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-left: 8px;
-}
-
-.s2-thumbnail_5 {
-  width: 16px;
-  height: 16px;
-  margin: 3px 0 0 16px;
-}
-
-.s2-text_20 {
-  width: 14px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-left: 8px;
-}
-
-.s2-thumbnail_6 {
-  width: 16px;
-  height: 16px;
-  margin: 3px 0 0 16px;
-}
-
-.s2-text_21 {
-  width: 14px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-left: 8px;
-}
-
-.s2-thumbnail_7 {
-  width: 16px;
-  height: 16px;
-  margin: 3px 0 0 16px;
-}
-
-.s2-text_22 {
-  width: 14px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-left: 8px;
-}
-
-.s2-text-wrapper_10 {
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 2px;
-  height: 32px;
-  border: 1px solid rgba(217, 217, 217, 1);
-  margin-top: 13px;
-  width: 262px;
-}
-
-.s2-text_23 {
-  width: 42px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(191, 191, 191, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 8px;
-}
-
-.s2-group_5 {
-  width: 332px;
-  height: 32px;
-  margin-top: 8px;
-}
-
-.s2-text_24 {
-  width: 70px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: center;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 5px;
-}
-
-.s2-group_6 {
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 2px;
-  width: 262px;
-  height: 32px;
-  border: 1px solid rgba(217, 217, 217, 1);
-  justify-content: flex-center;
-}
-
-.s2-text_25 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(191, 191, 191, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 8px;
-}
-
-.s2-text_26 {
-  width: 12px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(191, 191, 191, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 45px;
-}
-
-.s2-text_27 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(191, 191, 191, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 16px;
-}
-
-.s2-thumbnail_8 {
-  width: 16px;
-  height: 16px;
-  margin: 8px 8px 0 45px;
-}
-
-.s2-group_7 {
-  width: 332px;
-  height: 32px;
-  margin-top: 8px;
-}
-
-.s2-text_28 {
-  width: 70px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: center;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 5px;
-}
-
-.s2-group_8 {
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 2px;
-  width: 262px;
-  height: 32px;
-  border: 1px solid rgba(217, 217, 217, 1);
-}
-
-.s2-text_29 {
-  width: 42px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(191, 191, 191, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 8px;
-}
-
-.s2-thumbnail_9 {
-  width: 16px;
-  height: 16px;
-  margin: 8px 8px 0 0;
-}
-
-.s2-group_9 {
-  width: 329px;
-  height: 349px;
-  margin: 12px 0 0 3px;
-}
-
-.s2-section_3 {
-  background-color: rgba(217, 217, 217, 1);
-  border-radius: 1px;
-  position: relative;
-  width: 2px;
-  height: 333px;
-  margin-top: 6px;
-}
-
-.s2-block_1 {
-  background-color: rgba(0, 122, 255, 1);
-  border-radius: 50%;
-  position: absolute;
-  left: -3px;
-  top: 0;
-  width: 12px;
-  height: 12px;
-  border: 2px solid rgba(0, 122, 255, 1);
-}
-
-.s2-block_2 {
-  background-color: rgba(0, 122, 255, 1);
-  border-radius: 50%;
-  position: absolute;
-  left: -3px;
-  top: 109px;
-  width: 12px;
-  height: 12px;
-  border: 2px solid rgba(0, 122, 255, 1);
-}
-
-.s2-block_3 {
-  background-color: rgba(0, 122, 255, 1);
-  border-radius: 50%;
-  position: absolute;
-  left: -3px;
-  top: 219px;
-  width: 12px;
-  height: 12px;
-  border: 2px solid rgba(0, 122, 255, 1);
-}
-
-.s2-section_4 {
-  width: 316px;
-  height: 349px;
-}
-
-.s2-text_30 {
-  width: 79px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s2-image-text_1 {
-  width: 316px;
-  height: 102px;
-  margin-top: 7px;
-}
-
-.s2-group_10 {
-  width: 316px;
-  height: 64px;
-  background: url(./img/SketchPng6c39f7447c3692de100d839db0c5af1a7e076a2a78382e0668d3743cacbe83c9.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-}
-
-.s2-box_15 {
-  position: relative;
-  width: 126px;
-  height: 48px;
-  margin: 8px 0 0 6px;
-}
-
-.s2-text-group_2 {
-  width: 126px;
-  height: 48px;
-}
-
-.s2-text_31 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s2-text_32 {
-  width: 126px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(140, 140, 140, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 4px;
-}
-
-.s2-text-group_3 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 126px;
-  height: 48px;
-}
-
-.s2-text_31 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s2-text_32 {
-  width: 126px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(140, 140, 140, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 4px;
-}
-
-.s2-thumbnail_10 {
-  width: 1px;
-  height: 12px;
-  margin: 39px 0 0 8px;
-}
-
-.s2-text_33 {
-  width: 42px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(140, 140, 140, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 34px 0 0 7px;
-}
-
-.s2-box_16 {
-  width: 28px;
-  height: 52px;
-  margin: 1px 0 0 98px;
-}
-
-.s2-text-wrapper_11 {
-  background-color: rgba(238, 247, 255, 1);
-  border-radius: 0px 2px 0px 8px;
-  height: 20px;
-  margin-left: 8px;
-  width: 20px;
-}
-
-.s2-text_34 {
-  width: 12px;
-  height: 17px;
-  overflow-wrap: break-word;
-  color: rgba(0, 122, 255, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 17px;
-  margin: 2px 0 0 4px;
-}
-
-.s2-thumbnail_11 {
-  width: 16px;
-  height: 16px;
-  margin-top: 16px;
-}
-
-.s2-text-group_4 {
-  width: 79px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 16px;
-}
-
-.s2-image-text_2 {
-  width: 316px;
-  height: 102px;
-  margin-top: 7px;
-}
-
-.s2-box_17 {
-  width: 316px;
-  height: 64px;
-  background: url(./img/SketchPnga58f02b012259b3c78520bb5031aeb958aea54e0cc90e7331869b939815429e6.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-}
-
-.s2-box_18 {
-  position: relative;
-  width: 126px;
-  height: 48px;
-  margin: 8px 0 0 6px;
-}
-
-.s2-text-group_5 {
-  width: 126px;
-  height: 48px;
-}
-
-.s2-text_35 {
-  width: 84px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s2-text_36 {
-  width: 126px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(140, 140, 140, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 4px;
-}
-
-.s2-text-group_6 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 126px;
-  height: 48px;
-}
-
-.s2-text_35 {
-  width: 84px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s2-text_36 {
-  width: 126px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(140, 140, 140, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 4px;
-}
-
-.s2-thumbnail_12 {
-  width: 1px;
-  height: 12px;
-  margin: 39px 0 0 8px;
-}
-
-.s2-text_37 {
-  width: 42px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(140, 140, 140, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 34px 0 0 7px;
-}
-
-.s2-box_19 {
-  width: 28px;
-  height: 52px;
-  margin: 1px 0 0 98px;
-}
-
-.s2-text-wrapper_12 {
-  background-color: rgba(254, 166, 0, 0.1);
-  border-radius: 0px 2px 0px 8px;
-  height: 20px;
-  margin-left: 8px;
-  width: 20px;
-}
-
-.s2-text_38 {
-  width: 12px;
-  height: 17px;
-  overflow-wrap: break-word;
-  color: rgba(254, 166, 0, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 17px;
-  margin: 2px 0 0 4px;
-}
-
-.s2-thumbnail_13 {
-  width: 16px;
-  height: 16px;
-  margin-top: 16px;
-}
-
-.s2-text-group_7 {
-  width: 79px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 16px;
-}
-
-.s2-image-text_3 {
-  width: 316px;
-  height: 101px;
-  margin-top: 8px;
-}
-
-.s2-section_5 {
-  width: 316px;
-  height: 64px;
-  background: url(./img/SketchPng7d341a975d83b6e4384f9f5212e8b835c7740f20dbf42f7cb4bae367b8f68329.png)
-    0px -1px no-repeat;
-  background-size: 316px 65px;
-}
-
-.s2-group_11 {
-  position: relative;
-  width: 126px;
-  height: 48px;
-  margin: 8px 0 0 6px;
-}
-
-.s2-text-group_8 {
-  width: 126px;
-  height: 48px;
-}
-
-.s2-text_39 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s2-text_40 {
-  width: 126px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(140, 140, 140, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 4px;
-}
-
-.s2-text-group_9 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 126px;
-  height: 48px;
-}
-
-.s2-text_39 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s2-text_40 {
-  width: 126px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(140, 140, 140, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 4px;
-}
-
-.s2-thumbnail_14 {
-  width: 1px;
-  height: 12px;
-  margin: 39px 0 0 8px;
-}
-
-.s2-text_41 {
-  width: 42px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(140, 140, 140, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 34px 0 0 7px;
-}
-
-.s2-group_12 {
-  width: 28px;
-  height: 53px;
-  margin-left: 98px;
-}
-
-.s2-text-wrapper_13 {
-  background-color: rgba(255, 59, 48, 0.1);
-  border-radius: 0px 2px 0px 9px;
-  height: 20px;
-  margin-left: 8px;
-  width: 20px;
-}
-
-.s2-text_42 {
-  width: 12px;
-  height: 17px;
-  overflow-wrap: break-word;
-  color: rgba(255, 59, 48, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 17px;
-  margin: 2px 0 0 4px;
-}
-
-.s2-thumbnail_15 {
-  width: 16px;
-  height: 16px;
-  margin-top: 17px;
-}
-
-.s2-text-group_10 {
-  width: 79px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 15px;
-}
-
-.s2-group_13 {
-  width: 316px;
-  height: 64px;
-  background: url(./img/SketchPnga58f02b012259b3c78520bb5031aeb958aea54e0cc90e7331869b939815429e6.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  margin: 7px 0 0 16px;
-}
-
-.s2-text-group_11 {
-  width: 126px;
-  height: 48px;
-  margin: 8px 0 0 6px;
-}
-
-.s2-text_43 {
-  width: 84px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s2-text_44 {
-  width: 126px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(140, 140, 140, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 4px;
-}
-
-.s2-thumbnail_16 {
-  width: 1px;
-  height: 12px;
-  margin: 39px 0 0 8px;
-}
-
-.s2-text_45 {
-  width: 42px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(140, 140, 140, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 34px 0 0 7px;
-}
-
-.s2-section_6 {
-  width: 28px;
-  height: 52px;
-  margin: 1px 0 0 98px;
-}
-
-.s2-text-wrapper_14 {
-  background-color: rgba(238, 247, 255, 1);
-  border-radius: 0px 2px 0px 8px;
-  height: 20px;
-  margin-left: 8px;
-  width: 20px;
-}
-
-.s2-text_46 {
-  width: 12px;
-  height: 17px;
-  overflow-wrap: break-word;
-  color: rgba(0, 122, 255, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 17px;
-  margin: 2px 0 0 4px;
-}
-
-.s2-thumbnail_17 {
-  width: 16px;
-  height: 16px;
-  margin-top: 16px;
-}
-
-.s2-box_20 {
-  width: 868px;
-  height: 648px;
-}
-
-.s2-image_2 {
-  width: 1px;
-  height: 648px;
-}
-
-.s2-image_3 {
-  width: 868px;
-  height: 1px;
-  margin: 40px 0 0 -1px;
-}
-
-.s2-section_7 {
-  width: 60px;
-  height: 40px;
-  margin-left: -868px;
-}
-
-.s2-text_47 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(0, 122, 255, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 9px 0 0 16px;
-}
-
-.s2-image_4 {
-  width: 55px;
-  height: 2px;
-  margin-top: 7px;
-}
-
-.s2-image_5 {
-  width: 844px;
-  height: 1px;
-  margin: 117px 0 0 -48px;
-}
-
-.s2-section_8 {
-  width: 844px;
-  height: 32px;
-  background: url(./img/SketchPngfcf73f179d1c8dd9c34c4764351095b1069447736fdbb359c4e4386a873139d3.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  margin: 118px 0 0 -844px;
-}
-
-.s2-text_48 {
-  width: 17px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 123px;
-}
-
-.s2-image_6 {
-  width: 844px;
-  height: 1px;
-  margin-top: 4px;
-}
-
-.s2-section_9 {
-  width: 844px;
-  height: 32px;
-  background: url(./img/SketchPng99e7a54b0aa0eecc395980ced567106b2291dd8edafdeabc733e4da636da4eba.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  margin: 85px 0 0 -844px;
-}
-
-.s2-image_7 {
-  width: 844px;
-  height: 1px;
-}
-
-.s2-text_49 {
-  width: 15px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 4px 0 5px 124px;
-}
-
-.s2-section_10 {
-  width: 844px;
-  height: 32px;
-  background: url(./img/SketchPngbc6deefd1f1b531b2e87cf0f29cf591d4dc30262b62934779c7b492d2e10aa42.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  margin: 53px 0 0 -844px;
-}
-
-.s2-image-text_4 {
-  width: 80px;
-  height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.s2-thumbnail_18 {
-  width: 16px;
-  height: 16px;
-  margin-top: 3px;
-}
-
-.s2-text-group_12 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s2-text_50 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 693px 0 31px;
-}
-
-.s2-section_11 {
-  width: 180px;
-  height: 40px;
-  margin: 0 628px 0 -796px;
-}
-
-.s2-text-wrapper_15 {
-  height: 40px;
-  width: 60px;
-}
-
-.s2-text_51 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 9px 0 0 16px;
-}
-
-.s2-text-wrapper_16 {
-  height: 40px;
-  width: 60px;
-}
-
-.s2-text_52 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 9px 0 0 16px;
-}
-
-.s2-text-wrapper_17 {
-  height: 40px;
-  width: 60px;
-}
-
-.s2-text_53 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 9px 0 0 16px;
-}
-
-.s2-box_21 {
-  background-color: rgba(0, 122, 255, 1);
-  border-radius: 50%;
-  position: absolute;
-  left: 228px;
-  top: 761px;
-  width: 12px;
-  height: 12px;
-  border: 2px solid rgba(0, 122, 255, 1);
-}
-
-.s2-box_22 {
-  position: absolute;
-  left: 584px;
-  top: 304px;
-  width: 844px;
-  height: 584px;
-  background: url(./img/SketchPngc29ee4e8c211b517fcda90135217d9ce941aeebaf9ac982ae79aec76c7d42972.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-}
-
-.s2-image-wrapper_1 {
-  width: 16px;
-  height: 49px;
-  margin: 41px 0 0 12px;
-}
-
-.s2-thumbnail_19 {
-  width: 16px;
-  height: 16px;
-}
-
-.s2-thumbnail_20 {
-  width: 16px;
-  height: 16px;
-  margin-top: 17px;
-}
-
-.s2-group_14 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 97px;
-  margin: 1px 0 0 76px;
-}
-
-.s2-group_15 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 97px;
-  margin: 1px 0 0 52px;
-}
-
-.s2-text-group_13 {
-  width: 182px;
-  height: 87px;
-  margin: 6px 492px 0 12px;
-}
-
-.s2-text_54 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s2-text_55 {
-  width: 182px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 10px;
-}
-
-.s2-text_56 {
-  width: 126px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-    </style>
-    <style>
-body * {
-  box-sizing: border-box;
-  flex-shrink: 0;
-}
-body {
-  font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma,
-    Arial, PingFang SC-Light, Microsoft YaHei;
-}
-input {
-  background-color: transparent;
-  border: 0;
-}
-button {
-  margin: 0;
-  padding: 0;
-  border: 1px solid transparent;
-  outline: none;
-  background-color: transparent;
-}
-
-button:active {
-  opacity: 0.6;
-}
-.s3-flex-col {
-  display: flex;
-  flex-direction: column;
-}
-.s3-flex-row {
-  display: flex;
-  flex-direction: row;
-}
-.s3-justify-start {
-  display: flex;
-  justify-content: flex-start;
-}
-.s3-justify-center {
-  display: flex;
-  justify-content: center;
-}
-
-.s3-justify-end {
-  display: flex;
-  justify-content: flex-end;
-}
-.s3-justify-evenly {
-  display: flex;
-  justify-content: space-evenly;
-}
-.s3-justify-around {
-  display: flex;
-  justify-content: space-around;
-}
-.s3-justify-between {
-  display: flex;
-  justify-content: space-between;
-}
-.s3-align-start {
-  display: flex;
-  align-items: flex-start;
-}
-.s3-align-center {
-  display: flex;
-  align-items: center;
-}
-.s3-align-end {
-  display: flex;
-  align-items: flex-end;
-}
-
-    </style>
-    <style>
-.s3-page {
-  background-color: rgba(245, 245, 245, 1);
-  position: relative;
-  width: 1440px;
-  height: 900px;
-  overflow: hidden;
-}
-
-.s3-box_1 {
-  position: relative;
-  width: 1440px;
-  height: 900px;
-  background: url(./img/SketchPngbbec49b1f922b51ad65d23d77d594344399a5b944b0523a4c2d28f24de9aee0d.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-}
-
-.s3-box_2 {
-  width: 216px;
-  height: 889px;
-  margin-top: 11px;
-}
-
-.s3-group_1 {
-  width: 100px;
-  height: 25px;
-  margin-left: 12px;
-}
-
-.s3-thumbnail_1 {
-  width: 16px;
-  height: 16px;
-  margin-top: 5px;
-}
-
-.s3-text_1 {
-  width: 72px;
-  height: 25px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 18px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 25px;
-}
-
-.s3-group_2 {
-  background-color: rgba(255, 255, 255, 1);
-  width: 216px;
-  height: 852px;
-  margin-top: 12px;
-}
-
-.s3-text_2 {
-  width: 58px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.s3-text-wrapper_1 {
-  background-color: rgba(224, 239, 255, 1);
-  height: 32px;
-  margin-top: 5px;
-  width: 216px;
-}
-
-.s3-text_3 {
-  width: 70px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(0, 122, 255, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.s3-text_4 {
-  width: 72px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.s3-text_5 {
-  width: 72px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 10px 0 729px 12px;
-}
-
-.s3-box_3 {
-  background-color: rgba(217, 217, 217, 1);
-  width: 1px;
-  height: 900px;
-}
-
-.s3-box_4 {
-  width: 1211px;
-  height: 889px;
-  margin: 11px 12px 0 0;
-}
-
-.s3-box_5 {
-  width: 1199px;
-  height: 33px;
-  margin-left: 12px;
-}
-
-.s3-text_6 {
-  width: 90px;
-  height: 25px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 18px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 25px;
-}
-
-.s3-text-wrapper_2 {
-  background-color: rgba(255, 255, 255, 1);
-  height: 32px;
-  border: 1px solid rgba(217, 217, 217, 1);
-  width: 60px;
-  margin: 1px 0 0 981px;
-}
-
-.s3-text_7 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 16px;
-}
-
-.s3-text-wrapper_3 {
-  background-color: rgba(0, 122, 255, 1);
-  height: 32px;
-  width: 60px;
-  margin: 1px 0 0 8px;
-}
-
-.s3-text_8 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(255, 255, 255, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 16px;
-}
-
-.s3-box_6 {
-  background-color: rgba(255, 251, 230, 1);
-  border-radius: 2px;
-  width: 1200px;
-  height: 32px;
-  border: 1px solid rgba(255, 229, 143, 1);
-  margin: 12px 0 0 11px;
-}
-
-.s3-thumbnail_2 {
-  width: 20px;
-  height: 20px;
-  margin: 6px 0 0 8px;
-}
-
-.s3-text-wrapper_4 {
-  width: 240px;
-  height: 20px;
-  overflow-wrap: break-word;
-  font-size: 0;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 20px;
-  margin: 6px 924px 0 8px;
-}
-
-.s3-text_9 {
-  width: 240px;
-  height: 20px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 20px;
-}
-
-.s3-text_10 {
-  width: 240px;
-  height: 20px;
-  overflow-wrap: break-word;
-  color: rgba(254, 166, 0, 1);
-  font-size: 12px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 20px;
-}
-
-.s3-box_7 {
-  width: 76px;
-  height: 24px;
-  margin: 12px 0 0 11px;
-}
-
-.s3-block_1 {
-  background-color: rgba(0, 122, 255, 1);
-  width: 4px;
-  height: 16px;
-  margin-top: 4px;
-}
-
-.s3-text_11 {
-  width: 64px;
-  height: 24px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 16px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 24px;
-}
-
-.s3-box_8 {
-  width: 414px;
-  height: 32px;
-  margin: 12px 0 0 11px;
-}
-
-.s3-text_12 {
-  width: 238px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 4px;
-}
-
-.s3-box_9 {
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 2px;
-  width: 176px;
-  height: 32px;
-  border: 1px solid rgba(217, 217, 217, 1);
-}
-
-.s3-text_13 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 8px;
-}
-
-.s3-thumbnail_3 {
-  width: 16px;
-  height: 16px;
-  margin: 8px 8px 0 0;
-}
-
-.s3-box_10 {
-  width: 76px;
-  height: 24px;
-  margin: 16px 0 0 11px;
-}
-
-.s3-group_3 {
-  background-color: rgba(0, 122, 255, 1);
-  width: 4px;
-  height: 16px;
-  margin-top: 4px;
-}
-
-.s3-text_14 {
-  width: 64px;
-  height: 24px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 16px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  white-space: nowrap;
-  line-height: 24px;
-}
-
-.s3-box_11 {
-  width: 1200px;
-  height: 32px;
-  margin: 12px 0 0 11px;
-  display: flex;
-  align-items: flex-end;
-  border-bottom: 1px solid #E5E5E5;
-}
-
-.s3-image_1 {
-  display: none;
-}
-
-.s3-text-wrapper_5 {
-  background-color: rgba(245, 245, 245, 1);
-  border-radius: 6px 6px 0px 0px;
-  height: 32px;
-  border: 1px solid rgba(217, 217, 217, 1);
-  width: 88px;
-  margin: 0 0 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.s3-text_15 {
-  width: auto;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: 400;
-  text-align: center;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 0;
-}
-
-.s3-text-wrapper_6 {
-  height: 32px;
-  background: none;
-  width: 88px;
-  margin: 0 0 0 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #FFFFFF;
-  border: 1px solid #E5E5E5;
-  border-bottom: none;
-  border-radius: 6px 6px 0 0;
-  cursor: pointer;
-}
-
-.s3-text_16 {
-  width: auto;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(0, 122, 255, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: center;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 0;
-}
-
-.s3-box_12 {
-  width: 1211px;
-  height: 648px;
-}
-
-.s3-block_2 {
-  width: 199px;
-  height: 636px;
-  margin-top: 12px;
-}
-
-.s3-box_13 {
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 2px;
-  width: 176px;
-  height: 32px;
-  border: 1px solid rgba(217, 217, 217, 1);
-  margin-left: 11px;
-}
-
-.s3-text_17 {
-  width: 112px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(191, 191, 191, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 8px;
-}
-
-.s3-image-wrapper_1 {
-  background-color: rgba(255, 255, 255, 1);
-  height: 16px;
-  width: 16px;
-  margin: 8px 9px 0 31px;
-}
-
-.s3-thumbnail_4 {
-  width: 16px;
-  height: 16px;
-}
-
-.s3-box_14 {
-  width: 199px;
-  height: 592px;
-  background: url(./img/SketchPng1c08191db025d8db7f02ba190e5d7c7978928aeff5d636b5b2f98f6751e7a72e.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-  margin-top: 12px;
-}
-
-.s3-group_4 {
-  background-color: rgba(224, 239, 255, 1);
-  width: 199px;
-  height: 32px;
-}
-
-.s3-text_18 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(0, 122, 255, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.s3-thumbnail_5 {
-  width: 16px;
-  height: 16px;
-  margin: 8px 12px 0 0;
-}
-
-.s3-group_5 {
-  width: 175px;
-  height: 22px;
-  margin: 5px 0 0 12px;
-}
-
-.s3-text_19 {
-  width: 104px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s3-thumbnail_6 {
-  width: 16px;
-  height: 16px;
-  margin-top: 3px;
-}
-
-.s3-group_6 {
-  width: 175px;
-  height: 22px;
-  margin: 10px 0 0 12px;
-}
-
-.s3-text_20 {
-  width: 118px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s3-thumbnail_7 {
-  width: 16px;
-  height: 16px;
-  margin-top: 3px;
-}
-
-.s3-group_7 {
-  width: 175px;
-  height: 22px;
-  margin: 10px 0 0 12px;
-}
-
-.s3-text_21 {
-  width: 118px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s3-thumbnail_8 {
-  width: 16px;
-  height: 16px;
-  margin-top: 3px;
-}
-
-.s3-group_8 {
-  width: 175px;
-  height: 22px;
-  margin: 10px 0 0 12px;
-}
-
-.s3-text_22 {
-  width: 115px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s3-thumbnail_9 {
-  width: 16px;
-  height: 16px;
-  margin-top: 3px;
-}
-
-.s3-group_9 {
-  width: 175px;
-  height: 22px;
-  margin: 10px 0 0 12px;
-}
-
-.s3-text_23 {
-  width: 109px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s3-thumbnail_10 {
-  width: 16px;
-  height: 16px;
-  margin-top: 3px;
-}
-
-.s3-group_10 {
-  width: 175px;
-  height: 22px;
-  margin: 10px 0 0 12px;
-}
-
-.s3-text_24 {
-  width: 109px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s3-thumbnail_11 {
-  width: 16px;
-  height: 16px;
-  margin-top: 3px;
-}
-
-.s3-group_11 {
-  width: 175px;
-  height: 22px;
-  margin: 10px 0 0 12px;
-}
-
-.s3-text_25 {
-  width: 109px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s3-thumbnail_12 {
-  width: 16px;
-  height: 16px;
-  margin-top: 3px;
-}
-
-.s3-group_12 {
-  width: 175px;
-  height: 22px;
-  margin: 10px 0 309px 12px;
-}
-
-.s3-text_26 {
-  width: 95px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  letter-spacing: 0.30000001192092896px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s3-thumbnail_13 {
-  width: 16px;
-  height: 16px;
-  margin-top: 3px;
-}
-
-.s3-image_2 {
-  width: 1px;
-  height: 648px;
-}
-
-.s3-block_3 {
-  width: 1000px;
-  height: 97px;
-  margin: 13px 0 0 11px;
-}
-
-.s3-text-wrapper_7 {
-  width: 1000px;
-  height: 32px;
-  background: url(./img/SketchPngfe06edec5a0a5b00723596bf972525c8ce3488b2bc26022423f6bfe6d94407de.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-}
-
-.s3-text_27 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 36px;
-}
-
-.s3-text_28 {
-  width: 28px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 855px 0 25px;
-}
-
-.s3-section_1 {
-  width: 1000px;
-  height: 32px;
-  background: url(./img/SketchPngf1850c11974e3fd7ef88d798e0c679c070c025eecb5d905322e67bf27bb5898c.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-}
-
-.s3-image_3 {
-  width: 1000px;
-  height: 1px;
-}
-
-.s3-text_29 {
-  width: 15px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 4px 0 5px 124px;
-}
-
-.s3-image_4 {
-  width: 1000px;
-  height: 1px;
-}
-
-.s3-section_2 {
-  width: 1000px;
-  height: 32px;
-  background: url(./img/SketchPng2834f9ecb559313bcc24d9bc7983b0370398ca171388929003ac651f8806eba5.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-}
-
-.s3-text_30 {
-  width: 17px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin: 5px 0 0 123px;
-}
-
-.s3-image_5 {
-  width: 1000px;
-  height: 1px;
-  margin-top: 4px;
-}
-
-.s3-box_15 {
-  position: absolute;
-  left: 428px;
-  top: 264px;
-  width: 1000px;
-  height: 624px;
-  background: url(./img/SketchPnga9f5b0b889932d128516b1db02194a3c60c7fbefb1d7502c2d2bd68be45c940b.png)
-    100% no-repeat;
-  background-size: 100% 100%;
-}
-
-.s3-image-wrapper_2 {
-  width: 16px;
-  height: 81px;
-  margin: 9px 0 0 12px;
-}
-
-.s3-thumbnail_14 {
-  width: 16px;
-  height: 16px;
-}
-
-.s3-thumbnail_15 {
-  width: 16px;
-  height: 16px;
-  margin-top: 16px;
-}
-
-.s3-thumbnail_16 {
-  width: 16px;
-  height: 16px;
-  margin-top: 17px;
-}
-
-.s3-box_16 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 97px;
-  margin: 1px 0 0 76px;
-}
-
-.s3-box_17 {
-  background-color: rgba(191, 222, 255, 1);
-  width: 1px;
-  height: 97px;
-  margin: 1px 0 0 52px;
-}
-
-.s3-text-group_1 {
-  width: 182px;
-  height: 87px;
-  margin: 6px 648px 0 12px;
-}
-
-.s3-text_31 {
-  width: 56px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(38, 38, 38, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-}
-
-.s3-text_32 {
-  width: 182px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 10px;
-}
-
-.s3-text_33 {
-  width: 126px;
-  height: 22px;
-  overflow-wrap: break-word;
-  color: rgba(89, 89, 89, 1);
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  font-weight: NaN;
-  text-align: left;
-  white-space: nowrap;
-  line-height: 22px;
-  margin-top: 11px;
-}
-
-    </style>
-    <style>
-      /* 页面切换容器 */
-      #page-view, #page-edit, #view-diag, #view-health { margin: 0; padding: 0; }
-      [id^="tab-"] { cursor: pointer; }
-    
-/* ========== 两层结构样式（沿用原有风格） ========== */
-.two-layer {
-  width: 1212px; height: 648px; margin-top: 12px; position: relative;
-  border: 1px solid #E5E5E5; border-radius: 6px; overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-.layer-panel { position: absolute; left: 0; top: 0; width: 1212px; height: 648px; background: #FFFFFF; }
-.layer-hidden { display: none; }
-
-/* 第一层：模块列表 */
-.mod-list { padding: 0; }
-.mod-list-head {
-  height: 40px; display: flex; align-items: center;
-  background: #F0F7FF; font-size: 14px;
-  font-family: PingFangSC-Regular; color: #262626; font-weight: 500;
-  border-bottom: 1px solid #E5E5E5;
-}
-.mod-list-head .hd-name { width: 400px; padding-left: 12px; }
-.mod-list-head .hd-status { width: 200px; text-align: center; }
-.mod-list-head .hd-op { flex: 1; text-align: center; }
-.mod-row {
-  height: 48px; display: flex; align-items: center; cursor: pointer;
-  border-bottom: 1px solid #E5E5E5; font-size: 14px; color: #262626;
-  transition: background 0.2s ease;
-  background: #FFFFFF;
-}
-.mod-row:hover { background: #F5F5F5; }
-.mod-row .row-name { width: 400px; padding-left: 12px; color: #262626; }
-.mod-row .row-status { width: 200px; text-align: center; }
-.mod-row .row-op { flex: 1; text-align: center; }
-.status-tag {
-  display: inline-block; min-width: 60px; padding: 2px 10px; border-radius: 4px;
-  font-size: 12px; font-weight: 400;
-}
-.status-tag.none { background: #FAFAFA; color: #8C8C8C; }
-.status-tag.partial { background: #E6F7FF; color: #007AFF; }
-.status-tag.all { background: #FFF1F0; color: #F5222D; }
-.row-arrow { color: #BFBFBF; margin-left: 6px; transition: transform 0.2s ease, color 0.2s ease; }
-.mod-row:hover .row-arrow { color: #007AFF; transform: translateX(3px); }
-
-/* 模块列表快捷操作按钮 */
-.row-op { display: flex; align-items: center; justify-content: center; gap: 8px; }
-.row-op .op-btn {
-  height: 28px;
-  padding: 0 12px;
-  border-radius: 4px;
-  font-size: 13px;
-  font-family: PingFangSC-Regular;
-  border: 1px solid #D9D9D9;
-  background: #FFFFFF;
-  color: #595959;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.row-op .op-btn:hover { border-color: #007AFF; color: #007AFF; }
-.row-op .op-btn.primary {
-  background: #E6F7FF;
-  border-color: #007AFF;
-  color: #007AFF;
-}
-.row-op .op-btn.primary:hover { background: #007AFF; color: #FFFFFF; }
-.row-op .op-btn.danger {
-  background: #FFF1F0;
-  border-color: #F5222D;
-  color: #F5222D;
-}
-.row-op .op-btn.danger:hover { background: #F5222D; color: #FFFFFF; }
-
-/* 第二层：记录选择 — 严格参照脱敏规则表格样式 */
-.rec-head {
-  height: 44px; display: flex; align-items: center;
-  background: #FFFFFF; border-bottom: 1px solid #E5E5E5;
-  padding: 0 0 0 0;
-}
-.rec-back {
-  color: #007AFF; font-size: 14px; cursor: pointer;
-  display: inline-flex; align-items: center; font-weight: 400;
-  padding: 0 16px; line-height: 44px;
-}
-.rec-back:hover { color: #40A9FF; }
-.rec-title { font-size: 16px; font-family: PingFangSC-Medium; color: #262626; font-weight: 500; }
-.rec-status { font-size: 13px; color: #595959; margin-left: auto; padding-right: 16px; }
-.rec-status .num { color: #007AFF; font-weight: 500; }
-
-/* 记录表格 */
-.rec-list-head {
-  height: 40px; display: flex; align-items: center;
-  background: #F0F7FF; font-size: 14px;
-  font-family: PingFangSC-Regular; color: #262626; font-weight: 500;
-  border-bottom: 1px solid #E5E5E5;
-}
-.rec-list-head .hd-check { width: 50px; text-align: center; }
-.rec-list-head .hd-rec { flex: 1; padding-left: 12px; }
-.rec-list-head .hd-date { width: 180px; text-align: center; }
-.rec-list-head .hd-type { width: 140px; text-align: center; }
-
-.rec-item {
-  height: 48px; display: flex; align-items: center; font-size: 14px; color: #262626;
-  border-bottom: 1px solid #E5E5E5; background: #FFFFFF;
-  transition: background 0.2s ease;
-}
-.rec-item:hover { background: #F5F5F5; }
-.rec-item:last-child { border-bottom: none; }
-.rec-item .col-check { width: 50px; text-align: center; }
-.rec-item .col-rec { flex: 1; padding-left: 12px; color: #262626; }
-.rec-item .col-date { width: 180px; text-align: center; color: #595959; }
-.rec-item .col-type { width: 140px; text-align: center; color: #595959; }
-.rec-item input[type="checkbox"] { accent-color: #007AFF; width: 16px; height: 16px; cursor: pointer; }
-
-/* 分页 */
-.rec-pagination {
-  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
-  padding: 12px 16px; font-size: 13px; color: #595959;
-}
-.rec-pagination .pg-size { padding: 2px 8px; border: 1px solid #D9D9D9; border-radius: 4px; color: #595959; font-size: 13px; cursor: pointer; }
-.rec-pagination .pg-btn { width: 24px; height: 24px; border: 1px solid #D9D9D9; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #595959; background: #FFF; }
-.rec-pagination .pg-btn:hover { border-color: #007AFF; color: #007AFF; }
-.rec-pagination .pg-cur { min-width: 24px; height: 24px; border: 1px solid #007AFF; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; color: #007AFF; font-weight: 500; padding: 0 6px; }
-.rec-pagination .pg-total { color: #8C8C8C; font-size: 12px; }
-
-.rec-empty { text-align: center; color: #999999; font-size: 14px; padding: 60px 0; }
-
-/* ========== 查看页动态表格（嵌套主从表） ========== */
-.view-table { position: absolute; left: 228px; top: 206px; width: 1200px; }
-
-/* 主表头 */
-.view-table-head {
-  height: 40px; display: flex; align-items: center;
-  background: linear-gradient(180deg, #EAF2FF 0%, #E4EEFF 100%);
-  font-size: 14px;
-  font-family: PingFangSC-Medium; font-weight: 500; color: #1A3C6E;
-}
-.view-table-head .vh-no { width: 60px; text-align: center; }
-.view-table-head .vh-org { width: 380px; padding-left: 12px; }
-.view-table-head .vh-date { width: 200px; text-align: center; }
-.view-table-head .vh-type { width: 160px; text-align: center; }
-
-/* 主行（就诊分组） */
-.view-group-row {
-  display: flex; align-items: center; font-size: 14px; color: #262626;
-  background: linear-gradient(90deg, #F4F8FF 0%, #FFFFFF 100%);
-  height: 44px; cursor: pointer; transition: background 0.2s ease;
-  font-family: PingFangSC-Medium; font-weight: 500;
-  border-bottom: 1px solid #E5E5E5;
-}
-.view-group-row:hover { background: linear-gradient(90deg, #E8F1FF 0%, #F4F8FF 100%); }
-.view-group-row .vr-no { width: 60px; text-align: center; color: #8C8C8C; }
-.view-group-row .vr-org { width: 380px; padding-left: 12px; color: #262626; display: flex; align-items: center; }
-.view-group-row .vr-date { width: 200px; text-align: center; color: #595959; font-weight: 400; }
-.view-group-row .vr-type { width: 160px; text-align: center; color: #595959; font-weight: 400; }
-.view-group-row .vr-toggle {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 18px; height: 18px; margin-right: 8px;
-  border: 1px solid #2378F5; border-radius: 3px;
-  color: #2378F5; font-size: 12px; line-height: 1;
-  background: #FFFFFF; transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-.view-group-row:hover .vr-toggle { background: #2378F5; color: #FFFFFF; }
-.view-group-row.collapsed .vr-toggle::before { content: '+'; }
-.view-group-row:not(.collapsed) .vr-toggle::before { content: '−'; }
-.view-group-row .vr-org-name { font-weight: 500; color: #262626; }
-.view-group-row .vr-org-mask { color: #B5B5B5; font-size: 13px; margin-left: 6px; font-weight: 400; }
-
-/* 子表（业务模块 + 服务内容） */
-.view-detail-panel {
-  background: #FFFFFF;
-  border-bottom: 1px solid #E5E5E5;
-  padding: 0;
-  overflow: hidden;
-  max-height: 600px;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-  opacity: 1;
-}
-.view-detail-panel.collapsed {
-  max-height: 0;
-  opacity: 0;
-  border-bottom: none;
-}
-.view-detail-head {
-  display: flex; align-items: center; height: 36px;
-  background: #FAFBFC;
-  font-size: 13px; font-family: PingFangSC-Medium; font-weight: 500;
-  color: #595959;
-}
-.view-detail-head .vd-no { width: 60px; text-align: center; }
-.view-detail-head .vd-mod { width: 280px; padding-left: 24px; }
-.view-detail-head .vd-name { flex: 1; padding-left: 12px; }
-
-.view-detail-row {
-  display: flex; align-items: center; height: 32px;
-  font-size: 14px; color: #262626;
-  transition: background 0.2s ease;
-  border-bottom: 1px solid #F5F5F5;
-}
-.view-detail-row:last-child { border-bottom: none; }
-.view-detail-row:hover { background: #F0F7FF; }
-.view-detail-row .vd-no { width: 60px; text-align: center; color: #8C8C8C; }
-.view-detail-row .vd-mod { width: 280px; padding-left: 24px; color: #2378F5; font-weight: 500; }
-.view-detail-row .vd-name { flex: 1; padding-left: 12px; color: #595959; }
-
-.view-empty { text-align: center; color: #999999; font-size: 14px; padding: 60px 0; background: #FFF; }
-#viewTableBody { max-height: 580px; overflow-y: auto; }
-</style>
   </head>
   <body>
-    <!-- 查看页：隐私保险箱 -->
-    <div id="page-view">
+    <div class="page">
+      <div class="side">
+        <div class="side-title">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3z" stroke="#262626" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#262626" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>隐私设置</span>
+        </div>
+        <div class="side-menu">
+          <div class="side-item">医域边界</div>
+          <div class="side-item active">隐私保险箱</div>
+          <div class="side-item">调阅安全锁</div>
+          <div class="side-item">访问即时通</div>
+        </div>
+      </div>
+      <div class="divider"></div>
 
-    <div class="page flex-col">
-      <div class="group_1 flex-row">
-        <div class="box_1 flex-col justify-between">
-          <div class="box_2 flex-row justify-between">
-            <img
-              class="thumbnail_1"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPng354a74e1f555d95e7969159c42d323c6eaf2a579f410ed84e4462c79fb0dd3b1.png"
-            />
-            <span class="text_1">隐私设置</span>
-          </div>
-          <div class="box_3 flex-col">
-            <span class="text_2">医域边界</span>
-            <div class="text-wrapper_1 flex-col">
-              <span class="text_3">隐私保险箱</span>
-            </div>
-            <span class="text_4">调阅安全锁</span>
-            <span class="text_5">访问即时通</span>
-          </div>
-        </div>
-        <div class="box_4 flex-col"></div>
-        <div class="box_5 flex-col">
-          <div class="group_2 flex-row justify-between">
-            <span class="text_6">隐私保险箱</span>
-            <div class="text-wrapper_2 flex-col" id="btn-edit">
-              <span class="text_7">编辑</span>
+      <div class="main">
+        <div id="viewPage">
+          <div class="hd">
+            <span class="hd-title">隐私保险箱</span>
+            <div class="hd-actions">
+              <button class="btn btn-outline-blue" onclick="enterEdit()">编辑</button>
             </div>
           </div>
-          <div class="group_3 flex-row">
-            <img
-              class="thumbnail_2"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPnga7714f69edcc5ed9f940bfd9f4f8c50b8174e20ec73bbce320dc3cd4b33a7b65.png"
-            />
-            <div class="text-wrapper_3">
-              <span class="text_8">设置您的隐私病例，对特殊病历进行</span>
-              <span class="text_9">加锁保密</span>
+
+          <div class="tip-bar">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FAAD14" stroke-width="1.8"/><path d="M12 8v5" stroke="#FAAD14" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16.2" r="1.1" fill="#FAAD14"/></svg>
+            <span>设置您的隐私病例，对特殊病历进行<b>加锁保密</b></span>
+          </div>
+
+          <div class="role-card">
+            <div class="role-lead">
+              <div class="t1">放入保险箱的内容，谁能看到？</div>
+              <div class="t2">屏蔽实时生效，不影响您的正常诊疗与公共卫生服务</div>
+            </div>
+            <div class="role-item">
+              <div class="role-ico ok">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="#52C41A" stroke-width="1.8"/><path d="M5 19c0-3.3 3.1-5.4 7-5.4s7 2.1 7 5.4" stroke="#52C41A" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </div>
+              <div class="role-txt">
+                <div class="r1">您本人</div>
+                <div class="r2 ok">始终可见</div>
+              </div>
+            </div>
+            <div class="role-item">
+              <div class="role-ico no">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M3 3l18 18" stroke="#F5222D" stroke-width="1.8" stroke-linecap="round"/><path d="M10.6 5.1c.5-.1.9-.1 1.4-.1 5 0 8.5 4.2 9.6 6.4.4.8.4 1.7 0 2.5-.5 1-1.6 2.6-3.2 3.9M6.6 6.9C4.3 8.5 2.9 10.6 2.4 11.9c-.4.8-.4 1.7 0 2.5C3.5 16.6 7 20.8 12 20.8c1.4 0 2.7-.3 3.9-.9" stroke="#F5222D" stroke-width="1.8" stroke-linecap="round"/><path d="M9.9 10.2a3 3 0 004.2 4.2" stroke="#F5222D" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </div>
+              <div class="role-txt">
+                <div class="r1">医生人员</div>
+                <div class="r2 no">调阅时不可见</div>
+              </div>
+            </div>
+            <div class="role-item">
+              <div class="role-ico no">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M3 3l18 18" stroke="#F5222D" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="8" r="3" stroke="#F5222D" stroke-width="1.8"/><path d="M2.8 19c.4-2.9 3.1-4.8 6.2-4.8 1 0 2 .2 2.8.6M15.5 8.5a3 3 0 01-2.9 4.4M15 14.5c2.5.5 4.4 2.2 4.8 4.5" stroke="#F5222D" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </div>
+              <div class="role-txt">
+                <div class="r1">家庭成员</div>
+                <div class="r2 no">查看时不可见</div>
+              </div>
             </div>
           </div>
-          <div class="group_4 flex-row justify-between">
-            <div class="group_5 flex-col"></div>
-            <span class="text_10">范围设置</span>
+
+          <div class="stat-row">
+            <div class="stat-card">
+              <span class="stat-num lock" id="statTotal">0</span>
+              <div class="stat-label">
+                <div class="s1">保险箱内内容</div>
+                <div class="s2">对医生及家庭成员不可见</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <span class="stat-num" id="statDiag">0</span>
+              <div class="stat-label">
+                <div class="s1">诊疗服务</div>
+                <div class="s2">检查 / 检验 / 就诊记录等</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <span class="stat-num" id="statHealth">0</span>
+              <div class="stat-label">
+                <div class="s1">健康档案</div>
+                <div class="s2">档案 / 随访 / 体检等</div>
+              </div>
+            </div>
           </div>
-          <div class="text-wrapper_4 flex-row justify-between">
-            <span class="text_11">允许医护或其他成员查看档案的范围：</span>
-            <span class="text_12">全部</span>
+
+          <div class="range-card">
+            <div class="r-ico">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#1677FF" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="#1677FF" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <div class="r-txt">
+              <div class="r-t1" id="rangeViewText">生效范围：<b>全部</b>（不限时间）</div>
+              <div class="r-t2" id="rangeViewSub">仅当前范围内的内容可被屏蔽；范围外的记录不可选</div>
+            </div>
+            <a class="r-edit" onclick="enterEdit(true)">修改范围</a>
           </div>
-          <div class="group_6 flex-row justify-between">
-            <div class="box_6 flex-col"></div>
-            <span class="text_13">项目设置</span>
-          </div>
-          <img
-            class="image_1"
-            referrerpolicy="no-referrer"
-            src="./img/SketchPng9ddb4274f2774db6bbe456806d76f40907e3d89535b1968c349546362a349b1a.png"
-          />
-          <div class="image-wrapper_1 flex-col">
-            <img
-              class="image_2"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPng74f329dd9448143d10a065200b9dd73cb9b27dcb2d85b5efc00ca89f930ebfad.png"
-            />
-          </div>
-          <img
-            class="image_3"
-            referrerpolicy="no-referrer"
-            src="./img/SketchPng74f329dd9448143d10a065200b9dd73cb9b27dcb2d85b5efc00ca89f930ebfad.png"
-          />
-          <div class="image-wrapper_2 flex-col">
-            <img
-              class="image_4"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPng74f329dd9448143d10a065200b9dd73cb9b27dcb2d85b5efc00ca89f930ebfad.png"
-            />
-          </div>
-          <div class="image-wrapper_3 flex-col">
-            <img
-              class="image_5"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPng74f329dd9448143d10a065200b9dd73cb9b27dcb2d85b5efc00ca89f930ebfad.png"
-            />
-          </div>
-          <img
-            class="image_6"
-            referrerpolicy="no-referrer"
-            src="./img/SketchPng74f329dd9448143d10a065200b9dd73cb9b27dcb2d85b5efc00ca89f930ebfad.png"
-          />
-          <div class="image-wrapper_4 flex-col">
-            <img
-              class="image_7"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPng74f329dd9448143d10a065200b9dd73cb9b27dcb2d85b5efc00ca89f930ebfad.png"
-            />
-          </div>
-        </div>
-        <div class="view-table">
-          <div class="view-table-head">
-            <span class="vh-no">序号</span>
-            <span class="vh-org">机构名称</span>
-            <span class="vh-date">就诊/服务日期</span>
-            <span class="vh-type">就诊/服务类型</span>
-          </div>
-          <div id="viewTableBody"></div>
+
+          <div class="sec"><span>保险箱内容</span><span class="sec-extra">按就诊 / 业务分组展示，可直接移出</span></div>
+          <div id="viewList"></div>
         </div>
 
-</div>
-      </div>
-    </div>
-  
-    </div>
-    <!-- 编辑页容器 -->
-    <div id="page-edit" style="display:none;">
-      <!-- 诊疗服务 tab 视图 -->
-      <div id="view-diag">
+        <div id="editPage" style="display: none;">
+          <div class="hd">
+            <span class="hd-title">隐私保险箱</span>
+            <div class="hd-actions">
+              <button class="btn btn-ghost" onclick="cancelEdit()">取消</button>
+              <button class="btn btn-primary" onclick="saveEdit()">保存</button>
+            </div>
+          </div>
 
-    <div class="s2-page s2-flex-col">
-      <div class="s2-group_1 s2-flex-row">
-        <div class="s2-box_1 s2-flex-col s2-justify-between">
-          <div class="s2-box_2 s2-flex-row s2-justify-between">
-            <img
-              class="s2-thumbnail_1"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPng354a74e1f555d95e7969159c42d323c6eaf2a579f410ed84e4462c79fb0dd3b1.png"
-            />
-            <span class="s2-text_1">隐私设置</span>
-          </div>
-          <div class="s2-box_3 s2-flex-col">
-            <div class="s2-text-wrapper_1 s2-flex-col">
-              <span class="s2-text_2">医域边界</span>
-            </div>
-            <div class="s2-text-wrapper_2 s2-flex-col">
-              <span class="s2-text_3">隐私保险箱</span>
-            </div>
-            <div class="s2-text-wrapper_3 s2-flex-col">
-              <span class="s2-text_4">调阅安全锁</span>
-            </div>
-            <div class="s2-text-wrapper_4 s2-flex-col">
-              <span class="s2-text_5">访问即时通</span>
+          <div class="sec"><span>范围设置</span></div>
+          <div class="scope-row">
+            <span style="color:#595959;">允许医护或其他成员查看档案的时间范围：</span>
+            <div class="scope-tabs" id="scopeTabs">
+              <div class="scope-tab" data-type="all" onclick="setScope('all', this)">全部</div>
+              <div class="scope-tab" data-type="3m" onclick="setScope('3m', this)">三个月</div>
+              <div class="scope-tab" data-type="6m" onclick="setScope('6m', this)">半年</div>
+              <div class="scope-tab" data-type="1y" onclick="setScope('1y', this)">一年</div>
+              <div class="scope-tab" data-type="custom" onclick="setScope('custom', this)">自定义</div>
             </div>
           </div>
-        </div>
-        <div class="s2-box_4 s2-flex-col"></div>
-        <div class="s2-box_5 s2-flex-col">
-          <div class="s2-box_6 s2-flex-row">
-            <span class="s2-text_6">隐私保险箱</span>
-            <div class="s2-text-wrapper_5 s2-flex-col" id="btn-cancel-1">
-              <span class="s2-text_7">取消</span>
-            </div>
-            <div class="s2-text-wrapper_6 s2-flex-col">
-              <span class="s2-text_8">保存</span>
-            </div>
+          <div class="scope-custom" id="scopeCustom">
+            <label>开始</label>
+            <input type="date" id="rangeStart" onchange="onCustomChange()"/>
+            <span class="t-line"></span>
+            <label>结束</label>
+            <input type="date" id="rangeEnd" onchange="onCustomChange()"/>
           </div>
-          <div class="s2-box_7 s2-flex-row">
-            <img
-              class="s2-thumbnail_2"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPnga7714f69edcc5ed9f940bfd9f4f8c50b8174e20ec73bbce320dc3cd4b33a7b65.png"
-            />
-            <div class="s2-text-wrapper_7">
-              <span class="s2-text_9">设置您的隐私病例，对特殊病历进行</span>
-              <span class="s2-text_10">加锁保密</span>
-            </div>
-          </div>
-          <div class="s2-box_8 s2-flex-row s2-justify-between">
-            <div class="s2-group_2 s2-flex-col"></div>
-            <span class="s2-text_11">范围设置</span>
-          </div>
-          <div class="s2-box_9 s2-flex-row s2-justify-between">
-            <span class="s2-text_12">允许医护或其他成员查看档案的范围：</span>
-            <div class="s2-section_1 s2-flex-row s2-justify-between">
-              <span class="s2-text_13">全部</span>
-              <img
-                class="s2-thumbnail_3"
-                referrerpolicy="no-referrer"
-                src="./img/SketchPngc3e6dcda2433d2c011a002bc0b99e8df0521394fc938bda8da4bc0d6e4a693d5.png"
-              />
-            </div>
-          </div>
-          <div class="s2-box_10 s2-flex-row s2-justify-between">
-            <div class="s2-section_2 s2-flex-col"></div>
-            <span class="s2-text_14">项目设置</span>
-          </div>
-          <div class="s2-box_11 s2-flex-row">
-            <img
-              class="s2-image_1"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPng402ed75525b37806b7c222f81591ecd58cf413c9fd409c68800c67d5d5c708b8.png"
-            />
-            <div class="s2-text-wrapper_8 s2-flex-col" id="tab-diag-1">
-              <span class="s2-text_15">诊疗服务</span>
-            </div>
-            <div class="s2-text-wrapper_9 s2-flex-col" id="tab-health-1">
-              <span class="s2-text_16">健康档案</span>
-            </div>
-          </div>
-          <div
+          <div class="scope-hint">仅当前时间范围内的内容可选；范围外的记录不可放入保险箱。</div>
 
-    <div class="two-layer">
-      <div class="layer-panel" id="diag-layer-mod">
-        <div class="mod-list-head">
-          <span class="hd-name">序号　业务模块</span>
-          <span class="hd-status">屏蔽状态</span>
-          <span class="hd-op">操作</span>
-        </div>
-        <div class="mod-list">
-        <div class="mod-row" data-module="check">
-          <span class="row-name">01　检查报告</span>
-          <span class="row-status"><span class="status-tag none" id="diag-st-check">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('diag','check','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('diag','check', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('diag','check','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="lab">
-          <span class="row-name">02　检验报告</span>
-          <span class="row-status"><span class="status-tag none" id="diag-st-lab">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('diag','lab','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('diag','lab', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('diag','lab','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="outpatient">
-          <span class="row-name">03　门诊记录</span>
-          <span class="row-status"><span class="status-tag none" id="diag-st-outpatient">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('diag','outpatient','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('diag','outpatient', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('diag','outpatient','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="inpatient">
-          <span class="row-name">04　住院记录</span>
-          <span class="row-status"><span class="status-tag none" id="diag-st-inpatient">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('diag','inpatient','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('diag','inpatient', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('diag','inpatient','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="outdrug">
-          <span class="row-name">05　门急诊用药</span>
-          <span class="row-status"><span class="status-tag none" id="diag-st-outdrug">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('diag','outdrug','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('diag','outdrug', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('diag','outdrug','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="indrug">
-          <span class="row-name">06　住院用药</span>
-          <span class="row-status"><span class="status-tag none" id="diag-st-indrug">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('diag','indrug','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('diag','indrug', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('diag','indrug','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="record">
-          <span class="row-name">07　病案首页</span>
-          <span class="row-status"><span class="status-tag none" id="diag-st-record">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('diag','record','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('diag','record', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('diag','record','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="ai">
-          <span class="row-name">08　AI报告解读</span>
-          <span class="row-status"><span class="status-tag none" id="diag-st-ai">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('diag','ai','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('diag','ai', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('diag','ai','all', event)">全部屏蔽</button>
-          </span>
-        </div></div>
-      </div>
-      <div class="layer-panel layer-hidden" id="diag-layer-rec">
-        <div class="rec-head">
-          <span class="rec-back" onclick="backToModules('diag')">← 返回模块列表</span>
-          <span class="rec-title" id="diag-rec-title">检查报告</span>
-          <span class="rec-status" id="diag-rec-count">共 <span class="num">0</span> 条记录，已屏蔽 <span class="num">0</span> 条</span>
-        </div>
-        <div class="rec-list-head">
-          <span class="hd-check"><input type="checkbox" id="diag-check-all" onchange="toggleSelectAll(this, 'diag')" /></span>
-          <span class="hd-rec">记录名称</span>
-          <span class="hd-date">日期</span>
-          <span class="hd-type">类型</span>
-        </div>
-        <div class="rec-list" id="diag-rec-list"></div>
-        <div class="rec-pagination">
-          <span class="pg-size">10 条/页</span>
-          <span class="pg-btn">‹</span>
-          <span class="pg-cur">1</span>
-          <span class="pg-btn">›</span>
-          <span class="pg-total">共 1 页</span>
-        </div>
-      </div>
-    </div>
-</div>
-        </div>
-        
-        
-      </div>
-    </div>
-  
-      </div>
-      <!-- 健康档案 tab 视图（默认隐藏） -->
-      <div id="view-health" style="display:none;">
+          <div class="sec"><span>内容设置</span><span class="sec-extra">点击模块展开记录清单，勾选后即放入保险箱</span></div>
+          <div class="tab-bar">
+            <div class="tab active" id="tabDiag" onclick="switchTab('diag')">诊疗服务</div>
+            <div class="tab" id="tabHealth" onclick="switchTab('health')">健康档案</div>
+          </div>
 
-    <div class="s3-page s3-flex-col">
-      <div class="s3-box_1 s3-flex-row">
-        <div class="s3-box_2 s3-flex-col s3-justify-between">
-          <div class="s3-group_1 s3-flex-row s3-justify-between">
-            <img
-              class="s3-thumbnail_1"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPng354a74e1f555d95e7969159c42d323c6eaf2a579f410ed84e4462c79fb0dd3b1.png"
-            />
-            <span class="s3-text_1">隐私设置</span>
-          </div>
-          <div class="s3-group_2 s3-flex-col">
-            <span class="s3-text_2">医域边界</span>
-            <div class="s3-text-wrapper_1 s3-flex-col">
-              <span class="s3-text_3">隐私保险箱</span>
-            </div>
-            <span class="s3-text_4">调阅安全锁</span>
-            <span class="s3-text_5">访问即时通</span>
-          </div>
+          <div id="modListDiag"></div>
+          <div id="modListHealth" style="display: none;"></div>
         </div>
-        <div class="s3-box_3 s3-flex-col"></div>
-        <div class="s3-box_4 s3-flex-col">
-          <div class="s3-box_5 s3-flex-row">
-            <span class="s3-text_6">隐私保险箱</span>
-            <div class="s3-text-wrapper_2 s3-flex-col" id="btn-cancel-2">
-              <span class="s3-text_7">取消</span>
-            </div>
-            <div class="s3-text-wrapper_3 s3-flex-col">
-              <span class="s3-text_8">保存</span>
-            </div>
-          </div>
-          <div class="s3-box_6 s3-flex-row">
-            <img
-              class="s3-thumbnail_2"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPnga7714f69edcc5ed9f940bfd9f4f8c50b8174e20ec73bbce320dc3cd4b33a7b65.png"
-            />
-            <div class="s3-text-wrapper_4">
-              <span class="s3-text_9">设置您的隐私病例，对特殊病历进行</span>
-              <span class="s3-text_10">加锁保密</span>
-            </div>
-          </div>
-          <div class="s3-box_7 s3-flex-row s3-justify-between">
-            <div class="s3-block_1 s3-flex-col"></div>
-            <span class="s3-text_11">范围设置</span>
-          </div>
-          <div class="s3-box_8 s3-flex-row s3-justify-between">
-            <span class="s3-text_12">允许医护或其他成员查看档案的范围：</span>
-            <div class="s3-box_9 s3-flex-row s3-justify-between">
-              <span class="s3-text_13">全部</span>
-              <img
-                class="s3-thumbnail_3"
-                referrerpolicy="no-referrer"
-                src="./img/SketchPngc3e6dcda2433d2c011a002bc0b99e8df0521394fc938bda8da4bc0d6e4a693d5.png"
-              />
-            </div>
-          </div>
-          <div class="s3-box_10 s3-flex-row s3-justify-between">
-            <div class="s3-group_3 s3-flex-col"></div>
-            <span class="s3-text_14">项目设置</span>
-          </div>
-          <div class="s3-box_11 s3-flex-row">
-            <img
-              class="s3-image_1"
-              referrerpolicy="no-referrer"
-              src="./img/SketchPng402ed75525b37806b7c222f81591ecd58cf413c9fd409c68800c67d5d5c708b8.png"
-            />
-            <div class="s3-text-wrapper_5 s3-flex-col" id="tab-diag-2">
-              <span class="s3-text_15">诊疗服务</span>
-            </div>
-            <div class="s3-text-wrapper_6 s3-flex-col" id="tab-health-2">
-              <span class="s3-text_16">健康档案</span>
-            </div>
-          </div>
-          <div
+      </div>
+    </div>
 
-    <div class="two-layer">
-      <div class="layer-panel" id="health-layer-mod">
-        <div class="mod-list-head">
-          <span class="hd-name">序号　业务模块</span>
-          <span class="hd-status">屏蔽状态</span>
-          <span class="hd-op">操作</span>
+    <div class="mask" id="maskAll">
+      <div class="modal">
+        <div class="mt">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3L2 20h20L12 3z" stroke="#FAAD14" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10v4" stroke="#FAAD14" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16.8" r="1.1" fill="#FAAD14"/></svg>
+          <span id="maskTitle">全部屏蔽</span>
         </div>
-        <div class="mod-list">
-        <div class="mod-row" data-module="base">
-          <span class="row-name">01　基本档案</span>
-          <span class="row-status"><span class="status-tag none" id="health-st-base">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('health','base','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('health','base', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('health','base','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="child">
-          <span class="row-name">02　儿童保健（20）</span>
-          <span class="row-status"><span class="status-tag none" id="health-st-child">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('health','child','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('health','child', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('health','child','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="maternity">
-          <span class="row-name">03　孕产妇保健（20）</span>
-          <span class="row-status"><span class="status-tag none" id="health-st-maternity">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('health','maternity','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('health','maternity', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('health','maternity','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="tcm">
-          <span class="row-name">04　中医药管理（25）</span>
-          <span class="row-status"><span class="status-tag none" id="health-st-tcm">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('health','tcm','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('health','tcm', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('health','tcm','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="hypertension">
-          <span class="row-name">05　高血压管理（16）</span>
-          <span class="row-status"><span class="status-tag none" id="health-st-hypertension">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('health','hypertension','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('health','hypertension', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('health','hypertension','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="diabetes">
-          <span class="row-name">06　糖尿病管理（3）</span>
-          <span class="row-status"><span class="status-tag none" id="health-st-diabetes">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('health','diabetes','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('health','diabetes', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('health','diabetes','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="tb">
-          <span class="row-name">07　肺结核管理（3）</span>
-          <span class="row-status"><span class="status-tag none" id="health-st-tb">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('health','tb','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('health','tb', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('health','tb','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="mental">
-          <span class="row-name">08　精神病管理（3）</span>
-          <span class="row-status"><span class="status-tag none" id="health-st-mental">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('health','mental','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('health','mental', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('health','mental','all', event)">全部屏蔽</button>
-          </span>
-        </div>
-        <div class="mod-row" data-module="vaccine">
-          <span class="row-name">09　计划免疫（3）</span>
-          <span class="row-status"><span class="status-tag none" id="health-st-vaccine">未屏蔽</span></span>
-          <span class="row-op">
-            <button class="op-btn" onclick="quickSet('health','vaccine','none', event)">不屏蔽</button>
-            <button class="op-btn primary" onclick="openRecordPanel('health','vaccine', event)">选择记录</button>
-            <button class="op-btn danger" onclick="quickSet('health','vaccine','all', event)">全部屏蔽</button>
-          </span>
-        </div></div>
-      </div>
-      <div class="layer-panel layer-hidden" id="health-layer-rec">
-        <div class="rec-head">
-          <span class="rec-back" onclick="backToModules('health')">← 返回模块列表</span>
-          <span class="rec-title" id="health-rec-title">检查报告</span>
-          <span class="rec-status" id="health-rec-count">共 <span class="num">0</span> 条记录，已屏蔽 <span class="num">0</span> 条</span>
-        </div>
-        <div class="rec-list-head">
-          <span class="hd-check"><input type="checkbox" id="health-check-all" onchange="toggleSelectAll(this, 'health')" /></span>
-          <span class="hd-rec">记录名称</span>
-          <span class="hd-date">日期</span>
-          <span class="hd-type">类型</span>
-        </div>
-        <div class="rec-list" id="health-rec-list"></div>
-        <div class="rec-pagination">
-          <span class="pg-size">10 条/页</span>
-          <span class="pg-btn">‹</span>
-          <span class="pg-cur">1</span>
-          <span class="pg-btn">›</span>
-          <span class="pg-total">共 1 页</span>
+        <div class="mc" id="maskDesc"></div>
+        <div class="mf">
+          <button class="btn btn-ghost" onclick="closeMask()">再想想</button>
+          <button class="btn btn-primary" style="background:#F5222D;" onclick="confirmAll()">确认全部屏蔽</button>
         </div>
       </div>
     </div>
-</div>
-        </div>
-        
-      </div>
-    </div>
-  
-      </div>
-    </div>
+
+    <div class="toast" id="toast"></div>
+
     <script>
-      (function () {
-        var pageView = document.getElementById('page-view');
-        var pageEdit = document.getElementById('page-edit');
-        var viewDiag = document.getElementById('view-diag');
-        var viewHealth = document.getElementById('view-health');
-
-        function showEdit() {
-          pageView.style.display = 'none';
-          pageEdit.style.display = 'block';
-          // 进入编辑页时重置为模块列表
-          resetEditLayers();
-          if (typeof renderModuleList === 'function') renderModuleList();
-          if (typeof renderAllStatus === 'function') renderAllStatus();
-        }
-        function showView() {
-          pageEdit.style.display = 'none';
-          pageView.style.display = 'block';
-          resetEditLayers();
-          if (typeof renderAllStatus === 'function') renderAllStatus();
-          if (typeof renderViewTable === 'function') renderViewTable();
-        }
-        function resetEditLayers() {
-          ['diag', 'health'].forEach(function (g) {
-            var modLayer = document.getElementById(g + '-layer-mod');
-            var recLayer = document.getElementById(g + '-layer-rec');
-            if (modLayer) modLayer.classList.remove('layer-hidden');
-            if (recLayer) recLayer.classList.add('layer-hidden');
-          });
-          if (typeof currentPanel !== 'undefined') currentPanel = null;
-        }
-        function showDiag() {
-          viewDiag.style.display = 'block';
-          viewHealth.style.display = 'none';
-        }
-        function showHealth() {
-          viewDiag.style.display = 'none';
-          viewHealth.style.display = 'block';
-        }
-
-        var btnEdit = document.getElementById('btn-edit');
-        if (btnEdit) btnEdit.addEventListener('click', showEdit);
-
-        var btnCancel1 = document.getElementById('btn-cancel-1');
-        var btnCancel2 = document.getElementById('btn-cancel-2');
-        if (btnCancel1) btnCancel1.addEventListener('click', showView);
-        if (btnCancel2) btnCancel2.addEventListener('click', showView);
-
-        // 保存按钮：保存配置并返回查看页（编辑操作已实时保存）
-        var btnSave1 = document.querySelector('#page-edit #view-diag .s2-text-wrapper_6');
-        var btnSave2 = document.querySelector('#page-edit #view-health .s3-text-wrapper_3');
-        function doSave() {
-          showView();
-        }
-        if (btnSave1) btnSave1.addEventListener('click', doSave);
-        if (btnSave2) btnSave2.addEventListener('click', doSave);
-
-        var tabDiag1 = document.getElementById('tab-diag-1');
-        var tabHealth1 = document.getElementById('tab-health-1');
-        var tabDiag2 = document.getElementById('tab-diag-2');
-        var tabHealth2 = document.getElementById('tab-health-2');
-        if (tabDiag1) tabDiag1.addEventListener('click', showDiag);
-        if (tabDiag2) tabDiag2.addEventListener('click', showDiag);
-        if (tabHealth1) tabHealth1.addEventListener('click', showHealth);
-        if (tabHealth2) tabHealth2.addEventListener('click', showHealth);
-      })();
-    </script>
-  
-<script>
-// ===== 与手机端对齐的数据结构 =====
-var APP_STATE_KEY = 'privacy_app_state';
-
-// 业务模块数据：诊疗服务 + 公共卫生服务
-var moduleData = {
+var DATA = {
   diag: [
-    {
-      id: 'outpatient', name: '门诊记录',
-      subItems: [
-        { id: 'outpatient_1', name: '呼吸内科门诊', date: '2025-04-20', type: '门诊', typeName: '门诊', doctor: '王磊', org: '北京大学第三医院' },
-        { id: 'outpatient_2', name: '消化内科门诊', date: '2025-03-15', type: '门诊', typeName: '门诊', doctor: '陈静', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'inpatient', name: '住院记录',
-      subItems: [
-        { id: 'inpatient_1', name: '普外科住院', date: '2025-05-13', type: '住院', typeName: '住院', doctor: '张伟', org: '北京大学第三医院' },
-        { id: 'inpatient_2', name: '心内科住院', date: '2024-11-02', type: '住院', typeName: '住院', doctor: '刘洋', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'check', name: '检查报告',
-      subItems: [
-        { id: 'check_1', name: '腹部彩超（肝、胆、胰、脾）', date: '2025-05-13', type: '住院', typeName: '住院', doctor: '赵敏', org: '北京大学第三医院' },
-        { id: 'check_2', name: 'CT全腹部平扫', date: '2025-04-20', type: '门诊', typeName: '门诊', doctor: '赵敏', org: '北京大学第三医院' },
-        { id: 'check_3', name: '电子胃镜检查', date: '2025-03-15', type: '门诊', typeName: '门诊', doctor: '孙强', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'lab', name: '检验报告',
-      subItems: [
-        { id: 'lab_1', name: '输血传染病八项检测', date: '2025-05-13', type: '住院', typeName: '住院', doctor: '李娜', org: '首都医科大学附属北京儿童医院' },
-        { id: 'lab_2', name: '凝血四项', date: '2025-05-13', type: '住院', typeName: '住院', doctor: '李娜', org: '首都医科大学附属北京儿童医院' },
-        { id: 'lab_3', name: '肝功能全套', date: '2025-04-20', type: '门诊', typeName: '门诊', doctor: '李娜', org: '首都医科大学附属北京儿童医院' }
-      ]
-    },
-    {
-      id: 'outdrug', name: '门急诊用药',
-      subItems: [
-        { id: 'outdrug_1', name: '阿莫西林胶囊', date: '2025-04-20', type: '门诊', typeName: '门诊', doctor: '王磊', org: '北京大学第三医院' },
-        { id: 'outdrug_2', name: '布洛芬缓释胶囊', date: '2025-03-15', type: '门诊', typeName: '门诊', doctor: '陈静', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'indrug', name: '住院用药',
-      subItems: [
-        { id: 'indrug_1', name: '头孢曲松钠注射液', date: '2025-05-13', type: '住院', typeName: '住院', doctor: '周婷', org: '首都医科大学附属北京儿童医院' },
-        { id: 'indrug_2', name: '奥美拉唑肠溶片', date: '2025-05-13', type: '住院', typeName: '住院', doctor: '周婷', org: '首都医科大学附属北京儿童医院' }
-      ]
-    },
-    {
-      id: 'record', name: '病案首页',
-      subItems: [
-        { id: 'record_1', name: '门急诊病案首页', date: '2025-05-13', type: '住院', typeName: '住院', doctor: '张伟', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'ai', name: 'AI报告解读',
-      subItems: [
-        { id: 'ai_1', name: '检查报告AI解读', date: '2025-05-13', type: '住院', typeName: '住院', doctor: 'AI助手', org: '北京大学第三医院' },
-        { id: 'ai_2', name: '检验报告AI解读', date: '2025-05-13', type: '住院', typeName: '住院', doctor: 'AI助手', org: '北京大学第三医院' }
-      ]
-    }
+    { id: 'outpatient', name: '门诊记录（C）', color: '#E6FFFB', iconColor: '#13C2C2',
+      records: [
+        { id: 'outpatient_1', name: '呼吸内科门诊', date: '2026-04-20', org: '北京大学第三医院', doctor: '王磊', type: '门诊' },
+        { id: 'outpatient_2', name: '消化内科门诊', date: '2026-03-15', org: '北京大学第三医院', doctor: '陈静', type: '门诊' }
+      ]},
+    { id: 'inpatient', name: '住院记录（C）', color: '#F0F5FF', iconColor: '#2F54EB',
+      records: [
+        { id: 'inpatient_1', name: '普外科住院', date: '2026-05-13', org: '北京大学第三医院', doctor: '张伟', type: '住院' },
+        { id: 'inpatient_2', name: '心内科住院', date: '2025-11-02', org: '北京大学第三医院', doctor: '刘洋', type: '住院' }
+      ]},
+    { id: 'surgery', name: '手术信息（PC）', color: '#FFF1F0', iconColor: '#F5222D',
+      records: [
+        { id: 'surgery_1', name: '阑尾切除术', date: '2026-06-18', org: '北京大学第三医院', doctor: '李强', type: '住院' },
+        { id: 'surgery_2', name: '腹腔镜胆囊切除术', date: '2025-09-12', org: '北京大学第三医院', doctor: '李强', type: '住院' }
+      ]},
+    { id: 'pathology', name: '病理信息（PC）', color: '#F9F0FF', iconColor: '#722ED1',
+      records: [
+        { id: 'path_1', name: '病理诊断报告（阑尾切除标本）', date: '2026-06-20', org: '北京大学第三医院', doctor: '钱敏', type: '住院' },
+        { id: 'path_2', name: '胃黏膜活检病理报告', date: '2026-03-17', org: '北京大学第三医院', doctor: '钱敏', type: '门诊' }
+      ]},
+    { id: 'checkinfo', name: '检查信息（PC）', color: '#E6F4FF', iconColor: '#1677FF',
+      records: [
+        { id: 'cinfo_1', name: '常规心电图', date: '2026-07-02', org: '北京大学第三医院', doctor: '赵敏', type: '门诊' },
+        { id: 'cinfo_2', name: '胸部DR正侧位片', date: '2026-05-20', org: '北京大学第三医院', doctor: '赵敏', type: '门诊' }
+      ]},
+    { id: 'labinfo', name: '检验信息（PC）', color: '#E6FFFB', iconColor: '#13C2C2',
+      records: [
+        { id: 'linfo_1', name: '血常规（五分类）', date: '2026-07-02', org: '北京大学第三医院', doctor: '李娜', type: '门诊' },
+        { id: 'linfo_2', name: '尿常规', date: '2026-05-16', org: '北京大学第三医院', doctor: '李娜', type: '门诊' }
+      ]},
+    { id: 'check', name: '检查报告（PC/C）', color: '#E6F4FF', iconColor: '#1677FF',
+      records: [
+        { id: 'check_1', name: 'CT头颅平扫', date: '2026-06-10', org: '北京大学第三医院', doctor: '赵敏', type: '门诊' },
+        { id: 'check_2', name: 'CT全腹部平扫', date: '2026-04-20', org: '北京大学第三医院', doctor: '赵敏', type: '门诊' },
+        { id: 'check_3', name: '腹部彩超（肝、胆、胰、脾）', date: '2026-05-13', org: '北京大学第三医院', doctor: '赵敏', type: '住院' },
+        { id: 'check_4', name: '电子胃镜检查', date: '2026-03-15', org: '北京大学第三医院', doctor: '孙强', type: '门诊' }
+      ]},
+    { id: 'lab', name: '检验报告（PC/C）', color: '#F9F0FF', iconColor: '#722ED1',
+      records: [
+        { id: 'lab_1', name: '输血传染病八项检测', date: '2026-05-13', org: '北京大学第三医院', doctor: '李娜', type: '住院' },
+        { id: 'lab_2', name: '凝血四项', date: '2026-05-13', org: '北京大学第三医院', doctor: '李娜', type: '住院' },
+        { id: 'lab_3', name: '肝功能全套', date: '2026-04-20', org: '北京大学第三医院', doctor: '李娜', type: '门诊' }
+      ]},
+    { id: 'outdrug', name: '门急诊用药（PC/C）', color: '#FFF7E6', iconColor: '#FA8C16',
+      records: [
+        { id: 'outdrug_1', name: '阿莫西林胶囊', date: '2026-04-20', org: '北京大学第三医院', doctor: '王磊', type: '门诊' },
+        { id: 'outdrug_2', name: '布洛芬缓释胶囊', date: '2026-03-15', org: '北京大学第三医院', doctor: '陈静', type: '门诊' }
+      ]},
+    { id: 'indrug', name: '住院用药（PC/C）', color: '#FFF0F6', iconColor: '#EB2F96',
+      records: [
+        { id: 'indrug_1', name: '头孢曲松钠注射液', date: '2026-05-13', org: '北京大学第三医院', doctor: '周婷', type: '住院' },
+        { id: 'indrug_2', name: '奥美拉唑肠溶片', date: '2026-05-13', org: '北京大学第三医院', doctor: '周婷', type: '住院' }
+      ]}
   ],
   health: [
-    {
-      id: 'profile', name: '个人档案',
-      subItems: [
-        { id: 'profile_1', name: '居民健康档案', date: '2024-03-01', type: '建档', typeName: '建档', doctor: '系统', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'hypertension', name: '高血压管理',
-      subItems: [
-        { id: 'hypertension_1', name: '随访记录（2025-01）', date: '2025-01-05', type: '随访', typeName: '随访', doctor: '李明', org: '北京大学第三医院' },
-        { id: 'hypertension_2', name: '随访记录（2024-12）', date: '2024-12-05', type: '随访', typeName: '随访', doctor: '李明', org: '北京大学第三医院' },
-        { id: 'hypertension_3', name: '年度健康评估', date: '2024-12-30', type: '评估', typeName: '评估', doctor: '李明', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'diabetes', name: '糖尿病管理',
-      subItems: [
-        { id: 'diabetes_1', name: '随访记录（2025-01）', date: '2025-01-08', type: '随访', typeName: '随访', doctor: '赵伟', org: '首都医科大学附属北京儿童医院' },
-        { id: 'diabetes_2', name: '随访记录（2024-12）', date: '2024-12-08', type: '随访', typeName: '随访', doctor: '赵伟', org: '首都医科大学附属北京儿童医院' },
-        { id: 'diabetes_3', name: '糖化血红蛋白检测', date: '2025-01-08', type: '检验', typeName: '检验', doctor: '赵伟', org: '首都医科大学附属北京儿童医院' }
-      ]
-    },
-    {
-      id: 'tb', name: '肺结核管理',
-      subItems: [
-        { id: 'tb_1', name: '第一次入户随访', date: '2024-08-10', type: '随访', typeName: '随访', doctor: '马俊', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'copd', name: '慢阻肺管理',
-      subItems: [
-        { id: 'copd_1', name: '慢阻肺随访记录', date: '2024-10-12', type: '随访', typeName: '随访', doctor: '孙强', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'maternity', name: '孕产妇管理',
-      subItems: [
-        { id: 'maternity_1', name: '首次产检随访', date: '2024-10-15', type: '随访', typeName: '随访', doctor: '王丽华', org: '北京大学第三医院' },
-        { id: 'maternity_2', name: '孕中期随访', date: '2024-12-20', type: '随访', typeName: '随访', doctor: '王丽华', org: '北京大学第三医院' },
-        { id: 'maternity_3', name: '孕晚期随访', date: '2025-01-10', type: '随访', typeName: '随访', doctor: '张芳', org: '北京大学第三医院' },
-        { id: 'maternity_4', name: '产后访视', date: '2025-01-20', type: '随访', typeName: '随访', doctor: '张芳', org: '北京大学第三医院' },
-        { id: 'maternity_5', name: '产后42天健康检查', date: '2025-02-05', type: '体检', typeName: '体检', doctor: '王丽华', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'children', name: '0-6岁儿童管理',
-      subItems: [
-        { id: 'children_1', name: '新生儿访视', date: '2024-06-10', type: '访视', typeName: '访视', doctor: '孙颖', org: '首都医科大学附属北京儿童医院' },
-        { id: 'children_2', name: '1岁健康检查', date: '2024-09-15', type: '体检', typeName: '体检', doctor: '孙颖', org: '首都医科大学附属北京儿童医院' },
-        { id: 'children_3', name: '疫苗接种记录', date: '2024-12-20', type: '接种', typeName: '接种', doctor: '周婷', org: '首都医科大学附属北京儿童医院' },
-        { id: 'children_4', name: '视力筛查', date: '2025-01-05', type: '筛查', typeName: '筛查', doctor: '孙颖', org: '首都医科大学附属北京儿童医院' }
-      ]
-    },
-    {
-      id: 'elderly', name: '老年人健康管理',
-      subItems: [
-        { id: 'elderly_1', name: '年度体检报告', date: '2024-11-20', type: '体检', typeName: '体检', doctor: '刘洋', org: '北京大学第三医院' },
-        { id: 'elderly_2', name: '生活方式指导', date: '2024-12-15', type: '指导', typeName: '指导', doctor: '刘洋', org: '北京大学第三医院' },
-        { id: 'elderly_3', name: '随访记录（2025-01）', date: '2025-01-12', type: '随访', typeName: '随访', doctor: '刘洋', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'tcm', name: '中医药管理',
-      subItems: [
-        { id: 'tcm_1', name: '中医体质辨识', date: '2024-11-20', type: '测评', typeName: '测评', doctor: '刘洋', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'mental', name: '严重精神障碍管理',
-      subItems: [
-        { id: 'mental_1', name: '随访记录（2025-01）', date: '2025-01-03', type: '随访', typeName: '随访', doctor: '马俊', org: '北京大学第三医院' },
-        { id: 'mental_2', name: '用药指导', date: '2025-01-03', type: '指导', typeName: '指导', doctor: '马俊', org: '北京大学第三医院' },
-        { id: 'mental_3', name: '康复评估', date: '2024-12-20', type: '评估', typeName: '评估', doctor: '马俊', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'tumor', name: '肿瘤管理',
-      subItems: [
-        { id: 'tumor_1', name: '肿瘤随访记录', date: '2024-09-20', type: '随访', typeName: '随访', doctor: '张伟', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'occupation', name: '职业病管理',
-      subItems: [
-        { id: 'occupation_1', name: '职业健康检查', date: '2024-07-15', type: '体检', typeName: '体检', doctor: '王磊', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'highrisk', name: '高危人群管理',
-      subItems: [
-        { id: 'highrisk_1', name: '高危人群筛查', date: '2024-08-05', type: '筛查', typeName: '筛查', doctor: '陈静', org: '北京大学第三医院' }
-      ]
-    },
-    {
-      id: 'vaccine', name: '计划免疫',
-      subItems: [
-        { id: 'vaccine_1', name: '疫苗接种记录', date: '2024-12-20', type: '接种', typeName: '接种', doctor: '周婷', org: '首都医科大学附属北京儿童医院' }
-      ]
-    }
+    { id: 'base', name: '基本档案', color: '#E6F4FF', iconColor: '#1677FF',
+      records: [
+        { id: 'base_1', name: '居民健康档案', date: '2024-03-01', org: '海淀区社区卫生服务中心', doctor: '系统', type: '建档' }
+      ]},
+    { id: 'maternity', name: '孕产妇保健', color: '#FFF0F6', iconColor: '#EB2F96',
+      groups: [
+        { id: 'mat_2024', name: '孕产妇档案（2024-10 建档）', org: '海淀区妇幼保健院',
+          children: [
+            { id: 'mat_info', name: '档案信息', date: '2024-10-15', doctor: '王丽华' },
+            { id: 'mat_pre1', name: '产前随访（第1次）', date: '2024-10-15', doctor: '王丽华' },
+            { id: 'mat_pre2', name: '产前随访（第2次）', date: '2024-12-20', doctor: '王丽华' },
+            { id: 'mat_pre3', name: '产前随访（第3次）', date: '2025-01-10', doctor: '张芳' },
+            { id: 'mat_post', name: '产后随访', date: '2025-01-20', doctor: '张芳' },
+            { id: 'mat_42', name: '产后42天健康检查', date: '2025-02-05', doctor: '王丽华' }
+          ]}
+      ]},
+    { id: 'child', name: '儿童保健', color: '#F6FFED', iconColor: '#52C41A',
+      records: [
+        { id: 'child_1', name: '新生儿访视', date: '2024-06-10', org: '海淀区社区卫生服务中心', doctor: '孙颖', type: '访视' },
+        { id: 'child_2', name: '1岁健康检查', date: '2024-09-15', org: '海淀区社区卫生服务中心', doctor: '孙颖', type: '体检' },
+        { id: 'child_3', name: '视力筛查', date: '2025-01-05', org: '海淀区社区卫生服务中心', doctor: '孙颖', type: '筛查' }
+      ]},
+    { id: 'hypertension', name: '高血压管理', color: '#FFF7E6', iconColor: '#FA8C16',
+      records: [
+        { id: 'htn_1', name: '随访记录（2025-01）', date: '2025-01-05', org: '海淀区社区卫生服务中心', doctor: '李明', type: '随访' },
+        { id: 'htn_2', name: '随访记录（2024-12）', date: '2024-12-05', org: '海淀区社区卫生服务中心', doctor: '李明', type: '随访' },
+        { id: 'htn_3', name: '年度健康评估', date: '2024-12-30', org: '海淀区社区卫生服务中心', doctor: '李明', type: '评估' }
+      ]},
+    { id: 'diabetes', name: '糖尿病管理', color: '#E6FFFB', iconColor: '#13C2C2',
+      records: [
+        { id: 'dm_1', name: '随访记录（2025-01）', date: '2025-01-08', org: '海淀区社区卫生服务中心', doctor: '赵伟', type: '随访' },
+        { id: 'dm_2', name: '糖化血红蛋白检测', date: '2025-01-08', org: '海淀区社区卫生服务中心', doctor: '赵伟', type: '检验' }
+      ]},
+    { id: 'copd', name: '慢阻肺管理', color: '#F0F5FF', iconColor: '#2F54EB',
+      records: [
+        { id: 'copd_1', name: '慢阻肺随访记录', date: '2024-10-12', org: '海淀区社区卫生服务中心', doctor: '孙强', type: '随访' }
+      ]},
+    { id: 'tb', name: '肺结核管理', color: '#FFF1F0', iconColor: '#F5222D',
+      records: [
+        { id: 'tb_1', name: '第一次入户随访', date: '2024-08-10', org: '海淀区社区卫生服务中心', doctor: '马俊', type: '随访' }
+      ]},
+    { id: 'mental', name: '严重精神障碍管理', color: '#F9F0FF', iconColor: '#722ED1',
+      records: [
+        { id: 'mental_1', name: '随访记录（2025-01）', date: '2025-01-03', org: '海淀区社区卫生服务中心', doctor: '马俊', type: '随访' },
+        { id: 'mental_2', name: '康复评估', date: '2024-12-20', org: '海淀区社区卫生服务中心', doctor: '马俊', type: '评估' }
+      ]},
+    { id: 'tcm', name: '中医药管理', color: '#F6FFED', iconColor: '#52C41A',
+      records: [
+        { id: 'tcm_1', name: '中医体质辨识', date: '2024-11-20', org: '海淀区社区卫生服务中心', doctor: '刘洋', type: '测评' }
+      ]},
+    { id: 'vaccine', name: '计划免疫', color: '#E6F4FF', iconColor: '#1677FF',
+      records: [
+        { id: 'vac_1', name: '疫苗接种记录', date: '2024-12-20', org: '海淀区社区卫生服务中心', doctor: '周婷', type: '接种' }
+      ]}
   ]
 };
 
-// 默认状态：部分记录已屏蔽，让首页列表不为空
-var DEFAULT_STATE = {
-  blockedOrgs: [],
-  modules: {},
-  lockEnabled: false,
-  lockPassword: '',
-  imEnabled: false
-};
+var blocked = { diag: {}, health: {} };
+blocked.diag.check = new Set(['check_1']);
+blocked.health.maternity = new Set(['mat_info', 'mat_pre2', 'mat_post']);
 
-function initDefaultState() {
-  ['diag', 'health'].forEach(function (group) {
-    moduleData[group].forEach(function (m) {
-      DEFAULT_STATE.modules[m.id] = { mode: 'none', blockedItems: [] };
-    });
-  });
-  // 默认屏蔽项：让查看页列表不为空
-  DEFAULT_STATE.modules.check = { mode: 'partial', blockedItems: ['check_2'] };
-  DEFAULT_STATE.modules.lab = { mode: 'partial', blockedItems: ['lab_1', 'lab_2'] };
-  DEFAULT_STATE.modules.indrug = { mode: 'all', blockedItems: ['indrug_1', 'indrug_2'] };
-  DEFAULT_STATE.modules.ai = { mode: 'partial', blockedItems: ['ai_1'] };
-  DEFAULT_STATE.modules.hypertension = { mode: 'partial', blockedItems: ['hypertension_1'] };
-  DEFAULT_STATE.modules.maternity = { mode: 'all', blockedItems: ['maternity_1', 'maternity_2', 'maternity_3', 'maternity_4', 'maternity_5'] };
-  DEFAULT_STATE.modules.elderly = { mode: 'partial', blockedItems: ['elderly_1'] };
-  DEFAULT_STATE.modules.mental = { mode: 'all', blockedItems: ['mental_1', 'mental_2', 'mental_3'] };
+var rangeConfig = { type: '3m', start: '', end: '' };
+var curTab = 'diag';
+var maskTarget = null;
+
+function openAllMask(group, modId) {
+  var mod = getMod(group, modId);
+  var inRangeIds = allIds(mod).filter(function (id) { var r = findRecord(group, modId, id); return r && inRange(r.date); });
+  maskTarget = { group: group, modId: modId };
+  document.getElementById('maskTitle').textContent = '全部屏蔽「' + mod.name + '」';
+  document.getElementById('maskDesc').innerHTML =
+    '确认后，<b>' + mod.name + '</b> 内的 <b>' + inRangeIds.length + '</b> 条内容（当前范围内全部）将被放入保险箱，' +
+    '<b>对医生人员和家庭成员均不可见</b>。此操作可随时在「编辑」中解除。';
+  document.getElementById('maskAll').classList.add('show');
 }
-initDefaultState();
+function closeMask() {
+  document.getElementById('maskAll').classList.remove('show');
+  maskTarget = null;
+}
+function confirmAll() {
+  if (!maskTarget) return;
+  var g = maskTarget.group, m = maskTarget.modId;
+  var mod = getMod(g, m);
+  var set = blockedSet(g, m);
+  allIds(mod).forEach(function (id) {
+    var r = findRecord(g, m, id);
+    if (r && !inRange(r.date)) return;
+    set.add(id);
+  });
+  closeMask();
+  syncModUI(g, m);
+  showToast('已对「' + mod.name + '」范围内的全部内容加锁保密');
+}
 
-function findModuleById(id) {
-  var groups = ['diag', 'health'];
-  for (var i = 0; i < groups.length; i++) {
-    var list = moduleData[groups[i]];
-    for (var j = 0; j < list.length; j++) {
-      if (list[j].id === id) return list[j];
+function getMod(group, modId) { return DATA[group].find(function (m) { return m.id === modId; }); }
+function allIds(mod) {
+  var ids = [];
+  (mod.records || []).forEach(function (r) { ids.push(r.id); });
+  (mod.groups || []).forEach(function (g) { g.children.forEach(function (c) { ids.push(c.id); }); });
+  return ids;
+}
+function totalCount(mod) { return allIds(mod).length; }
+function blockedSet(group, modId) {
+  if (!blocked[group][modId]) blocked[group][modId] = new Set();
+  return blocked[group][modId];
+}
+function blockedCount(group, modId) { return blockedSet(group, modId).size; }
+function groupBlockedTotal(group) {
+  var n = 0;
+  DATA[group].forEach(function (m) { n += blockedCount(group, m.id); });
+  return n;
+}
+
+function rangeBounds(cfg) {
+  if (cfg.type === 'all') return null;
+  var now = new Date();
+  var e = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+  var s = null;
+  if (cfg.type === '3m') { s = new Date(e); s.setMonth(s.getMonth() - 3); s.setHours(0,0,0,0); }
+  else if (cfg.type === '6m') { s = new Date(e); s.setMonth(s.getMonth() - 6); s.setHours(0,0,0,0); }
+  else if (cfg.type === '1y') { s = new Date(e); s.setFullYear(s.getFullYear() - 1); s.setHours(0,0,0,0); }
+  else if (cfg.type === 'custom') {
+    if (!cfg.start || !cfg.end) return null;
+    return { start: new Date(cfg.start + 'T00:00:00'), end: new Date(cfg.end + 'T23:59:59') };
+  }
+  return { start: s, end: e };
+}
+function inRange(dateStr) {
+  var b = rangeBounds(rangeConfig);
+  if (!b) return true;
+  var d = new Date(dateStr + 'T12:00:00');
+  return d >= b.start && d <= b.end;
+}
+function rangeText(cfg) {
+  if (cfg.type === 'all') return { main: '全部', sub: '不限时间' };
+  if (cfg.type === '3m') return { main: '最近三个月', sub: '当前日期向前 90 天内的全部记录' };
+  if (cfg.type === '6m') return { main: '最近半年', sub: '当前日期向前 180 天内的全部记录' };
+  if (cfg.type === '1y') return { main: '最近一年', sub: '当前日期向前 365 天内的全部记录' };
+  if (cfg.type === 'custom') {
+    if (cfg.start && cfg.end) return { main: cfg.start + ' ~ ' + cfg.end, sub: '自定义时间范围' };
+    return { main: '自定义（请选择日期）', sub: '请填写开始与结束日期' };
+  }
+}
+
+var SVG_LOCK = '<svg class="lock-ico" viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" fill="#F5222D"/><path d="M8 10V7a4 4 0 018 0v3" stroke="#F5222D" stroke-width="2"/></svg>';
+var SVG_ARROW = '<svg class="arrow" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#8c8c8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var SVG_DOC = '<svg viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6V3z" stroke="ICON" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12h6M9 16h6M14 3v4h4" stroke="ICON" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var SVG_LOCK_BOX = '<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="#F5222D" stroke-width="1.8"/><path d="M8 10V7a4 4 0 018 0v3" stroke="#F5222D" stroke-width="1.8"/></svg>';
+
+function setScope(type, el) {
+  rangeConfig.type = type;
+  document.querySelectorAll('.scope-tab').forEach(function (n) { n.classList.toggle('active', n.dataset.type === type); });
+  document.getElementById('scopeCustom').classList.toggle('show', type === 'custom');
+  if (type === 'custom') {
+    if (!rangeConfig.start && !rangeConfig.end) {
+      var now = new Date(), past = new Date(now); past.setMonth(past.getMonth() - 3);
+      rangeConfig.start = past.toISOString().slice(0, 10);
+      rangeConfig.end = now.toISOString().slice(0, 10);
+      document.getElementById('rangeStart').value = rangeConfig.start;
+      document.getElementById('rangeEnd').value = rangeConfig.end;
     }
   }
-  return null;
+  refreshRangeUI();
+  rerenderAll();
+}
+function onCustomChange() {
+  rangeConfig.start = document.getElementById('rangeStart').value;
+  rangeConfig.end = document.getElementById('rangeEnd').value;
+  refreshRangeUI();
+  rerenderAll();
+}
+function refreshRangeUI() {
+  var t = rangeText(rangeConfig);
+  document.getElementById('rangeViewText').innerHTML = '生效范围：<b>' + t.main + '</b>（' + t.sub + '）';
 }
 
-function loadState() {
-  try {
-    var raw = localStorage.getItem(APP_STATE_KEY);
-    if (raw) {
-      var parsed = JSON.parse(raw);
-      return normalizeState(parsed);
+function findRecord(group, modId, id) {
+  var mod = getMod(group, modId);
+  var r = (mod.records || []).find(function (x) { return x.id === id; });
+  if (r) return r;
+  (mod.groups || []).forEach(function (g) {
+    g.children.forEach(function (c) { if (c.id === id) r = c; });
+  });
+  return r;
+}
+
+function statusTag(group, modId) {
+  var mod = getMod(group, modId);
+  var n = blockedCount(group, modId), total = totalCount(mod);
+  if (n === 0) return '<span class="st-tag none">未屏蔽</span>';
+  if (n >= total) return '<span class="st-tag all">全部屏蔽</span>';
+  return '<span class="st-tag partial">部分屏蔽（' + n + '/' + total + '）</span>';
+}
+
+function renderModules(group) {
+  var box = document.getElementById(group === 'diag' ? 'modListDiag' : 'modListHealth');
+  var html = '';
+  DATA[group].forEach(function (mod, idx) {
+    var total = totalCount(mod);
+    var icon = SVG_DOC.split('ICON').join(mod.iconColor);
+    var num = (idx + 1) < 10 ? '0' + (idx + 1) : '' + (idx + 1);
+    html += '<div class="mod-card" id="card-' + group + '-' + mod.id + '">';
+    html += '<div class="mod-hd" onclick="toggleCard(\'' + group + '\',\'' + mod.id + '\')">';
+    html += SVG_ARROW;
+    html += '<div class="mod-ico" style="background:' + mod.color + ';">' + icon + '</div>';
+    html += '<div class="mod-info"><div class="m1"><span class="mod-no">' + num + '</span><span class="cat-name">' + mod.name + '</span></div>';
+    html += '<div class="m2">共 ' + total + ' 条内容</div></div>';
+    html += '<div class="mod-status" id="st-' + group + '-' + mod.id + '">' + statusTag(group, mod.id) + '</div>';
+    var showAll = rangeConfig.type === 'all';
+    html += '<div class="mod-ops" onclick="event.stopPropagation();">';
+    html += '<button class="op-btn" onclick="clearMod(\'' + group + '\',\'' + mod.id + '\')">不屏蔽</button>';
+    html += '<button class="op-btn primary" onclick="toggleCard(\'' + group + '\',\'' + mod.id + '\')">选择内容</button>';
+    html += '<button class="op-btn danger" id="allbtn-' + group + '-' + mod.id + '" data-role="allblock" style="display:' + (showAll ? '' : 'none') + ';" onclick="openAllMask(\'' + group + '\',\'' + mod.id + '\')">全部屏蔽</button>';
+    html += '</div></div>';
+    html += '<div class="mod-bd">';
+    html += '<div class="bd-toolbar">';
+    html += '<span class="tb-label">就诊时间</span>';
+    html += '<span class="tb-date"><input type="date" id="dt-start-' + group + '-' + mod.id + '" onchange="filterByDate(\'' + group + '\',\'' + mod.id + '\')"/></span>';
+    html += '<span class="tb-date"><input type="date" id="dt-end-' + group + '-' + mod.id + '" onchange="filterByDate(\'' + group + '\',\'' + mod.id + '\')"/></span>';
+    html += '<div class="bd-search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#BFBFBF" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#BFBFBF" stroke-width="2" stroke-linecap="round"/></svg>';
+    html += '<input placeholder="搜索内容名称" oninput="filterRec(this,\'' + group + '\',\'' + mod.id + '\')"/></div>';
+    html += '<label class="bd-checkall"><input type="checkbox" id="cba-' + group + '-' + mod.id + '" onchange="toggleAll(this,\'' + group + '\',\'' + mod.id + '\')"/>全选本页内容</label>';
+    html += '<div class="bd-toolbar-right">';
+    html += '<span class="bd-total" id="total-' + group + '-' + mod.id + '">共 <b>' + total + '</b> 条数据</span>';
+    html += '<span class="bd-sel" id="sel-' + group + '-' + mod.id + '"></span>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="bd-table-hd">';
+    html += '<span class="th name">内容名称</span>';
+    html += '<span class="th date">就诊时间</span>';
+    html += '<span class="th org">医疗机构</span>';
+    html += '<span class="th doc">医生</span>';
+    html += '</div>';
+    html += '<div id="recs-' + group + '-' + mod.id + '">';
+    (mod.records || []).forEach(function (r) {
+      html += recRow(group, mod.id, r, r.org, r.type, false);
+    });
+    (mod.groups || []).forEach(function (g) {
+      html += '<div class="grp">';
+      html += '<div class="grp-hd">';
+      html += '<input type="checkbox" class="rec-cb" id="cb-' + group + '-' + g.id + '" onchange="toggleGrp(this,\'' + group + '\',\'' + mod.id + '\',\'' + g.id + '\')"/>';
+      html += '<div class="rec-name"><div class="n1">' + g.name + '<span class="grp-badge">档案业务</span></div>';
+      html += '<div class="n2">' + g.org + ' · ' + g.children.length + ' 项子服务，可分别屏蔽</div></div>';
+      html += '</div>';
+      html += '<div class="grp-children">';
+      g.children.forEach(function (c) {
+        html += recRow(group, mod.id, c, g.org, '公卫服务', true);
+      });
+      html += '</div></div>';
+    });
+    html += '</div></div></div>';
+  });
+  box.innerHTML = html;
+  DATA[group].forEach(function (mod) { syncModUI(group, mod.id); });
+}
+
+function deriveTime(recId) {
+  var hash = 0;
+  for (var i = 0; i < recId.length; i++) hash = (hash * 31 + recId.charCodeAt(i)) | 0;
+  var hour = 8 + (Math.abs(hash) % 9);
+  var minute = Math.abs(hash * 7) % 60;
+  return (hour < 10 ? '0' + hour : '' + hour) + ':' + (minute < 10 ? '0' + minute : '' + minute);
+}
+
+function recRow(group, modId, r, org, type, isChild) {
+  var cbId = 'cb-' + group + '-' + r.id;
+  var oor = !inRange(r.date);
+  var html = '<div class="rec-row ' + (oor ? 'out-of-range' : '') + '" data-name="' + r.name + '" id="row-' + group + '-' + r.id + '">';
+  if (isChild) html += '<span class="child-branch"></span>';
+  html += '<input type="checkbox" class="rec-cb" id="' + cbId + '" ' + (oor ? 'disabled' : '') + ' onchange="toggleRec(this,\'' + group + '\',\'' + modId + '\',\'' + r.id + '\')"/>';
+  html += '<div class="rec-name"><div class="n1">' + r.name;
+  html += '<span id="lk-' + group + '-' + r.id + '"></span>';
+  if (oor) html += '<span class="oor-tag">不在当前范围</span>';
+  html += '</div></div>';
+  var time = r.time || deriveTime(r.id);
+  html += '<span class="rec-col date"><span class="time-label">' + r.date + '<span class="sep">' + (r.time ? ' · ' : ' ') + '</span>' + time + '</span></span>';
+  html += '<span class="rec-col org">' + org + '</span>';
+  html += '<span class="rec-col doc">' + r.doctor + '</span>';
+  html += '</div>';
+  return html;
+}
+
+function toggleCard(group, modId) { document.getElementById('card-' + group + '-' + modId).classList.toggle('open'); }
+
+function toggleRec(cb, group, modId, recId) {
+  var set = blockedSet(group, modId);
+  if (cb.checked) set.add(recId); else set.delete(recId);
+  syncModUI(group, modId);
+}
+function toggleGrp(cb, group, modId, grpId) {
+  var mod = getMod(group, modId);
+  var grp = mod.groups.find(function (g) { return g.id === grpId; });
+  var set = blockedSet(group, modId);
+  grp.children.forEach(function (c) {
+    if (!inRange(c.date)) return;
+    if (cb.checked) set.add(c.id); else set.delete(c.id);
+  });
+  syncModUI(group, modId);
+}
+function toggleAll(cb, group, modId) {
+  var mod = getMod(group, modId);
+  var set = blockedSet(group, modId);
+  allIds(mod).forEach(function (id) {
+    var r = findRecord(group, modId, id);
+    if (r && !inRange(r.date)) return;
+    if (cb.checked) set.add(id); else set.delete(id);
+  });
+  syncModUI(group, modId);
+}
+function clearMod(group, modId) {
+  blocked[group][modId] = new Set();
+  syncModUI(group, modId);
+  showToast('已解除「' + getMod(group, modId).name + '」的全部屏蔽');
+}
+
+function syncModUI(group, modId) {
+  var mod = getMod(group, modId);
+  var set = blockedSet(group, modId);
+  allIds(mod).forEach(function (id) {
+    var cb = document.getElementById('cb-' + group + '-' + id);
+    if (cb && !cb.disabled) cb.checked = set.has(id);
+    var row = document.getElementById('row-' + group + '-' + id);
+    if (row) row.classList.toggle('blocked', set.has(id));
+    var lk = document.getElementById('lk-' + group + '-' + id);
+    if (lk) lk.innerHTML = set.has(id) ? SVG_LOCK : '';
+  });
+  (mod.groups || []).forEach(function (g) {
+    var cb = document.getElementById('cb-' + group + '-' + g.id);
+    if (cb) {
+      var inR = g.children.filter(function (c) { return inRange(c.date); });
+      var checked = inR.filter(function (c) { return set.has(c.id); }).length;
+      cb.checked = inR.length > 0 && checked === inR.length;
+      cb.indeterminate = checked > 0 && checked < inR.length;
     }
-  } catch (e) {}
-  return JSON.parse(JSON.stringify(DEFAULT_STATE));
-}
-
-function normalizeState(state) {
-  if (!state || typeof state !== 'object') return JSON.parse(JSON.stringify(DEFAULT_STATE));
-  var result = {
-    blockedOrgs: Array.isArray(state.blockedOrgs) ? state.blockedOrgs : [],
-    modules: {},
-    lockEnabled: !!state.lockEnabled,
-    lockPassword: state.lockPassword || '',
-    imEnabled: !!state.imEnabled
-  };
-  ['diag', 'health'].forEach(function (group) {
-    moduleData[group].forEach(function (m) {
-      var sm = state.modules && state.modules[m.id];
-      if (sm && typeof sm === 'object') {
-        var mode = ['none', 'partial', 'all'].indexOf(sm.mode) !== -1 ? sm.mode : 'none';
-        var blockedItems = Array.isArray(sm.blockedItems) ? sm.blockedItems : [];
-        // 校准模式与列表一致性
-        if (mode === 'all') blockedItems = m.subItems.map(function (s) { return s.id; });
-        else if (mode === 'none') blockedItems = [];
-        result.modules[m.id] = { mode: mode, blockedItems: blockedItems };
-      } else {
-        result.modules[m.id] = { mode: 'none', blockedItems: [] };
-      }
-    });
   });
-  return result;
-}
-
-function saveState(s) {
-  localStorage.setItem(APP_STATE_KEY, JSON.stringify(s));
-}
-
-function getModuleState(id) {
-  var s = loadState();
-  return s.modules[id] || { mode: 'none', blockedItems: [] };
-}
-
-function setModuleState(id, mode, blockedItems) {
-  var s = loadState();
-  s.modules[id] = { mode: mode, blockedItems: Array.isArray(blockedItems) ? blockedItems : [] };
-  saveState(s);
-}
-
-function renderAllStatus() {
-  ['diag', 'health'].forEach(function (group) {
-    moduleData[group].forEach(function (m) {
-      var st = getModuleState(m.id);
-      var el = document.getElementById(group + '-st-' + m.id);
-      if (!el) return;
-      if (st.mode === 'all') { el.className = 'status-tag all'; el.textContent = '全部屏蔽'; }
-      else if (st.mode === 'partial') { el.className = 'status-tag partial'; el.textContent = '部分屏蔽(' + st.blockedItems.length + ')'; }
-      else { el.className = 'status-tag none'; el.textContent = '未屏蔽'; }
-    });
+  var inRangeIds = allIds(mod).filter(function (id) {
+    var r = findRecord(group, modId, id);
+    return r && inRange(r.date);
   });
-}
-
-function renderModuleList() {
-  ['diag', 'health'].forEach(function (group) {
-    var container = document.querySelector('#' + group + '-layer-mod .mod-list');
-    if (!container) return;
-    container.innerHTML = moduleData[group].map(function (m, idx) {
-      var no = String(idx + 1).padStart(2, '0');
-      var st = getModuleState(m.id);
-      var statusClass = st.mode;
-      var statusText = st.mode === 'all' ? '全部屏蔽' : st.mode === 'partial' ? '部分屏蔽(' + st.blockedItems.length + ')' : '未屏蔽';
-      return '<div class="mod-row" data-module="' + m.id + '">' +
-        '<span class="row-name">' + no + '　' + m.name + '</span>' +
-        '<span class="row-status"><span class="status-tag ' + statusClass + '" id="' + group + '-st-' + m.id + '">' + statusText + '</span></span>' +
-        '<span class="row-op">' +
-          '<button class="op-btn" onclick="quickSet(\'' + group + '\',\'' + m.id + '\',\'none\', event)">不屏蔽</button>' +
-          '<button class="op-btn primary" onclick="openRecordPanel(\'' + group + '\',\'' + m.id + '\', event)">选择记录</button>' +
-          '<button class="op-btn danger" onclick="quickSet(\'' + group + '\',\'' + m.id + '\',\'all\', event)">全部屏蔽</button>' +
-        '</span>' +
-      '</div>';
-    }).join('');
-  });
-}
-
-var currentPanel = null;
-
-function openRecordPanel(group, moduleId, event) {
-  if (event) { event.stopPropagation(); }
-  currentPanel = { group: group, moduleId: moduleId };
-  var m = findModuleById(moduleId);
-  var st = getModuleState(moduleId);
-
-  document.getElementById(group + '-layer-mod').classList.add('layer-hidden');
-  document.getElementById(group + '-layer-rec').classList.remove('layer-hidden');
-  document.getElementById(group + '-rec-title').textContent = m.name;
-
-  renderRecordList(group);
-}
-
-function backToModules(group) {
-  currentPanel = null;
-  document.getElementById(group + '-layer-mod').classList.remove('layer-hidden');
-  document.getElementById(group + '-layer-rec').classList.add('layer-hidden');
-  renderAllStatus();
-}
-
-// 模块列表快捷设置：不屏蔽 / 全部屏蔽
-function quickSet(group, moduleId, mode, event) {
-  if (event) { event.stopPropagation(); }
-  var blocked = [];
-  if (mode === 'all') {
-    var m = findModuleById(moduleId);
-    blocked = m.subItems.map(function (s) { return s.id; });
+  var cba = document.getElementById('cba-' + group + '-' + modId);
+  if (cba) {
+    var n = inRangeIds.filter(function (id) { return set.has(id); }).length;
+    cba.checked = n === inRangeIds.length && inRangeIds.length > 0;
+    cba.indeterminate = n > 0 && n < inRangeIds.length;
   }
-  setModuleState(moduleId, mode, blocked);
-  renderAllStatus();
-}
-
-// 更新状态文本和全选 checkbox
-function updateRecFooter(group) {
-  if (!currentPanel) return;
-  var m = findModuleById(currentPanel.moduleId);
-  var st = getModuleState(currentPanel.moduleId);
-  var blocked = (st.blockedItems || []).length;
-  var total = m.subItems.length;
-  var el = document.getElementById(group + '-rec-count');
-  if (el) el.innerHTML = '共 <span class="num">' + total + '</span> 条记录，已屏蔽 <span class="num">' + blocked + '</span> 条';
-
-  // 同步全选 checkbox 状态
-  var checkAll = document.getElementById(group + '-check-all');
-  if (checkAll) {
-    checkAll.checked = (blocked === total && total > 0);
-    checkAll.indeterminate = (blocked > 0 && blocked < total);
+  var st = document.getElementById('st-' + group + '-' + modId);
+  if (st) st.innerHTML = statusTag(group, modId);
+  var sel = document.getElementById('sel-' + group + '-' + modId);
+  if (sel) {
+    sel.innerHTML = '已选 <b>' + set.size + '</b> / ' + totalCount(mod) + ' 项' + (inRangeIds.length < totalCount(mod) ? '（范围内 ' + inRangeIds.length + ' 项）' : '');
   }
 }
 
-function renderRecordList(group) {
-  if (!currentPanel) return;
-  var m = findModuleById(currentPanel.moduleId);
-  var st = getModuleState(currentPanel.moduleId);
-  var blocked = Array.isArray(st.blockedItems) ? st.blockedItems : [];
-  var list = document.getElementById(group + '-rec-list');
+function filterRec(input, group, modId) {
+  var kw = input.value.trim();
+  applyFilter(group, modId);
+}
 
-  if (m.subItems.length === 0) {
-    list.innerHTML = '<div class="rec-empty">暂无记录</div>';
-    updateRecFooter(group);
+function filterByDate(group, modId) {
+  applyFilter(group, modId);
+}
+
+function applyFilter(group, modId) {
+  var startEl = document.getElementById('dt-start-' + group + '-' + modId);
+  var endEl   = document.getElementById('dt-end-' + group + '-' + modId);
+  var start = startEl ? startEl.value : '';
+  var end   = endEl ? endEl.value : '';
+
+  var box = document.getElementById('recs-' + group + '-' + modId);
+  if (!box) return;
+  var rows = box.querySelectorAll('.rec-row[data-name]');
+
+  var kwInput = document.querySelector('#card-' + group + '-' + modId + ' .bd-search input');
+  var kw = kwInput ? kwInput.value.trim() : '';
+
+  var visible = 0;
+  var visibleSelected = 0;
+  rows.forEach(function (row) {
+    var name = row.getAttribute('data-name') || '';
+    var labelEl = row.querySelector('.time-label');
+    var dateText = labelEl ? (labelEl.textContent || '').trim().split(/[\s·]/)[0] : '';
+
+    var passKw = kw === '' || name.indexOf(kw) >= 0;
+    var passDate = (!start || dateText >= start) && (!end || dateText <= end);
+    var show = passKw && passDate;
+
+    row.style.display = show ? '' : 'none';
+    if (show) {
+      visible++;
+      var cb = row.querySelector('.rec-cb');
+      if (cb && cb.checked && !cb.disabled) visibleSelected++;
+    }
+  });
+
+  var totalEl = document.getElementById('total-' + group + '-' + modId);
+  if (totalEl) totalEl.innerHTML = '共 <b>' + visible + '</b> 条数据';
+
+  var selEl = document.getElementById('sel-' + group + '-' + modId);
+  if (selEl && (kw || start || end)) {
+    selEl.innerHTML = '已选 <b>' + visibleSelected + '</b> / ' + visible + ' 项';
+    selEl.style.display = '';
+  } else if (selEl) {
+    var mod = getMod(group, modId);
+    var set = blockedSet(group, modId);
+    var inR = allIds(mod).filter(function (id) {
+      var r = findRecord(group, modId, id);
+      return r && inRange(r.date);
+    });
+    selEl.innerHTML = '已选 <b>' + set.size + '</b> / ' + totalCount(mod) + ' 项' +
+      (inR.length < totalCount(mod) ? '（范围内 ' + inR.length + ' 项）' : '');
+    selEl.style.display = '';
+  }
+}
+
+function rerenderAll() {
+  if (document.getElementById('editPage').style.display !== 'none') {
+    renderModules('diag');
+    renderModules('health');
+  } else {
+    renderView();
+  }
+}
+
+function switchTab(tab) {
+  curTab = tab;
+  document.getElementById('tabDiag').classList.toggle('active', tab === 'diag');
+  document.getElementById('tabHealth').classList.toggle('active', tab === 'health');
+  document.getElementById('modListDiag').style.display = tab === 'diag' ? '' : 'none';
+  document.getElementById('modListHealth').style.display = tab === 'health' ? '' : 'none';
+}
+
+function renderView() {
+  var d = groupBlockedTotal('diag'), h = groupBlockedTotal('health');
+  document.getElementById('statTotal').textContent = d + h;
+  document.getElementById('statDiag').textContent = d;
+  document.getElementById('statHealth').textContent = h;
+  var t = rangeText(rangeConfig);
+  document.getElementById('rangeViewText').innerHTML = '生效范围：<b>' + t.main + '</b>（' + t.sub + '）';
+
+  var list = document.getElementById('viewList');
+  if (d + h === 0) {
+    list.innerHTML = '<div class="v-empty"><div class="e1">保险箱是空的</div><div class="e2">点击右上角「编辑」，把不想让医生或家庭成员看到的内容放进来</div></div>';
     return;
   }
-
-  list.innerHTML = m.subItems.map(function (r) {
-    var checked = blocked.indexOf(r.id) !== -1;
-    return '<div class="rec-item">' +
-      '<span class="col-check"><input type="checkbox" ' + (checked ? 'checked' : '') + ' onchange="toggleRecord(this, \'' + r.id + '\')" /></span>' +
-      '<span class="col-rec">' + r.name + '</span>' +
-      '<span class="col-date">' + r.date + '</span>' +
-      '<span class="col-type">' + r.type + '</span></div>';
-  }).join('');
-
-  updateRecFooter(group);
-}
-
-// 表头全选 checkbox
-function toggleSelectAll(cb, group) {
-  if (!currentPanel) return;
-  var m = findModuleById(currentPanel.moduleId);
-  var group_ = currentPanel.group;
-  if (cb.checked) {
-    setModuleState(currentPanel.moduleId, 'all', m.subItems.map(function (s) { return s.id; }));
-  } else {
-    setModuleState(currentPanel.moduleId, 'none', []);
-  }
-  renderRecordList(group_);
-}
-
-function toggleRecord(cb, itemId) {
-  if (!currentPanel) return;
-  var st = getModuleState(currentPanel.moduleId);
-  var blocked = st.blockedItems.slice();
-  var idx = blocked.indexOf(itemId);
-  if (cb.checked && idx === -1) blocked.push(itemId);
-  if (!cb.checked && idx !== -1) blocked.splice(idx, 1);
-
-  var m = findModuleById(currentPanel.moduleId);
-  var mode = 'partial';
-  if (blocked.length === 0) mode = 'none';
-  else if (blocked.length === m.subItems.length) mode = 'all';
-
-  setModuleState(currentPanel.moduleId, mode, blocked);
-  updateRecFooter(currentPanel.group);
-}
-
-// ===== 查看页：主从嵌套表格 - 按就诊聚合 → 业务模块 → 屏蔽记录 =====
-
-// 机构名称脱敏显示
-function maskOrgName(name) {
-  if (!name || name.length <= 4) return name;
-  var len = name.length;
-  return name.substr(0, 2) + new Array(len - 4).join('*') + name.substr(len - 2);
-}
-
-// 构建主从结构：按(诊疗就诊/公卫业务)聚合 → 业务模块 → 屏蔽记录
-function buildBlockedTree() {
-  var tree = [];
-  var visitMap = {};
-  var visitOrder = [];
-
-  ['diag', 'health'].forEach(function (group) {
-    moduleData[group].forEach(function (m) {
-      var st = getModuleState(m.id);
-      if (st.mode === 'none') return;
-      // 收集该模块下被屏蔽的记录
-      var blockedRecords = m.subItems.filter(function (r) {
-        return st.blockedItems.indexOf(r.id) !== -1;
+  var groups = {};
+  ['diag', 'health'].forEach(function (g) {
+    DATA[g].forEach(function (mod) {
+      var set = blockedSet(g, mod.id);
+      (mod.records || []).forEach(function (r) {
+        if (!set.has(r.id)) return;
+        var key = r.org + '|' + r.date + '|' + r.type;
+        (groups[key] = groups[key] || { org: r.org, date: r.date, type: r.type, items: [] })
+          .items.push({ g: g, modId: mod.id, modName: mod.name, id: r.id, name: r.name, path: mod.name });
       });
-      if (blockedRecords.length === 0) return;
-
-      // 按(机构+日期+类型)分组聚合
-      blockedRecords.forEach(function (r) {
-        var vk = group + '|' + r.org + '|' + r.date + '|' + r.type;
-        if (!visitMap[vk]) {
-          visitMap[vk] = {
-            group: group,
-            groupLabel: group === 'diag' ? '诊疗就诊' : '公卫业务',
-            org: r.org,
-            date: r.date,
-            type: r.type,
-            modItems: [],
-            modMap: {}
-          };
-          visitOrder.push(vk);
-        }
-        var visit = visitMap[vk];
-        if (!visit.modMap[m.id]) {
-          visit.modMap[m.id] = {
-            modId: m.id,
-            modName: m.name,
-            mode: st.mode,
-            records: []
-          };
-          visit.modItems.push(visit.modMap[m.id]);
-        }
-        visit.modMap[m.id].records.push(r.name);
+      (mod.groups || []).forEach(function (grp) {
+        grp.children.forEach(function (c) {
+          if (!set.has(c.id)) return;
+          var key = grp.org + '|' + c.date + '|公卫业务';
+          (groups[key] = groups[key] || { org: grp.org, date: c.date, type: '公卫业务', items: [] })
+            .items.push({ g: g, modId: mod.id, modName: mod.name, id: c.id, name: c.name, path: mod.name + ' / ' + grp.name });
+        });
       });
     });
   });
-
-  visitOrder.forEach(function (vk) { tree.push(visitMap[vk]); });
-  return tree;
+  var keys = Object.keys(groups).sort(function (a, b) { return groups[b].date.localeCompare(groups[a].date); });
+  var html = '';
+  keys.forEach(function (key, idx) {
+    var grp = groups[key];
+    html += '<div class="v-group" id="vg-' + idx + '">';
+    html += '<div class="v-group-hd" onclick="document.getElementById(\'vg-' + idx + '\').classList.toggle(\'closed\')">';
+    html += SVG_ARROW;
+    html += '<span class="org">' + grp.org + '</span>';
+    html += '<span class="meta">' + grp.date + ' · ' + grp.type + '</span>';
+    html += '<span class="cnt">' + grp.items.length + ' 项已屏蔽</span>';
+    html += '</div><div class="v-group-body">';
+    grp.items.forEach(function (it) {
+      html += '<div class="v-item">';
+      html += '<div class="v-lock">' + SVG_LOCK_BOX + '</div>';
+      html += '<div class="v-name"><div class="n1">' + it.name + '</div><div class="n2">' + it.modName + '</div></div>';
+      html += '<span class="v-path">' + it.path + '</span>';
+      html += '<div class="v-tags"><span class="v-tag doc">对医生不可见</span><span class="v-tag fam">对家人不可见</span></div>';
+      html += '<button class="v-remove" onclick="removeItem(\'' + it.g + '\',\'' + it.modId + '\',\'' + it.id + '\')">移出保险箱</button>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  list.innerHTML = html;
 }
 
-function renderViewTable() {
-  var tbody = document.getElementById('viewTableBody');
-  if (!tbody) return;
-  var tree = buildBlockedTree();
-
-  if (tree.length === 0) {
-    tbody.innerHTML = '<div class="view-empty">暂无屏蔽记录，请先在编辑页进行配置</div>';
-    return;
-  }
-
-  var out = '';
-  var seq = 0;
-  for (var gi = 0; gi < tree.length; gi++) {
-    var g = tree[gi];
-    seq++;
-    var noStr = seq;
-    var recCount = g.modItems.reduce(function (s, m) { return s + m.records.length; }, 0);
-    var modCount = g.modItems.length;
-    var isFirstGroup = (gi === 0);
-    var collapsedCls = isFirstGroup ? '' : 'collapsed';
-
-    // 主行：序号/机构/日期/类型
-    out += '<div class="view-group-row ' + collapsedCls + '" data-group="' + gi + '" onclick="toggleViewGroup(' + gi + ')">';
-    out += '<span class="vr-no"><span class="vr-toggle"></span>' + noStr + '</span>';
-    out += '<span class="vr-org"><span class="vr-org-name">' + g.org + '</span></span>';
-    out += '<span class="vr-date">' + g.date + '</span>';
-    out += '<span class="vr-type">' + g.type + ' <span style="color:#999;font-size:12px;">·' + g.groupLabel + '·</span></span>';
-    out += '</div>';
-
-    // 子表面板：业务模块 + 服务内容
-    out += '<div class="view-detail-panel ' + collapsedCls + '" data-group="' + gi + '">';
-    out += '<div class="view-detail-head">';
-    out += '<span class="vd-no">序号</span>';
-    out += '<span class="vd-mod">业务模块</span>';
-    out += '<span class="vd-name">服务内容</span>';
-    out += '</div>';
-    var subSeq = 0;
-    for (var mi = 0; mi < g.modItems.length; mi++) {
-      var mod = g.modItems[mi];
-      subSeq++;
-      out += '<div class="view-detail-row">';
-      out += '<span class="vd-no">' + subSeq + '</span>';
-      out += '<span class="vd-mod">' + mod.modName + '</span>';
-      out += '<span class="vd-name">' + mod.records.join('、') + '</span>';
-      out += '</div>';
-    }
-    out += '</div>';
-  }
-  tbody.innerHTML = out;
+function removeItem(group, modId, recId) {
+  blockedSet(group, modId).delete(recId);
+  renderView();
+  showToast('已移出保险箱，医生与家庭成员可正常查看');
 }
 
-// 展开/折叠就诊分组（同时控制主行和子表面板）
-function toggleViewGroup(idx) {
-  var groupRow = document.querySelector('.view-group-row[data-group="' + idx + '"]');
-  var detailPanel = document.querySelector('.view-detail-panel[data-group="' + idx + '"]');
-  if (!groupRow) return;
-  var isCollapsed = groupRow.classList.contains('collapsed');
-  if (isCollapsed) {
-    groupRow.classList.remove('collapsed');
-    if (detailPanel) detailPanel.classList.remove('collapsed');
-  } else {
-    groupRow.classList.add('collapsed');
-    if (detailPanel) detailPanel.classList.add('collapsed');
+function enterEdit() {
+  document.getElementById('viewPage').style.display = 'none';
+  document.getElementById('editPage').style.display = '';
+  document.querySelectorAll('.scope-tab').forEach(function (n) { n.classList.toggle('active', n.dataset.type === rangeConfig.type); });
+  document.getElementById('scopeCustom').classList.toggle('show', rangeConfig.type === 'custom');
+  if (rangeConfig.type === 'custom') {
+    document.getElementById('rangeStart').value = rangeConfig.start || '';
+    document.getElementById('rangeEnd').value = rangeConfig.end || '';
   }
+  renderModules('diag');
+  renderModules('health');
+}
+function cancelEdit() {
+  document.getElementById('editPage').style.display = 'none';
+  document.getElementById('viewPage').style.display = '';
+  renderView();
+}
+function saveEdit() {
+  document.getElementById('editPage').style.display = 'none';
+  document.getElementById('viewPage').style.display = '';
+  renderView();
+  var d = groupBlockedTotal('diag'), h = groupBlockedTotal('health');
+  showToast('已保存，' + (d + h) + ' 项内容对医生及家庭成员不可见');
 }
 
-// 初始化
-renderModuleList();
-renderAllStatus();
-renderViewTable();
-</script>
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function () { t.classList.remove('show'); }, 2200);
+}
 
-</body>
+setScope('3m', document.querySelector('.scope-tab[data-type="3m"]'));
+renderView();
+    </script>
+  </body>
 </html>

@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>住院记录 · 详情</title>
+    <style>
+        /* ============================================================
+           住院记录详情 —— 参照门诊记录详情界面风格
+           蓝色医疗主题（主题色 #2378F5），基准宽度：375px
+           数据映射（详见《业务界面数据查询逻辑.md》1.2.2）：
+           · 住院病案首页基本信息   TB_ZY_BAJBXX
+           · 住院病案首页出院诊断   TB_ZY_BACYZD
+           · 住院病案首页手术操作   TB_ZY_BASSCZ
+           · 住院病案首页治疗记录   TB_ZY_BAYLZL
+           · 住院处方明细记录       TB_ZY_ZYCFMXJL
+           · 住院病案首页医疗费用   TB_ZY_BAYLFY
+           查询条件：CJZH + CHZBS + CYLJGDM
+           ============================================================ */
+
+        /* ---------- 全局重置 ---------- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica,
+                Tahoma, Arial, PingFang SC-Light, Microsoft YaHei;
+            background-color: #F3F5F7;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ---------- Flex 工具类 ---------- */
+        .flex-col { display: flex; flex-direction: column; }
+        .flex-row { display: flex; flex-direction: row; }
+        .justify-between { display: flex; justify-content: space-between; }
+        .align-center { display: flex; align-items: center; }
+        .align-start { display: flex; align-items: flex-start; }
+
+        /* ---------- 页面容器 ---------- */
+        .page {
+            background-color: #F3F5F7;
+            position: relative;
+            width: 375px;
+            min-height: 100vh;
+            padding-bottom: 24px;
+        }
+
+        /* ============================================================
+           导航栏
+           ============================================================ */
+        .group_1 { background-color: rgba(255, 255, 255, 1); padding: 14px 16px 7px 16px; }
+        .box_1 { margin: 0 10px 0 24px; }
+        .text_1 {
+            overflow-wrap: break-word; color: rgba(0, 0, 0, 1); font-size: 16px;
+            letter-spacing: 1.100000023841858px; font-family: PingFangSC-Semibold; font-weight: 600;
+            text-align: center; white-space: nowrap; line-height: 22px;
+        }
+        .thumbnail_1 { width: 19px; height: 12px; margin: 5px 0 5px 191px; }
+        .text_2 {
+            overflow-wrap: break-word; color: rgba(0, 0, 0, 1); font-size: 12px;
+            letter-spacing: 0.925000011920929px; font-family: PingFangSC-Semibold; font-weight: 600;
+            text-align: center; white-space: nowrap; line-height: 17px; margin: 3px 0 0 6px;
+        }
+        .image_1 { width: 25px; height: 13px; margin: 5px 0 4px 6px; }
+
+        .box_2 { margin-top: 15px; display: flex; align-items: center; }
+        .label_1 { width: 24px; height: 24px; flex-shrink: 0; cursor: pointer; }
+        .text_3 {
+            flex: 1; overflow-wrap: break-word; color: rgba(51, 51, 51, 1); font-size: 16px;
+            font-family: PingFangSC-Medium; font-weight: 500; text-align: center;
+            white-space: nowrap; line-height: 22px; margin: 4px 0 0 34px;
+        }
+        .image_2 { width: 78px; height: 30px; flex-shrink: 0; }
+
+        /* ---------- 导航栏右上角 设置按钮 ---------- */
+        .nav-right { height: 30px; display: flex; align-items: center; justify-content: flex-end; flex-shrink: 0; }
+        .nav-setting { height: auto; width: auto; flex-shrink: 0; cursor: pointer; }
+        .nav-setting:active { opacity: 0.75; }
+
+        /* ============================================================
+           卡片样式
+           ============================================================ */
+        .card {
+            background-color: #FFFFFF; border-radius: 8px;
+            padding: 16px; margin: 16px 16px 0 16px; width: calc(100% - 32px);
+        }
+        .hero-card { margin: 0; width: 375px; border: none; border-radius: 0px; padding: 0; }
+
+        .section-title {
+            font-size: 16px; font-weight: 500; font-family: PingFangSC-Medium;
+            color: #333333; line-height: 22px; margin-bottom: 12px;
+        }
+
+        /* ---------- 高亮卡片（摘要卡片，按状态变主题色） ---------- */
+        .card-highlight {
+            border-radius: 0; padding: 16px; margin: 8px 16px 8px 16px;
+            border: 1px solid transparent;
+            background-color: #FFFFFF;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .hero-patient { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+        .hero-name {
+            font-size: 18px; font-weight: 600; font-family: PingFangSC-Medium;
+            color: #1A1A1A; line-height: 25px;
+        }
+        .hero-gender {
+            font-size: 13px; font-weight: 400; font-family: PingFangSC-Regular;
+            color: #999999; line-height: 18px;
+        }
+        .card-highlight--pending { background-color: #FFFDF9; border-radius: 8px; border-color: #FEA800; }
+        .card-highlight--pending .hd-state-tag { background-color: #FFF7ED; color: #B97A00; border-color: #FEA800; }
+        .card-highlight--cancel { border-color: #CCCCCC; }
+        .card-highlight--cancel .hd-state-tag { background-color: #FFFFFF; color: #999999; border-color: #CCCCCC; }
+        .card-highlight--success { border-color: #18CF8E; }
+        .card-highlight--success .hd-state-tag { background-color: #E6FBF0; color: #0FA670; border-color: #18CF8E; }
+        .card-highlight--danger { border-color: #F32929; }
+        .card-highlight--danger .hd-state-tag { background-color: #FFECEC; color: #C82020; border-color: #F32929; }
+
+        /* ---------- 标签组件 ---------- */
+        .tag {
+            display: inline-flex; align-items: center; border-radius: 4px;
+            padding: 3px 8px; font-size: 12px; font-weight: 400;
+            font-family: PingFangSC-Regular; line-height: 17px; white-space: nowrap;
+        }
+        .tag--warning { background-color: #FFF7ED; color: #FEA800; border: 1px solid #FEA800; }
+        .tag--danger { background-color: #FFF4F4; color: #F32929; border: 1px solid #F32929; }
+        .tag--info { background-color: #E8F1FE; color: #2378F5; border: 1px solid #2378F5; }
+        .tag--success { background-color: #E6FBF0; color: #18CF8E; border: 1px solid #18CF8E; }
+        .tag--cancel { background-color: #F5F5F5; color: #999999; border: 1px solid #CCCCCC; }
+
+        /* ============================================================
+           简洁列表样式（信息卡片，病案首页信息 / 治疗与护理 / 费用信息）
+           ============================================================ */
+        .simple-card-title {
+            font-size: 16px; font-weight: 500; font-family: PingFangSC-Medium;
+            color: #333333; line-height: 22px; padding-bottom: 12px;
+            border-bottom: 1px solid #E5E5E5; margin-bottom: 0;
+        }
+        .simple-row { display: flex; align-items: baseline; padding: 10px 0; cursor: default; }
+        .simple-label {
+            font-size: 14px; font-weight: 400; font-family: PingFangSC-Regular;
+            color: #666666; line-height: 20px; min-width: 108px; flex-shrink: 0;
+        }
+        .simple-value {
+            font-size: 14px; font-weight: 400; font-family: PingFangSC-Regular;
+            color: #333333; line-height: 20px; flex: 1; text-align: left; word-break: break-all;
+        }
+        .simple-value.empty { color: #CCCCCC; }
+
+        /* ============================================================
+           Tab 切换样式（pill 胶囊式）
+           ============================================================ */
+        .tab-bar { display: flex; gap: 7px; margin: 16px 16px 0 16px; background: transparent; border: none; }
+        .tab-item {
+            flex: 1; height: 30px; line-height: 30px;
+            text-align: center; padding: 0;
+            font-size: 14px; font-weight: 400; font-family: PingFangSC-Regular;
+            color: #666666; cursor: pointer; position: relative;
+            background-color: transparent; transition: all 0.2s ease;
+            border: none; outline: none;
+            border-radius: 15px;
+        }
+        .tab-item.active {
+            color: #FFFFFF; font-weight: 500; font-family: PingFangSC-Medium;
+            background-color: #2378F5;
+            box-shadow: 0 4px 12px rgba(35, 120, 245, 0.25);
+        }
+        .tab-item:active:not(.active) { background-color: #F4F6F8; }
+        .tab-bar.in-hero { margin: 8px 16px 8px 16px; padding: 0; border: none; }
+
+        /* ============================================================
+           扁平条目卡（诊断 / 手术 通用）
+           ============================================================ */
+        .info-item {
+            padding: 14px 16px; position: relative;
+            transition: background-color 0.15s ease;
+        }
+        .info-item:active { background-color: #F8FAFC; }
+        .info-item + .info-item { border-top: 1px solid #F0F2F5; }
+        .card > .info-item { padding: 14px 0; }
+        .card > .info-item:active { background-color: #F8FAFC; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+        .info-item-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+        .info-item-name {
+            font-size: 15px; font-weight: 600; font-family: PingFangSC-Medium;
+            color: #1A1A1A; line-height: 21px; flex: 1;
+        }
+        .info-item-badge {
+            font-size: 12px; font-weight: 500; font-family: PingFangSC-Medium;
+            line-height: 18px; flex-shrink: 0; padding: 2px 8px; border-radius: 6px;
+            margin-top: 1px;
+        }
+        .info-item-badge.primary { color: #2378F5; background: #EAF2FF; }
+        .info-item-badge.tcm { color: #C8841B; background: #FBF3E2; }
+        .info-item-badge.other { color: #8A92A0; background: #F2F4F7; }
+        .info-item-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+
+        /* ============================================================
+           报告列表卡片（检查报告 / 检验报告）
+           ============================================================ */
+        .report-list { margin: 16px 16px 0 16px; }
+        .report-card {
+            background-color: #FFFFFF; border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px; cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+        .report-card:last-child { margin-bottom: 0; }
+        .report-card:active { background-color: #F8FAFC; }
+        .report-card-name {
+            font-size: 16px; font-weight: 500; font-family: PingFangSC-Medium;
+            color: #333333; line-height: 22px;
+            overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; word-break: break-all;
+        }
+        .report-card-time {
+            font-size: 14px; font-weight: 400; font-family: PingFangSC-Regular;
+            color: #666666; line-height: 20px; margin-top: 8px;
+        }
+        .report-card-hospital {
+            display: flex; align-items: center;
+            font-size: 14px; font-weight: 400; font-family: PingFangSC-Regular;
+            color: #999999; line-height: 20px; margin-top: 8px;
+        }
+        .report-card-hospital .hosp-icon {
+            display: inline-block; width: 14px; height: 14px;
+            margin-right: 4px; background-color: #C1C5CC; border-radius: 2px;
+            -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='black' d='M8 1.5 1.5 4v11h5v-5h3v5h5V4z'/></svg>") center/contain no-repeat;
+                    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='black' d='M8 1.5 1.5 4v11h5v-5h3v5h5V4z'/></svg>") center/contain no-repeat;
+            flex-shrink: 0;
+        }
+
+        /* ============================================================
+           用药信息卡片（住院处方明细 TB_ZY_ZYCFMXJL）
+           ============================================================ */
+        .meds-item {
+            padding: 14px 0; cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+        .meds-item:active { background-color: #F8FAFC; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+        .meds-item + .meds-item { border-top: 1px solid #F0F2F5; }
+        .meds-item-head {
+            display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+            margin-bottom: 12px;
+        }
+        .meds-item-name {
+            font-size: 15px; font-weight: 600; font-family: PingFangSC-Medium;
+            color: #1A1A1A; line-height: 21px; flex: 1;
+        }
+        .meds-item-usage {
+            font-size: 12px; font-weight: 500; font-family: PingFangSC-Medium;
+            color: #18A058; line-height: 18px; flex-shrink: 0;
+            background: #EAF7F0; padding: 2px 8px; border-radius: 6px;
+        }
+        .meds-item-dcy {
+            font-size: 12px; font-weight: 500; font-family: PingFangSC-Medium;
+            color: #2378F5; line-height: 18px; flex-shrink: 0;
+            background: #EAF2FF; padding: 2px 8px; border-radius: 6px;
+        }
+        .meds-divider { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+        .meds-field .field-k { font-size: 14px; color: #999999; line-height: 20px; }
+        .meds-field .field-k .v {
+            font-size: 14px; color: #333333; margin-left: 4px; font-weight: 400;
+        }
+        .meds-field.full { grid-column: 1 / -1; }
+
+        /* ---------- 空状态 ---------- */
+        .empty-state { text-align: center; padding: 48px 16px; color: #CCCCCC; }
+        .empty-state .empty-icon { font-size: 44px; margin-bottom: 8px; opacity: 0.7; }
+        .empty-state .empty-text { font-size: 14px; color: #999999; }
+
+        /* ---------- 提示条 ---------- */
+        .alert-bar {
+            margin: 12px 16px 0 16px; padding: 10px 12px;
+            background-color: #FFF8E5; border: 1px solid #FFE0A6; border-radius: 8px;
+            font-size: 12px; color: #8A6A2C; line-height: 18px;
+            display: flex; gap: 8px; align-items: flex-start;
+        }
+        .alert-bar::before { content: "ⓘ"; color: #FEA800; font-size: 14px; flex-shrink: 0; line-height: 18px; }
+
+        /* ---------- 响应式适配 ---------- */
+        @media (max-width: 375px) { .page { width: 100%; } }
+        @media (max-width: 340px) { .simple-label { min-width: 84px; } }
+    </style>
+</head>
+<body>
+
+    <div class="page flex-col">
+
+        <!-- ==================== 导航栏 ==================== -->
+        <div class="group_1 flex-col">
+            <div class="box_1 flex-row">
+                <span class="text_1">10:19</span>
+                <img class="thumbnail_1" referrerpolicy="no-referrer" src="../img/信号.png" />
+                <span class="text_2">5G</span>
+                <img class="image_1" referrerpolicy="no-referrer" src="../img/电量.png" />
+            </div>
+            <div class="box_2 flex-row">
+                <img class="label_1" referrerpolicy="no-referrer" src="../img/返回.png" id="btnBack" />
+                <span class="text_3" id="detailTitle">住院记录</span>
+                <div class="nav-right">
+                    <img class="nav-setting" referrerpolicy="no-referrer" src="../img/设置.png" id="btnCircle" role="button" tabindex="0" aria-label="设置" />
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+           摘要卡片（Hero）—— 患者信息 + 住院概要，胶囊 Tab 置于卡片底部
+           ============================================================ -->
+        <div class="card hero-card" id="heroCard">
+            <div class="card-highlight" id="heroHighlight">
+                <!-- 患者姓名 + 性别 -->
+                <div class="hero-patient">
+                    <span class="hero-name" id="hdName">—</span>
+                    <span class="hero-gender" id="hdGender">—</span>
+                </div>
+
+                <!-- 主要诊断 + 状态标签 -->
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                    <span style="font-size:18px; font-weight:500; font-family:PingFangSC-Medium; color:#333333; line-height:25px;" id="hdDiag">—</span>
+                    <span class="tag hd-state-tag" id="hdStatus">—</span>
+                </div>
+
+                <!-- 机构 & 科室 -->
+                <div style="font-size:14px; font-weight:400; font-family:PingFangSC-Regular; color:#666666; line-height:20px;">
+                    <span id="hdHosp">—</span>
+                    <span style="color:#CCCCCC; margin:0 4px;">›</span>
+                    <span id="hdDept">—</span>
+                </div>
+
+                <!-- 主治医师 -->
+                <div style="margin-top:8px; font-size:14px; font-weight:400; font-family:PingFangSC-Regular; color:#999999; line-height:20px;">
+                    <span>主治医师：</span>
+                    <span style="color:#333333;" id="hdDoctor">—</span>
+                </div>
+
+                <!-- 入院 / 出院时间 + 住院天数 -->
+                <div style="margin-top:12px; padding-top:12px; border-top:1px dashed #E5E5E5; font-size:14px; font-weight:400; font-family:PingFangSC-Regular; color:#999999; line-height:20px;">
+                    <span>入院时间：</span><span style="color:#333333;" id="hdAdmTime">—</span>
+                    <span style="margin-left:16px;">出院时间：</span><span style="color:#333333;" id="hdDisTime">—</span>
+                </div>
+                <div style="margin-top:8px; font-size:14px; font-weight:400; font-family:PingFangSC-Regular; color:#999999; line-height:20px;">
+                    <span>实际住院天数：</span><span style="color:#333333;" id="hdDays">—</span>
+                </div>
+
+                <!-- 费用信息 -->
+                <div style="margin-top:8px; display:flex; align-items:baseline; font-size:14px; line-height:20px;">
+                    <span style="font-weight:400; font-family:PingFangSC-Regular; color:#666666;">住院总费用：</span>
+                    <span style="font-weight:500; font-family:PingFangSC-Medium; color:#F32929;" id="hdTotalFee">—</span>
+                    <span style="font-weight:400; font-family:PingFangSC-Regular; color:#999999; margin-left:8px;" id="hdSelfFee">—</span>
+                </div>
+            </div>
+
+            <!-- Tab 切换栏（胶囊式，位于摘要卡片底部） -->
+            <div class="tab-bar in-hero" id="tabBar" role="tablist" aria-label="住院信息分类">
+                <button class="tab-item active" role="tab" id="tab-basic" aria-selected="true" aria-controls="paneBasic" data-tab="basic">住院信息</button>
+                <button class="tab-item" role="tab" id="tab-exam" aria-selected="false" aria-controls="paneExam" data-tab="exam">检查报告</button>
+                <button class="tab-item" role="tab" id="tab-lab" aria-selected="false" aria-controls="paneLab" data-tab="lab">检验报告</button>
+            </div>
+        </div>
+
+        <!-- ============================================================
+           Tab 内容面板
+           ============================================================ -->
+        <div id="paneBasic" class="pane-content" data-pane="basic"></div>
+        <div id="paneExam" class="pane-content" data-pane="exam" style="display:none;"></div>
+        <div id="paneLab" class="pane-content" data-pane="lab" style="display:none;"></div>
+
+    </div>
+
+    <script>
+        /* ============================================================
+           数据定义 —— 按临床主题库住院病案表结构组织
+           basic：TB_ZY_BAJBXX 住院病案首页基本信息
+           diags：TB_ZY_BACYZD 住院病案首页出院诊断
+           ops：  TB_ZY_BASSCZ 住院病案首页手术操作
+           treat：TB_ZY_BAYLZL 住院病案首页治疗记录
+           meds： TB_ZY_ZYCFMXJL 住院处方明细记录
+           fees： TB_ZY_BAYLFY 住院病案首页医疗费用
+           ============================================================ */
+        const RECORDS = [
+            {
+                id: 1, status: 'pending', statusText: '在院', name: '王秀兰', gender: '女', doctor: '吴静 副主任医师',
+                diag: '2型糖尿病酮症酸中毒', hospital: '北京协和医院', dept: '内分泌科',
+                admDate: '2023-11-18 09:30', disDate: null, days: '14 天', payment: '城镇职工医保',
+                totalFee: '8,240.00', selfFee: '2,150.00',
+                basic: [
+                    ['病案号', '1002367102'], ['住院次数', '第 3 次'],
+                    ['入院途径', '门诊'], ['入院情况', '一般'],
+                    ['入院科室', '内分泌科'], ['入院病房', '内分泌科一病房'],
+                    ['入院病床', '12 床'], ['转科科室', '—'],
+                    ['出院科室', '—'], ['离院方式', '—'],
+                    ['医疗付费方式', '城镇职工医保'], ['医疗保险类别', '职工基本医疗保险'],
+                    ['门（急）诊诊断', '2型糖尿病'], ['入院诊断', '2型糖尿病酮症酸中毒'],
+                    ['抢救次数', '0 次'], ['抢救成功次数', '0 次'],
+                    ['ABO血型', 'A 型'], ['Rh血型', '阳性'],
+                    ['药物过敏', '否'], ['出院31天内再住院', '否']
+                ],
+                diags: [
+                    { primary: true,  type: 'wm',  typeName: '西医诊断', name: '2型糖尿病酮症酸中毒', code: 'E11.100', cond: '一般', outcome: '—', date: '2023-11-18 10:20' },
+                    { primary: false, type: 'wm',  typeName: '西医诊断', name: '2型糖尿病伴周围神经病变', code: 'E11.400', cond: '一般', outcome: '—', date: '2023-11-18 10:20' },
+                    { primary: false, type: 'wm',  typeName: '西医诊断', name: '高血压2级', code: 'I10.x04', cond: '一般', outcome: '—', date: '2023-11-18 10:20' },
+                    { primary: false, type: 'tcm', typeName: '中医诊断', name: '消渴病', code: 'BNV010', synd: '气阴两虚证', cond: '—', outcome: '—', date: '2023-11-18 10:20' }
+                ],
+                ops: [
+                    { primary: true, name: '静脉穿刺置管术', code: '38.93', level: '一级', dept: '内分泌科', doctor: '林小雨', a1: '—', a2: '—', anes: '局部麻醉', anesDoctor: '—', date: '2023-11-18 10:05', duration: '0.2 小时', incision: '—', healing: '—' }
+                ],
+                treat: [
+                    ['住院期间应用抗菌药物', '否'], ['住院期间输液', '是'],
+                    ['发生输液反应', '否'], ['住院期间输血', '否'],
+                    ['有压疮', '否'], ['住院期间发生跌倒', '否'],
+                    ['使用物理约束', '否'],
+                    ['特级护理天数', '0 天'], ['一级护理天数', '2 天'],
+                    ['二级护理天数', '12 天'], ['三级护理天数', '0 天'],
+                    ['导尿管留置天数', '0 天'], ['血管内导管留置天数', '1 天']
+                ],
+                meds: [
+                    { name: '门冬胰岛素注射液', route: '皮下注射', type: '西药', freq: '每日三餐前', single: '8 IU', days: '14 天', spec: '300IU/3ml/支', price: '65.80', amount: '65.80', date: '2023-11-18', dcy: false },
+                    { name: '甘精胰岛素注射液', route: '皮下注射', type: '西药', freq: '每晚一次', single: '18 IU', days: '14 天', spec: '300IU/3ml/支', price: '285.00', amount: '285.00', date: '2023-11-18', dcy: false },
+                    { name: '盐酸二甲双胍片', route: '口服', type: '西药', freq: '每日两次', single: '0.5g', days: '14 天', spec: '0.5g*20片/盒', price: '12.50', amount: '25.00', date: '2023-11-19', dcy: false },
+                    { name: '0.9%氯化钠注射液', route: '静脉滴注', type: '西药', freq: '每日一次', single: '500ml', days: '3 天', spec: '500ml/瓶', price: '5.60', amount: '16.80', date: '2023-11-18', dcy: false }
+                ],
+                fees: [
+                    ['一般医疗服务费', '1,120.00'], ['一般治疗操作费', '680.00'],
+                    ['护理费', '560.00'], ['病理诊断费', '0.00'],
+                    ['实验室诊断费', '1,480.00'], ['影像学诊断费', '860.00'],
+                    ['非手术治疗项目费', '420.00'], ['西药费（含抗菌药物 0.00）', '1,860.00'],
+                    ['中成药费', '0.00'], ['中草药费', '0.00'],
+                    ['血费', '0.00'], ['其他费', '1,260.00']
+                ],
+                exams: [
+                    { name: '腹部彩超（肝、胆、胰、脾）', date: '2023-11-18', time: '14:30', hospital: '北京协和医院' },
+                    { name: '颈部血管彩超', date: '2023-11-20', time: '09:00', hospital: '北京协和医院' },
+                    { name: '眼底照相', date: '2023-11-21', time: '10:30', hospital: '北京协和医院' }
+                ],
+                labs: [
+                    { name: '糖化血红蛋白（HbA1c）', date: '2023-11-18', time: '11:20', hospital: '北京协和医院' },
+                    { name: '尿常规+酮体', date: '2023-11-18', time: '11:25', hospital: '北京协和医院' },
+                    { name: '血气分析', date: '2023-11-18', time: '11:30', hospital: '北京协和医院' },
+                    { name: '肝肾功能+电解质', date: '2023-11-19', time: '06:30', hospital: '北京协和医院' }
+                ]
+            },
+            {
+                id: 2, status: 'cancel', statusText: '转院', name: '李建国', gender: '男', doctor: '巴特尔 主任医师',
+                diag: '慢性阻塞性肺疾病急性加重', hospital: '内蒙古国际蒙医医院', dept: '呼吸内科',
+                admDate: '2023-10-12 14:20', disDate: '2023-10-19 09:45', days: '7 天', payment: '城乡居民医保',
+                totalFee: '6,890.00', selfFee: '2,640.00',
+                basic: [
+                    ['病案号', '1002365982'], ['住院次数', '第 5 次'],
+                    ['入院途径', '急诊'], ['入院情况', '急'],
+                    ['入院科室', '呼吸内科'], ['入院病房', '呼吸内科三病房'],
+                    ['入院病床', '08 床'], ['转科科室', '—'],
+                    ['出院科室', '呼吸内科'], ['离院方式', '转院'],
+                    ['拟接受医疗机构', '北京朝阳医院呼吸与危重症医学科'], ['医疗付费方式', '城乡居民医保'],
+                    ['门（急）诊诊断', '慢性阻塞性肺疾病急性加重'], ['入院诊断', '慢性阻塞性肺疾病急性加重、Ⅱ型呼吸衰竭'],
+                    ['抢救次数', '0 次'], ['抢救成功次数', '0 次'],
+                    ['ABO血型', 'O 型'], ['Rh血型', '阳性'],
+                    ['药物过敏', '否'], ['出院31天内再住院', '否']
+                ],
+                diags: [
+                    { primary: true,  type: 'wm',  typeName: '西医诊断', name: '慢性阻塞性肺疾病急性加重', code: 'J44.100', cond: '急', outcome: '转院', date: '2023-10-19 09:30' },
+                    { primary: false, type: 'wm',  typeName: '西医诊断', name: 'Ⅱ型呼吸衰竭', code: 'J96.900', cond: '急', outcome: '转院', date: '2023-10-12 15:10' },
+                    { primary: false, type: 'wm',  typeName: '西医诊断', name: '社区获得性肺炎', code: 'J18.900', cond: '—', outcome: '好转', date: '2023-10-14 10:00' },
+                    { primary: false, type: 'tcm', typeName: '中医诊断', name: '喘病', code: 'BNF010', synd: '肺肾气虚证', cond: '—', outcome: '—', date: '2023-10-13 08:30' }
+                ],
+                ops: [
+                    { primary: true, name: '无创机械通气辅助呼吸', code: '93.90', level: '操作', dept: '呼吸内科', doctor: '其木格', a1: '—', a2: '—', anes: '无需麻醉', anesDoctor: '—', date: '2023-10-12 16:00', duration: '72.0 小时', incision: '—', healing: '—' }
+                ],
+                treat: [
+                    ['住院期间应用抗菌药物', '是'], ['抗菌药物使用时间', '7 天'],
+                    ['住院期间抗菌联合用药', '是'], ['住院期间输液', '是'],
+                    ['发生输液反应', '否'], ['住院期间输血', '否'],
+                    ['有压疮', '否'], ['住院期间发生跌倒', '否'],
+                    ['使用物理约束', '否'],
+                    ['特级护理天数', '0 天'], ['一级护理天数', '2 天'],
+                    ['二级护理天数', '5 天'], ['三级护理天数', '0 天'],
+                    ['导尿管留置天数', '0 天'], ['血管内导管留置天数', '1 天']
+                ],
+                meds: [
+                    { name: '注射用头孢哌酮钠舒巴坦钠', route: '静脉滴注', type: '西药', freq: '每12小时一次', single: '3.0g', days: '7 天', spec: '1.5g/支', price: '126.00', amount: '1,764.00', date: '2023-10-12', dcy: false },
+                    { name: '盐酸氨溴索注射液', route: '静脉滴注', type: '西药', freq: '每日两次', single: '30mg', days: '7 天', spec: '2ml:15mg/支', price: '6.80', amount: '95.20', date: '2023-10-12', dcy: false },
+                    { name: '多索茶碱注射液', route: '静脉滴注', type: '西药', freq: '每日一次', single: '0.3g', days: '7 天', spec: '10ml:0.1g/支', price: '18.50', amount: '129.50', date: '2023-10-12', dcy: false },
+                    { name: '沙美特罗替卡松粉吸入剂', route: '吸入', type: '西药', freq: '每日两次', single: '1 吸', days: '7 天', spec: '50μg/250μg*60吸', price: '285.00', amount: '285.00', date: '2023-10-17', dcy: true }
+                ],
+                fees: [
+                    ['一般医疗服务费', '980.00'], ['一般治疗操作费', '700.00'],
+                    ['护理费', '420.00'], ['病理诊断费', '0.00'],
+                    ['实验室诊断费', '640.00'], ['影像学诊断费', '540.00'],
+                    ['非手术治疗项目费', '350.00'], ['西药费（含抗菌药物 1,760.00）', '2,800.00'],
+                    ['中成药费', '0.00'], ['中草药费', '380.00'],
+                    ['血费', '0.00'], ['其他费', '80.00']
+                ],
+                exams: [
+                    { name: '胸部CT平扫', date: '2023-10-12', time: '15:40', hospital: '内蒙古国际蒙医医院' },
+                    { name: '肺功能检查', date: '2023-10-13', time: '09:30', hospital: '内蒙古国际蒙医医院' }
+                ],
+                labs: [
+                    { name: '血气分析', date: '2023-10-12', time: '15:10', hospital: '内蒙古国际蒙医医院' },
+                    { name: '血常规+CRP', date: '2023-10-13', time: '07:00', hospital: '内蒙古国际蒙医医院' },
+                    { name: '痰培养+药敏', date: '2023-10-13', time: '09:00', hospital: '内蒙古国际蒙医医院' }
+                ]
+            },
+            {
+                id: 3, status: 'success', statusText: '已出院', name: '赵国强', gender: '男', doctor: '黄国栋 主任医师',
+                diag: '急性下壁心肌梗死', hospital: '内蒙古自治区人民医院', dept: '心血管内科',
+                admDate: '2023-09-21 02:30', disDate: '2023-09-28 10:20', days: '7 天', payment: '自费',
+                totalFee: '48,650.00', selfFee: '48,650.00',
+                basic: [
+                    ['病案号', '1002365110'], ['住院次数', '第 1 次'],
+                    ['入院途径', '急诊'], ['入院情况', '危'],
+                    ['入院科室', '心血管内科'], ['入院病房', '冠心病监护病房（CCU）'],
+                    ['入院病床', 'CCU-03 床'], ['转科科室', '—'],
+                    ['出院科室', '心血管内科'], ['出院病房', '心内科二病房'],
+                    ['出院病床', '15 床'], ['离院方式', '医嘱离院'],
+                    ['医疗付费方式', '自费'], ['门（急）诊诊断', '急性下壁心肌梗死'],
+                    ['入院诊断', '急性下壁心肌梗死（Killip Ⅳ级）'], ['抢救次数', '1 次'],
+                    ['抢救成功次数', '1 次'], ['ABO血型', 'B 型'],
+                    ['Rh血型', '阳性'], ['药物过敏', '否'],
+                    ['出院31天内再住院', '否']
+                ],
+                diags: [
+                    { primary: true,  type: 'wm',  typeName: '西医诊断', name: '急性下壁心肌梗死', code: 'I21.100', cond: '危', outcome: '好转', date: '2023-09-28 09:00' },
+                    { primary: false, type: 'wm',  typeName: '西医诊断', name: '冠状动脉粥样硬化性心脏病', code: 'I25.100', cond: '—', outcome: '好转', date: '2023-09-28 09:00' },
+                    { primary: false, type: 'wm',  typeName: '西医诊断', name: '高血压3级（极高危）', code: 'I10.x03', cond: '—', outcome: '好转', date: '2023-09-28 09:00' },
+                    { primary: false, type: 'wm',  typeName: '西医诊断', name: '2型糖尿病', code: 'E11.900', cond: '—', outcome: '无变化', date: '2023-09-28 09:00' },
+                    { primary: false, type: 'tcm', typeName: '中医诊断', name: '胸痹心痛', code: 'BNV30', synd: '心血瘀阻证', cond: '—', outcome: '—', date: '2023-09-21 08:00' }
+                ],
+                ops: [
+                    { primary: true,  name: '经皮冠状动脉支架植入术', code: '36.0601', level: '四级', dept: '心血管内科', doctor: '黄国栋', a1: '王晓东', a2: '刘畅', anes: '局部麻醉', anesDoctor: '孙志远', date: '2023-09-21 02:30', duration: '1.5 小时', incision: '—', healing: '—' },
+                    { primary: false, name: '冠状动脉造影术', code: '88.5301', level: '四级', dept: '心血管内科', doctor: '黄国栋', a1: '王晓东', a2: '—', anes: '局部麻醉', anesDoctor: '孙志远', date: '2023-09-21 02:15', duration: '1.0 小时', incision: '—', healing: '—' },
+                    { primary: false, name: '临时起搏器植入术', code: '37.7801', level: '三级', dept: '心血管内科', doctor: '王晓东', a1: '刘畅', a2: '—', anes: '局部麻醉', anesDoctor: '孙志远', date: '2023-09-21 03:50', duration: '0.5 小时', incision: 'Ⅱ类', healing: '甲级' }
+                ],
+                treat: [
+                    ['重症监护室名称', '冠心病监护病房（CCU）'], ['住院期间应用抗菌药物', '是'],
+                    ['抗菌药物使用时间', '3 天'], ['住院期间抗菌联合用药', '否'],
+                    ['住院期间输液', '是'], ['发生输液反应', '否'],
+                    ['住院期间输血', '否'], ['有压疮', '否'],
+                    ['住院期间发生跌倒', '否'], ['使用物理约束', '否'],
+                    ['特级护理天数', '1 天'], ['一级护理天数', '4 天'],
+                    ['二级护理天数', '2 天'], ['三级护理天数', '0 天'],
+                    ['导尿管留置天数', '0 天'], ['血管内导管留置天数', '4 天']
+                ],
+                meds: [
+                    { name: '阿司匹林肠溶片', route: '口服', type: '西药', freq: '每日一次', single: '100mg', days: '7 天', spec: '100mg*30片/瓶', price: '8.50', amount: '8.50', date: '2023-09-21', dcy: true },
+                    { name: '硫酸氢氯吡格雷片', route: '口服', type: '西药', freq: '每日一次', single: '75mg', days: '7 天', spec: '75mg*7片/盒', price: '22.60', amount: '22.60', date: '2023-09-21', dcy: true },
+                    { name: '阿托伐他汀钙片', route: '口服', type: '西药', freq: '每晚一次', single: '20mg', days: '7 天', spec: '20mg*7片/盒', price: '15.80', amount: '15.80', date: '2023-09-21', dcy: true },
+                    { name: '注射用替罗非班', route: '静脉泵入', type: '西药', freq: '持续泵入', single: '0.4μg/kg·min', days: '2 天', spec: '5mg:100ml/瓶', price: '680.00', amount: '1,360.00', date: '2023-09-21', dcy: false }
+                ],
+                fees: [
+                    ['一般医疗服务费', '1,860.00'], ['一般治疗操作费', '1,240.00'],
+                    ['护理费', '980.00'], ['病理诊断费', '0.00'],
+                    ['实验室诊断费', '2,340.00'], ['影像学诊断费', '3,120.00'],
+                    ['非手术治疗项目费', '560.00'], ['手术治疗费（手术费）', '28,500.00'],
+                    ['手术治疗费（麻醉费）', '1,200.00'], ['西药费（含抗菌药物 780.00）', '5,890.00'],
+                    ['中成药费', '0.00'], ['中草药费', '0.00'],
+                    ['血费', '0.00'], ['其他费', '2,960.00']
+                ],
+                exams: [
+                    { name: '急诊心电图', date: '2023-09-20', time: '22:55', hospital: '内蒙古自治区人民医院' },
+                    { name: '心脏彩超', date: '2023-09-20', time: '23:30', hospital: '内蒙古自治区人民医院' },
+                    { name: '冠脉CTA', date: '2023-09-21', time: '01:40', hospital: '内蒙古自治区人民医院' }
+                ],
+                labs: [
+                    { name: '心肌酶谱', date: '2023-09-20', time: '23:00', hospital: '内蒙古自治区人民医院' },
+                    { name: '肌钙蛋白I', date: '2023-09-20', time: '23:05', hospital: '内蒙古自治区人民医院' },
+                    { name: 'BNP', date: '2023-09-20', time: '23:10', hospital: '内蒙古自治区人民医院' }
+                ]
+            },
+            {
+                id: 4, status: 'danger', statusText: '危重', name: '孙桂兰', gender: '女', doctor: '乌云其木格 主任医师',
+                diag: '急性脑梗死', hospital: '内蒙古国际蒙医医院', dept: '神经内科',
+                admDate: '2023-11-25 16:40', disDate: null, days: '8 天（在院）', payment: '城镇职工医保',
+                totalFee: '32,480.00', selfFee: '9,860.00',
+                basic: [
+                    ['病案号', '1002367238'], ['住院次数', '第 2 次'],
+                    ['入院途径', '急诊（120）'], ['入院情况', '危'],
+                    ['入院科室', '神经内科'], ['入院病房', '重症监护室（ICU）'],
+                    ['入院病床', 'ICU-06 床'], ['转科科室', '—'],
+                    ['出院科室', '—'], ['离院方式', '—'],
+                    ['医疗付费方式', '城镇职工医保'], ['医疗保险类别', '职工基本医疗保险'],
+                    ['门（急）诊诊断', '急性脑梗死'], ['入院诊断', '急性脑梗死（左侧大脑中动脉闭塞）'],
+                    ['抢救次数', '1 次'], ['抢救成功次数', '1 次'],
+                    ['ABO血型', 'A 型'], ['Rh血型', '阳性'],
+                    ['药物过敏', '否'], ['出院31天内再住院', '—']
+                ],
+                diags: [
+                    { primary: true,  type: 'wm',  typeName: '西医诊断', name: '急性脑梗死（左侧大脑中动脉闭塞）', code: 'I63.900', cond: '危', outcome: '—', date: '2023-11-25 17:20' },
+                    { primary: false, type: 'wm',  typeName: '西医诊断', name: '高血压3级（极高危）', code: 'I10.x03', cond: '—', outcome: '—', date: '2023-11-25 17:20' },
+                    { primary: false, type: 'wm',  typeName: '西医诊断', name: '2型糖尿病', code: 'E11.900', cond: '—', outcome: '—', date: '2023-11-25 17:20' },
+                    { primary: false, type: 'tcm', typeName: '中医诊断', name: '中风病', code: 'BNG010', synd: '痰热内闭证', cond: '—', outcome: '—', date: '2023-11-26 08:00' }
+                ],
+                ops: [
+                    { primary: true,  name: '经皮颅内动脉取栓术', code: '39.7401', level: '四级', dept: '神经内科', doctor: '那顺', a1: '巴根', a2: '—', anes: '全身麻醉', anesDoctor: '高娃', date: '2023-11-25 19:05', duration: '2.0 小时', incision: '—', healing: '—' },
+                    { primary: false, name: '气管插管术', code: '96.04', level: '一级', dept: '重症监护室', doctor: '高娃', a1: '—', a2: '—', anes: '全身麻醉', anesDoctor: '高娃', date: '2023-11-25 18:30', duration: '0.2 小时', incision: '—', healing: '—' }
+                ],
+                treat: [
+                    ['重症监护室名称', '重症监护室（ICU）'], ['住院期间应用抗菌药物', '是'],
+                    ['抗菌药物使用时间', '5 天'], ['住院期间抗菌联合用药', '是'],
+                    ['住院期间输液', '是'], ['发生输液反应', '否'],
+                    ['住院期间输血', '否'], ['有压疮', '否'],
+                    ['住院期间发生跌倒', '否'], ['使用物理约束', '是'],
+                    ['约束总时间', '24 小时'], ['约束方式', '肢体约束'],
+                    ['约束工具', '约束带'], ['约束原因', '躁动不安'],
+                    ['特级护理天数', '8 天'], ['一级护理天数', '0 天'],
+                    ['二级护理天数', '0 天'], ['三级护理天数', '0 天'],
+                    ['导尿管留置天数', '8 天'], ['血管内导管留置天数', '3 天']
+                ],
+                meds: [
+                    { name: '注射用阿替普酶', route: '静脉注射', type: '西药', freq: '单次', single: '50mg', days: '1 天', spec: '50mg/支', price: '5,800.00', amount: '5,800.00', date: '2023-11-25', dcy: false },
+                    { name: '依达拉奉注射液', route: '静脉滴注', type: '西药', freq: '每日两次', single: '30mg', days: '8 天', spec: '20ml:30mg/支', price: '45.60', amount: '729.60', date: '2023-11-25', dcy: false },
+                    { name: '甘露醇注射液', route: '静脉滴注', type: '西药', freq: '每8小时一次', single: '125ml', days: '5 天', spec: '250ml:50g/瓶', price: '4.20', amount: '63.00', date: '2023-11-25', dcy: false },
+                    { name: '注射用头孢曲松钠', route: '静脉滴注', type: '西药', freq: '每日一次', single: '2.0g', days: '5 天', spec: '1.0g/支', price: '12.80', amount: '128.00', date: '2023-11-26', dcy: false }
+                ],
+                fees: [
+                    ['一般医疗服务费', '2,140.00'], ['一般治疗操作费', '1,480.00'],
+                    ['护理费', '2,860.00'], ['病理诊断费', '0.00'],
+                    ['实验室诊断费', '2,560.00'], ['影像学诊断费', '3,820.00'],
+                    ['非手术治疗项目费', '860.00'], ['手术治疗费（手术费）', '8,600.00'],
+                    ['手术治疗费（麻醉费）', '1,420.00'], ['西药费（含抗菌药物 980.00）', '7,120.00'],
+                    ['中成药费', '0.00'], ['中草药费', '0.00'],
+                    ['血费', '0.00'], ['其他费', '1,620.00']
+                ],
+                exams: [
+                    { name: '头颅CT平扫', date: '2023-11-25', time: '17:05', hospital: '内蒙古国际蒙医医院' },
+                    { name: '头颅MRI+DWI', date: '2023-11-26', time: '09:40', hospital: '内蒙古国际蒙医医院' }
+                ],
+                labs: [
+                    { name: '血常规+凝血四项', date: '2023-11-25', time: '17:30', hospital: '内蒙古国际蒙医医院' },
+                    { name: '血脂+血糖', date: '2023-11-26', time: '06:30', hospital: '内蒙古国际蒙医医院' },
+                    { name: '肝肾功能+电解质', date: '2023-11-26', time: '06:35', hospital: '内蒙古国际蒙医医院' }
+                ]
+            }
+        ];
+
+        /* ============================================================
+           全局状态
+           ============================================================ */
+        let currentIdx = 0, currentTab = 'basic';
+
+        function getRecordById(){
+            const params = new URLSearchParams(location.search);
+            const id = parseInt(params.get('id'), 10);
+            const idx = RECORDS.findIndex(r => r.id === id);
+            return idx >= 0 ? idx : 0;
+        }
+
+        /* ============================================================
+           初始化
+           ============================================================ */
+        function initDetail(){
+            currentIdx = getRecordById();
+            const r = RECORDS[currentIdx];
+
+            document.getElementById('detailTitle').textContent = '住院记录';
+
+            var heroEl = document.getElementById('heroHighlight');
+            heroEl.className = 'card-highlight card-highlight--' + (r.status || 'pending');
+
+            document.getElementById('hdDiag').textContent = r.diag;
+            document.getElementById('hdStatus').textContent = r.statusText || '—';
+            document.getElementById('hdName').textContent = r.name || '—';
+            document.getElementById('hdGender').textContent = r.gender ? ('· ' + r.gender) : '';
+            document.getElementById('hdHosp').textContent = r.hospital;
+            document.getElementById('hdDept').textContent = r.dept;
+            document.getElementById('hdDoctor').textContent = r.doctor || '—';
+            document.getElementById('hdAdmTime').textContent = r.admDate;
+            document.getElementById('hdDisTime').textContent = r.disDate || '—';
+            document.getElementById('hdDays').textContent = r.days || '—';
+            document.getElementById('hdTotalFee').textContent = '¥' + (r.totalFee || '—');
+            document.getElementById('hdSelfFee').textContent = '（自费 ¥' + (r.selfFee || '—') + '）';
+
+            switchTab('basic');
+        }
+
+        /* ============================================================
+           Tab 切换
+           ============================================================ */
+        document.querySelectorAll('.tab-item').forEach(function(t){
+            t.addEventListener('click', function(){ switchTab(t.dataset.tab); });
+            t.addEventListener('keydown', function(e){
+                if(e.key==='ArrowRight' || e.key==='ArrowLeft'){
+                    e.preventDefault();
+                    var tabs = [].slice.call(document.querySelectorAll('.tab-item'));
+                    var idx = tabs.indexOf(t);
+                    var next = e.key==='ArrowRight' ? (idx+1)%tabs.length : (idx-1+tabs.length)%tabs.length;
+                    tabs[next].focus();
+                    switchTab(tabs[next].dataset.tab);
+                }
+            });
+        });
+
+        function switchTab(name){
+            currentTab = name;
+            document.querySelectorAll('.tab-item').forEach(function(t){
+                var on = t.dataset.tab === name;
+                t.classList.toggle('active', on);
+                t.setAttribute('aria-selected', on ? 'true' : 'false');
+                t.tabIndex = on ? 0 : -1;
+            });
+            document.querySelectorAll('.pane-content').forEach(function(p){
+                var on = p.dataset.pane === name;
+                p.style.display = on ? 'block' : 'none';
+            });
+            renderPane();
+        }
+
+        function renderPane(){
+            if(currentTab==='basic') document.getElementById('paneBasic').innerHTML = renderBasicPane();
+            else if(currentTab==='exam') document.getElementById('paneExam').innerHTML = renderReportPane('exam');
+            else if(currentTab==='lab') document.getElementById('paneLab').innerHTML = renderReportPane('lab');
+        }
+
+        /* ============================================================
+           通用：行式信息卡片（病案首页信息 / 治疗与护理 / 费用信息）
+           ============================================================ */
+        function renderRowsCard(title, rows){
+            var rowsHtml = rows.map(function(row){
+                var k = row[0], v = row[1];
+                var isEmpty = !v || v === '—';
+                return '<div class="simple-row">' +
+                    '<span class="simple-label">' + k + '</span>' +
+                    '<span class="simple-value' + (isEmpty ? ' empty' : '') + '">' + v + '</span>' +
+                    '</div>';
+            }).join('');
+            return '<div class="card">' +
+                '<div class="simple-card-title">' + title + '</div>' +
+                rowsHtml +
+                '</div>';
+        }
+
+        /* ============================================================
+           诊断信息（TB_ZY_BACYZD 出院诊断）
+           ============================================================ */
+        function renderDiagCards(r){
+            if(!r.diags || !r.diags.length) return '';
+            return r.diags.map(function(d){
+                var badge = d.primary
+                    ? '<div class="info-item-badge primary">主诊断</div>'
+                    : (d.type==='tcm' ? '<div class="info-item-badge tcm">中医</div>'
+                                       : '<div class="info-item-badge other">其他</div>');
+
+                var syndRow = d.synd
+                    ? '<div class="meds-field full"><span class="field-k">中医证候<span class="v">' + d.synd + '</span></span></div>'
+                    : '';
+
+                return '<div class="info-item">' +
+                    '<div class="info-item-head">' +
+                        '<div class="info-item-name">' + d.name + '</div>' +
+                        badge +
+                    '</div>' +
+                    '<div class="info-item-detail">' +
+                        '<div class="meds-field"><span class="field-k">诊断类型<span class="v">' + d.typeName + '</span></span></div>' +
+                        '<div class="meds-field"><span class="field-k">疾病编码<span class="v">' + d.code + '</span></span></div>' +
+                        '<div class="meds-field"><span class="field-k">入院病情<span class="v">' + d.cond + '</span></span></div>' +
+                        '<div class="meds-field"><span class="field-k">出院情况<span class="v">' + d.outcome + '</span></span></div>' +
+                        '<div class="meds-field full"><span class="field-k">诊断日期<span class="v">' + d.date + '</span></span></div>' +
+                        syndRow +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        /* ============================================================
+           手术信息（TB_ZY_BASSCZ 手术操作）
+           ============================================================ */
+        function renderOpCards(r){
+            if(!r.ops || !r.ops.length) return '';
+            return r.ops.map(function(o){
+                var badge = o.primary
+                    ? '<div class="info-item-badge primary">主手术</div>'
+                    : '<div class="info-item-badge other">其他</div>';
+
+                function cell(k, v){
+                    return '<div class="meds-field"><span class="field-k">' + k + '<span class="v">' + (v || '—') + '</span></span></div>';
+                }
+
+                return '<div class="info-item">' +
+                    '<div class="info-item-head">' +
+                        '<div class="info-item-name">' + o.name + '</div>' +
+                        badge +
+                    '</div>' +
+                    '<div class="info-item-detail">' +
+                        cell('手术/操作代码', o.code) +
+                        cell('手术级别', o.level) +
+                        cell('手术科室', o.dept) +
+                        cell('手术者', o.doctor) +
+                        cell('Ⅰ助', o.a1) +
+                        cell('Ⅱ助', o.a2) +
+                        cell('麻醉方式', o.anes) +
+                        cell('麻醉医师', o.anesDoctor) +
+                        cell('手术日期时间', o.date) +
+                        cell('手术持续时长', o.duration) +
+                        cell('切口类别', o.incision) +
+                        cell('愈合等级', o.healing) +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        /* ============================================================
+           用药信息（TB_ZY_ZYCFMXJL 住院处方明细记录）
+           ============================================================ */
+        function renderMedsSection(r){
+            if(!r.meds || !r.meds.length) return '';
+
+            var itemsHtml = r.meds.map(function(m){
+                var dcyBadge = m.dcy ? '<div class="meds-item-dcy">出院带药</div>' : '';
+                return '<div class="meds-item" onclick="showToast(\'查看用药：' + m.name + '\')">' +
+                    '<div class="meds-item-head">' +
+                        '<div class="meds-item-name">' + m.name + '</div>' +
+                        '<div class="meds-item-usage">' + m.route + '</div>' +
+                        dcyBadge +
+                    '</div>' +
+                    '<div class="meds-divider">' +
+                        '<div class="meds-field"><span class="field-k">药物类型<span class="v">' + m.type + '</span></span></div>' +
+                        '<div class="meds-field"><span class="field-k">次剂量<span class="v">' + m.single + '</span></span></div>' +
+                        '<div class="meds-field"><span class="field-k">用药频次<span class="v">' + m.freq + '</span></span></div>' +
+                        '<div class="meds-field"><span class="field-k">用药天数<span class="v">' + m.days + '</span></span></div>' +
+                        '<div class="meds-field"><span class="field-k">单价<span class="v">¥' + m.price + '</span></span></div>' +
+                        '<div class="meds-field"><span class="field-k">金额<span class="v">¥' + m.amount + '</span></span></div>' +
+                        '<div class="meds-field full"><span class="field-k">药品规格<span class="v">' + m.spec + '</span></span></div>' +
+                        '<div class="meds-field full"><span class="field-k">开处方日期<span class="v">' + m.date + '</span></span></div>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+
+            return '<div class="card">' +
+                '<div class="simple-card-title">用药信息</div>' +
+                itemsHtml +
+                '</div>';
+        }
+
+        /* ============================================================
+           费用信息（TB_ZY_BAYLFY 医疗费用）
+           ============================================================ */
+        function fmtMoney(n){
+            return '¥ ' + Number(n || 0).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function renderFeeSection(r){
+            if(!r.totalFee) return '';
+            var total = parseFloat(String(r.totalFee).replace(/,/g, '')) || 0;
+            var self  = parseFloat(String(r.selfFee).replace(/,/g, '')) || 0;
+            var insured = Math.max(total - self, 0);
+            var rows = [
+                ['住院总费用', fmtMoney(total)],
+                ['自付金额', fmtMoney(self)],
+                ['医保支付', fmtMoney(insured)]
+            ].concat(r.fees.map(function(f){ return [f[0], fmtMoney(f[1])]; }));
+            return renderRowsCard('费用信息', rows);
+        }
+
+        /* ============================================================
+           住院信息面板（病案首页信息 + 诊断 + 手术 + 治疗护理 + 用药 + 费用）
+           ============================================================ */
+        function renderBasicPane(){
+            var r = RECORDS[currentIdx];
+
+            var basicSection = renderRowsCard('病案首页信息', r.basic);
+
+            var diagSection = (r.diags && r.diags.length)
+                ? '<div class="card">' +
+                    '<div class="simple-card-title">诊断信息</div>' +
+                    renderDiagCards(r) +
+                    '</div>'
+                : '';
+
+            var opSection = (r.ops && r.ops.length)
+                ? '<div class="card">' +
+                    '<div class="simple-card-title">手术信息</div>' +
+                    renderOpCards(r) +
+                    '</div>'
+                : '';
+
+            var treatSection = renderRowsCard('治疗与护理', r.treat);
+            var medsSection = renderMedsSection(r);
+            var feeSection = renderFeeSection(r);
+
+            var alertHtml = '<div class="alert-bar">住院病案数据来源于医疗机构归档，标准仅供参考。如有出入，请联系原住院机构核实。</div>';
+
+            return basicSection + diagSection + treatSection + opSection + medsSection + feeSection + alertHtml;
+        }
+
+        /* ============================================================
+           检查 / 检验报告列表面板（同门诊记录详情查询逻辑）
+           type: 'exam' 检查报告 | 'lab' 检验报告
+           ============================================================ */
+        function renderReportPane(type){
+            var r = RECORDS[currentIdx];
+            var list = (type === 'exam') ? r.exams : r.labs;
+            var emptyIcon = (type === 'exam') ? '🩻' : '🧪';
+            var emptyText = (type === 'exam') ? '本次住院未上传检查报告' : '本次住院未上传检验报告';
+            var alertText = (type === 'exam') ? '检查报告以医疗机构最终归档的影像/图文资料为准。' : '检验报告以医疗机构最终归档的实验室数据为准。';
+
+            if(!list || !list.length){
+                return '<div class="card">' +
+                    '<div class="empty-state"><div class="empty-icon">' + emptyIcon + '</div><div class="empty-text">' + emptyText + '</div></div>' +
+                    '</div>' +
+                    '<div class="alert-bar">' + alertText + '</div>';
+            }
+
+            var cardsHtml = list.map(function(item){
+                return '<div class="report-card" onclick="showToast(\'查看报告：' + item.name + '\')">' +
+                    '<div class="report-card-name">' + item.name + '</div>' +
+                    '<div class="report-card-time">' + item.date + ' ' + item.time + '</div>' +
+                    '<div class="report-card-hospital">' +
+                        '<span class="hosp-icon" aria-hidden="true"></span>' +
+                        '<span>' + item.hospital + '</span>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+
+            return '<div class="report-list">' + cardsHtml + '</div>' +
+                '<div class="alert-bar">' + alertText + '</div>';
+        }
+
+        /* ============================================================
+           Toast 提示
+           ============================================================ */
+        var toastTimer;
+        function showToast(msg){
+            var existing = document.getElementById('toastEl');
+            if(existing) existing.parentNode.removeChild(existing);
+
+            var el = document.createElement('div');
+            el.id = 'toastEl';
+            el.textContent = msg;
+            el.style.cssText = 'position:fixed;bottom:48px;left:50%;transform:translateX(-50%);' +
+                'background:rgba(21,23,28,.94);color:#fff;font-size:14px;font-weight:500;' +
+                'padding:10px 20px;border-radius:20px;box-shadow:0 8px 24px rgba(16,24,40,.15);' +
+                'z-index:999;pointer-events:none;max-width:280px;text-align:center;' +
+                'font-family:PingFangSC-Medium,Microsoft YaHei,sans-serif;';
+            document.body.appendChild(el);
+
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(function(){
+                if(el.parentNode) el.parentNode.removeChild(el);
+            }, 1800);
+        }
+
+        /* ============================================================
+           事件绑定
+           ============================================================ */
+        document.getElementById('btnBack').addEventListener('click', function(){
+            window.location.href = '住院记录.html';
+        });
+        document.getElementById('btnCircle').addEventListener('click', function(){
+            showToast('设置');
+        });
+
+        /* ============================================================
+           启动
+           ============================================================ */
+        initDetail();
+    </script>
+
+</body>
+</html>

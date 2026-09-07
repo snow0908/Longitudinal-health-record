@@ -63,7 +63,10 @@
         </div>
         <div class="list_1 flex-col" style="cursor:pointer;">
           <div class="list-items_1-0 flex-col">
-            <span class="text_4-0">凝血四项+D-Dimer（住院）</span>
+            <div class="title-row">
+              <span class="text_4-0">凝血四项+D-Dimer（住院）</span>
+              <span class="lab-category-tag">血液学检查</span>
+            </div>
             <span class="text_5-0">2022-11-29&nbsp;12:00</span>
             <div class="image-text_3-0 flex-row justify-between">
               <img
@@ -89,7 +92,10 @@
           </div>
           </div>
           <div class="list-items_1-1 flex-col">
-            <span class="text_4-1">输血传染病八项监测</span>
+            <div class="title-row">
+              <span class="text_4-1">输血传染病八项监测</span>
+              <span class="lab-category-tag">临床免疫学检查</span>
+            </div>
             <span class="text_5-1">2022-11-29&nbsp;12:00</span>
             <div class="image-text_3-1 flex-row justify-between">
               <img
@@ -115,7 +121,10 @@
           </div>
           </div>
           <div class="list-items_1-2 flex-col">
-            <span class="text_4-2">肝功能检测(十项)（住院）</span>
+            <div class="title-row">
+              <span class="text_4-2">肝功能检测(十项)（住院）</span>
+              <span class="lab-category-tag">临床化学检查</span>
+            </div>
             <span class="text_5-2">2022-11-29&nbsp;12:00</span>
             <div class="image-text_3-2 flex-row justify-between">
               <img
@@ -124,6 +133,35 @@
                 src="./img/SketchPngaaa99f43d9f3567d003bfe2b41d9567dae54b968007c925bd79d37a60f814a98.png"
               />
               <span class="text-group_3-2">内蒙古国际蒙医医院</span>
+            </div>
+          <div class="ai-card-divider"></div>
+          <div class="ai-bar">
+            <div class="ai-bar-icon-circle">
+              <svg class="ai-bar-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 1.5L11.8 7.2L17.5 9L11.8 10.8L10 16.5L8.2 10.8L2.5 9L8.2 7.2L10 1.5Z"/>
+                <path d="M16 13L16.6 14.6L18.2 15.2L16.6 15.8L16 17.4L15.4 15.8L13.8 15.2L15.4 14.6L16 13Z" opacity="0.55"/>
+              </svg>
+            </div>
+            <div class="ai-bar-content">
+              <span class="ai-bar-title">AI智能解读</span>
+              <span class="ai-bar-subtitle">快速看懂检验重点</span>
+            </div>
+            <div class="ai-bar-dot"></div>
+          </div>
+          </div>
+          <div class="list-items_1-3 flex-col" data-cat="micro">
+            <div class="title-row">
+              <span class="text_4-3">一般细菌培养及药敏（住院）</span>
+              <span class="lab-category-tag">临床微生物学检查</span>
+            </div>
+            <span class="text_5-3">2022-11-28&nbsp;09:30</span>
+            <div class="image-text_3-3 flex-row justify-between">
+              <img
+                class="thumbnail_4-3"
+                referrerpolicy="no-referrer"
+                src="./img/SketchPngaaa99f43d9f3567d003bfe2b41d9567dae54b968007c925bd79d37a60f814a98.png"
+              />
+              <span class="text-group_3-3">内蒙古国际蒙医医院</span>
             </div>
           <div class="ai-card-divider"></div>
           <div class="ai-bar">
@@ -172,7 +210,12 @@
       }
       var item = e.target.closest('[class^="list-items_"]');
       if (item) {
-        window.location.href = '../检验报告详情/检验报告详情.html';
+        var url = '../检验报告详情/检验报告详情.html';
+        // 临床微生物学检查 → 标本/细菌/药敏视图，其余类别保持原有指标明细视图
+        if (item.getAttribute('data-cat') === 'micro') {
+          url += '?cat=micro';
+        }
+        window.location.href = url;
       }
     });
 

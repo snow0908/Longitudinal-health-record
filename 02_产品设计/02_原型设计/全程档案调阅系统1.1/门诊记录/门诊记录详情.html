@@ -439,6 +439,12 @@
                     <span id="hdDept">—</span>
                 </div>
 
+                <!-- 就诊医师 -->
+                <div style="margin-top:8px; font-size:14px; font-weight:400; font-family:PingFangSC-Regular; color:#999999; line-height:20px;">
+                    <span>就诊医师：</span>
+                    <span style="color:#333333;" id="hdDoctor">—</span>
+                </div>
+
                 <!-- 就诊时间 -->
                 <div style="margin-top:12px; padding-top:12px; border-top:1px dashed #E5E5E5; font-size:14px; font-weight:400; font-family:PingFangSC-Regular; color:#999999; line-height:20px;">
                     <span>就诊时间：</span>
@@ -476,17 +482,17 @@
            ============================================================ */
         const RECORDS = [
             {
-                id:1, status:'pending', statusText:'待就诊', statusTag:'warning', name:'张自强', gender:'男',
+                id:1, status:'pending', statusText:'待就诊', statusTag:'warning', name:'张自强', gender:'男', doctor:'王立军 主任医师',
                 diag:'急性肠胃炎', hospital:'内蒙古国际蒙医医院', dept:'消化内科',
                 date:'2023-11-23', time:'09:30', type:'门诊', payment:'城镇职工医保', totalFee:'486.50', selfFee:'138.00',
                 diags:[
-                    { type:'wm', typeName:'西医诊断', primary:true, name:'急性肠胃炎', code:'K52.905', doctor:'王立军', time:'2023-11-23 09:42' },
-                    { type:'wm', typeName:'西医诊断', primary:false, name:'轻度脱水', code:'E86.902', doctor:'王立军', time:'2023-11-23 09:42' },
-                    { type:'tcm', typeName:'中医诊断', primary:false, name:'泄泻（暴泻）', code:'BNV050', synd:'寒湿内盛证', doctor:'王立军', time:'2023-11-23 09:50' }
+                    { type:'wm', typeName:'西医诊断', primary:true, name:'急性肠胃炎', code:'K52.905', doctor:'王立军' },
+                    { type:'wm', typeName:'西医诊断', primary:false, name:'轻度脱水', code:'E86.902', doctor:'王立军' },
+                    { type:'tcm', typeName:'中医诊断', primary:false, name:'泄泻（暴泻）', code:'BNV050', synd:'寒湿内盛证', doctor:'王立军' }
                 ],
                 ops:[
-                    { primary:true, name:'静脉穿刺置管术', code:'38.93', codeSystem:'ICD-9-CM-3', doctor:'李娜', anes:'局部麻醉', anesDoctor:'李娜', date:'2023-11-23 10:05', level:'一级', incision:'—', healing:'—', duration:'0.2 小时' },
-                    { primary:false, name:'静脉补液治疗', code:'00.91', codeSystem:'ICD-9-CM-3', doctor:'李娜', anes:'无需麻醉', anesDoctor:'—', date:'2023-11-23 10:30', level:'一级', incision:'—', healing:'—', duration:'1.5 小时' }
+                    { primary:true, name:'静脉穿刺置管术', code:'38.93', doctor:'李娜', anes:'局部麻醉', anesDoctor:'李娜', date:'2023-11-23 10:05', level:'一级', incision:'—', healing:'—', duration:'0.2 小时' },
+                    { primary:false, name:'静脉补液治疗', code:'00.91', doctor:'李娜', anes:'无需麻醉', anesDoctor:'—', date:'2023-11-23 10:30', level:'一级', incision:'—', healing:'—', duration:'1.5 小时' }
                 ],
                 exams:[
                     { name:'腹部彩超（肝、胆、胰、脾）', date:'2022-11-29', time:'12:00', hospital:'内蒙古国际蒙医医院' },
@@ -505,15 +511,15 @@
                 ]
             },
             {
-                id:2, status:'cancel', statusText:'已退号', statusTag:'cancel', name:'李建国', gender:'男',
+                id:2, status:'cancel', statusText:'已退号', statusTag:'cancel', name:'李建国', gender:'男', doctor:'陈雅芳 主任医师',
                 diag:'高血压复诊', hospital:'呼和浩特市第一医院', dept:'心血管内科',
                 date:'2023-11-15', time:'14:00', type:'门诊', payment:'城乡居民医保', totalFee:'120.00', selfFee:'45.00',
                 diags:[
-                    { type:'wm', typeName:'西医诊断', primary:true, name:'高血压3级', code:'I10.x05', doctor:'陈雅芳', time:'2023-11-15 14:30' },
-                    { type:'tcm', typeName:'中医诊断', primary:false, name:'眩晕', code:'BNV040', synd:'肝阳上亢证', doctor:'陈雅芳', time:'2023-11-15 14:35' }
+                    { type:'wm', typeName:'西医诊断', primary:true, name:'高血压3级', code:'I10.x05', doctor:'陈雅芳' },
+                    { type:'tcm', typeName:'中医诊断', primary:false, name:'眩晕', code:'BNV040', synd:'肝阳上亢证', doctor:'陈雅芳' }
                 ],
                 ops:[
-                    { primary:true, name:'24小时动态血压监测', code:'89.62', codeSystem:'ICD-9-CM-3', doctor:'陈雅芳', anes:'无需麻醉', anesDoctor:'—', date:'2023-11-15 14:50', level:'操作', incision:'—', healing:'—', duration:'24.0 小时' }
+                    { primary:true, name:'24小时动态血压监测', code:'89.62', doctor:'陈雅芳', anes:'无需麻醉', anesDoctor:'—', date:'2023-11-15 14:50', level:'操作', incision:'—', healing:'—', duration:'24.0 小时' }
                 ],
                 exams:[
                     { name:'心电图',        date:'2023-11-15', time:'14:20', hospital:'呼和浩特市第一医院' },
@@ -529,17 +535,17 @@
                 ]
             },
             {
-                id:3, status:'done', statusText:'已就诊', statusTag:'success', name:'王秀兰', gender:'女',
+                id:3, status:'done', statusText:'已就诊', statusTag:'success', name:'王秀兰', gender:'女', doctor:'周慧 主任医师',
                 diag:'2型糖尿病', hospital:'北京协和医院', dept:'内分泌科',
                 date:'2023-10-08', time:'09:00', type:'门诊', payment:'公费医疗', totalFee:'8,560.00', selfFee:'2,100.00',
                 diags:[
-                    { type:'wm', typeName:'西医诊断', primary:true, name:'2型糖尿病', code:'E11.900', doctor:'周慧', time:'2023-10-08 09:30' },
-                    { type:'wm', typeName:'西医诊断', primary:false, name:'糖尿病周围神经病变', code:'E11.400', doctor:'周慧', time:'2023-10-08 09:30' },
-                    { type:'wm', typeName:'西医诊断', primary:false, name:'高血压2级', code:'I10.x04', doctor:'周慧', time:'2023-10-08 09:30' }
+                    { type:'wm', typeName:'西医诊断', primary:true, name:'2型糖尿病', code:'E11.900', doctor:'周慧' },
+                    { type:'wm', typeName:'西医诊断', primary:false, name:'糖尿病周围神经病变', code:'E11.400', doctor:'周慧' },
+                    { type:'wm', typeName:'西医诊断', primary:false, name:'高血压2级', code:'I10.x04', doctor:'周慧' }
                 ],
                 ops:[
-                    { primary:true, name:'末梢血糖采集', code:'90.51', codeSystem:'ICD-9-CM-3', doctor:'王敏', anes:'无需麻醉', anesDoctor:'—', date:'2023-10-08 09:15', level:'操作', incision:'—', healing:'—', duration:'0.1 小时' },
-                    { primary:false, name:'糖化血红蛋白检测', code:'91.21', codeSystem:'ICD-9-CM-3', doctor:'王敏', anes:'无需麻醉', anesDoctor:'—', date:'2023-10-08 09:20', level:'操作', incision:'—', healing:'—', duration:'0.1 小时' }
+                    { primary:true, name:'末梢血糖采集', code:'90.51', doctor:'王敏', anes:'无需麻醉', anesDoctor:'—', date:'2023-10-08 09:15', level:'操作', incision:'—', healing:'—', duration:'0.1 小时' },
+                    { primary:false, name:'糖化血红蛋白检测', code:'91.21', doctor:'王敏', anes:'无需麻醉', anesDoctor:'—', date:'2023-10-08 09:20', level:'操作', incision:'—', healing:'—', duration:'0.1 小时' }
                 ],
                 exams:[
                     { name:'颈部血管彩超',   date:'2023-10-08', time:'10:00', hospital:'北京协和医院' },
@@ -556,18 +562,18 @@
                 ]
             },
             {
-                id:4, status:'overdue', statusText:'已转入住院', statusTag:'danger', name:'赵国强', gender:'男',
+                id:4, status:'overdue', statusText:'已转入住院', statusTag:'danger', name:'赵国强', gender:'男', doctor:'刘建华 主任医师',
                 diag:'急性心肌梗死', hospital:'内蒙古自治区人民医院', dept:'急诊科',
                 date:'2023-09-20', time:'22:48', type:'急诊', payment:'自费', totalFee:'12,380.00', selfFee:'3,500.00',
                 diags:[
-                    { type:'wm', typeName:'西医诊断', primary:true, name:'急性下壁心肌梗死', code:'I21.100', doctor:'刘建华', time:'2023-09-20 23:05' },
-                    { type:'wm', typeName:'西医诊断', primary:false, name:'高血压3级（极高危）', code:'I10.x03', doctor:'刘建华', time:'2023-09-20 23:05' },
-                    { type:'wm', typeName:'西医诊断', primary:false, name:'2型糖尿病', code:'E11.900', doctor:'刘建华', time:'2023-09-20 23:05' },
-                    { type:'tcm', typeName:'中医诊断', primary:false, name:'胸痹心痛', code:'BNV30', synd:'心血瘀阻证', doctor:'刘建华', time:'2023-09-20 23:10' }
+                    { type:'wm', typeName:'西医诊断', primary:true, name:'急性下壁心肌梗死', code:'I21.100', doctor:'刘建华' },
+                    { type:'wm', typeName:'西医诊断', primary:false, name:'高血压3级（极高危）', code:'I10.x03', doctor:'刘建华' },
+                    { type:'wm', typeName:'西医诊断', primary:false, name:'2型糖尿病', code:'E11.900', doctor:'刘建华' },
+                    { type:'tcm', typeName:'中医诊断', primary:false, name:'胸痹心痛', code:'BNV30', synd:'心血瘀阻证', doctor:'刘建华' }
                 ],
                 ops:[
-                    { primary:true, name:'冠状动脉造影术', code:'88.5301', codeSystem:'ICD-9-CM-3', doctor:'黄国栋', anes:'全身麻醉', anesDoctor:'孙志远', date:'2023-09-21 02:15', level:'四级', incision:'Ⅱ类', healing:'甲', duration:'1.0 小时' },
-                    { primary:false, name:'经皮冠状动脉支架植入术', code:'36.0601', codeSystem:'ICD-9-CM-3', doctor:'黄国栋', anes:'局部麻醉', anesDoctor:'孙志远', date:'2023-09-21 02:30', level:'四级', incision:'—', healing:'—', duration:'1.5 小时' }
+                    { primary:true, name:'冠状动脉造影术', code:'88.5301', doctor:'黄国栋', anes:'全身麻醉', anesDoctor:'孙志远', date:'2023-09-21 02:15', level:'四级', incision:'Ⅱ类', healing:'甲', duration:'1.0 小时' },
+                    { primary:false, name:'经皮冠状动脉支架植入术', code:'36.0601', doctor:'黄国栋', anes:'局部麻醉', anesDoctor:'孙志远', date:'2023-09-21 02:30', level:'四级', incision:'—', healing:'—', duration:'1.5 小时' }
                 ],
                 exams:[
                     { name:'急诊心电图',        date:'2023-09-20', time:'22:55', hospital:'内蒙古自治区人民医院' },
@@ -589,20 +595,9 @@
         ];
 
         /* ============================================================
-           基本信息分组数据（就诊信息 tab 内：就诊信息、主诉、现病史、既往史、过敏史；患者姓名已上移摘要卡，费用信息单独置底）
+           基本信息分组数据（就诊信息 tab 内：主诉、现病史、既往史、过敏史；就诊医师已上移摘要卡，费用信息单独置底）
            ============================================================ */
         const BASIC_GROUPS = [
-            {
-                name:'就诊信息',
-                rows:[
-                    { k:'挂号日期',     v:'2023-11-23 09:10', clickable:true },
-                    { k:'就诊日期',     v:'2023-11-23 09:30', clickable:true },
-                    { k:'就诊院区',     v:'内蒙古国际蒙医医院（主院区）', clickable:true },
-                    { k:'接诊科室',     v:'消化内科' },
-                    { k:'接诊医师',     v:'王立军 主任医师' },
-                    { k:'门急诊类型',   v:'门诊', clickable:true }
-                ]
-            },
             {
                 name:'主诉',
                 textOnly: true,
@@ -657,6 +652,7 @@
             document.getElementById('hdGender').textContent = r.gender ? ('· ' + r.gender) : '';
             document.getElementById('hdHosp').textContent = r.hospital;
             document.getElementById('hdDept').textContent = r.dept;
+            document.getElementById('hdDoctor').textContent = r.doctor || '—';
             document.getElementById('hdTime').textContent = r.date + ' ' + r.time;
             document.getElementById('hdTotalFee').textContent = '¥' + (r.totalFee || '—');
             document.getElementById('hdSelfFee').textContent = '（自费 ¥' + (r.selfFee || '—') + '）';
@@ -758,7 +754,6 @@
                         '<div class="meds-field"><span class="field-k">诊断类型<span class="v">' + d.typeName + '</span></span></div>' +
                         '<div class="meds-field"><span class="field-k">疾病编码<span class="v">' + d.code + '</span></span></div>' +
                         '<div class="meds-field"><span class="field-k">诊断医师<span class="v">' + d.doctor + '</span></span></div>' +
-                        '<div class="meds-field"><span class="field-k">诊断时间<span class="v">' + d.time + '</span></span></div>' +
                         syndRow +
                     '</div>' +
                     '</div>';
@@ -783,7 +778,6 @@
                     '</div>' +
                     '<div class="info-item-detail">' +
                         cell('手术编码', o.code) +
-                        cell('编码体系', o.codeSystem) +
                         cell('手术医师', o.doctor) +
                         cell('麻醉方式', o.anes) +
                         cell('麻醉医师', o.anesDoctor) +

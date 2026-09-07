@@ -80,7 +80,7 @@
         />
         <div class="list_1 flex-row">
           <div class="text-wrapper_2-0 flex-col">
-            <span class="text_8-0">开方医院</span>
+            <span class="text_8-0">检验医院</span>
             <span class="text_9-0">检验类型</span>
           </div>
           <div class="text-wrapper_2-1 flex-col">
@@ -89,11 +89,11 @@
           </div>
         </div>
         <div class="text-wrapper_3 flex-row justify-between">
-          <span class="text_10">开方医生</span>
+          <span class="text_10">检验医生</span>
           <span class="text_11">侯登国</span>
         </div>
         <div class="text-wrapper_4 flex-row justify-between">
-          <span class="text_12">开方科室</span>
+          <span class="text_12">检验科室</span>
           <span class="text_13">血管外科</span>
         </div>
         <div class="text-wrapper_5 flex-row justify-between">
@@ -102,8 +102,8 @@
         </div>
       </div>
 
-      <!-- 检验结果 -->
-      <div class="section_3 flex-col">
+      <!-- 检验结果（默认：检验指标明细） -->
+      <div class="section_3 flex-col" id="resultDefault">
         <span class="text_16">检验结果</span>
         <img
           class="image_4"
@@ -234,6 +234,165 @@
         </div>
       </div>
 
+      <!-- 检验结果（临床微生物学检查：标本 / 细菌 / 药敏，点击细菌结果展开药敏） -->
+      <div class="section_3 flex-col" id="resultMicro" style="display:none;">
+        <span class="text_16">检验结果</span>
+        <img
+          class="image_4"
+          referrerpolicy="no-referrer"
+          src="./img/SketchPng00abe6df26e504b5ae94bed18740a15bbd7cd7fb735a1bebb861e0416cb831b3.png"
+        />
+
+        <!-- ① 血液：肺炎克雷伯菌 -->
+        <div class="specimen-card" data-drugs>
+          <div class="specimen-bacteria">
+            <span class="bacteria-name">肺炎克雷伯菌</span>
+            <span class="specimen-status positive">阳性</span>
+            <span class="specimen-resist">多重耐药</span>
+          </div>
+          <div class="bacteria-sub">
+            <span class="bacteria-latin">K. pneumoniae</span>
+            <span class="specimen-warn">ESBL阳性株</span>
+          </div>
+          <div class="specimen-summary">
+            <span class="summary-text">药敏 5种 · 3敏 1中 1耐</span>
+            <span class="specimen-arrow">›</span>
+          </div>
+          <div class="drug-table">
+            <div class="drug-row">
+              <span class="drug-name">哌拉西林/他唑巴坦</span>
+              <span class="drug-mic">≤4</span>
+              <span class="drug-result sensitive">敏感</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">头孢曲松</span>
+              <span class="drug-mic">≥64</span>
+              <span class="drug-result resistant">耐药</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">亚胺培南</span>
+              <span class="drug-mic">≤0.25</span>
+              <span class="drug-result sensitive">敏感</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">左氧氟沙星</span>
+              <span class="drug-mic">2</span>
+              <span class="drug-result intermediate">中介</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">阿米卡星</span>
+              <span class="drug-mic">≤2</span>
+              <span class="drug-result sensitive">敏感</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ② 痰液：金黄色葡萄球菌 -->
+        <div class="specimen-card" data-drugs>
+          <div class="specimen-bacteria">
+            <span class="bacteria-name">金黄色葡萄球菌</span>
+            <span class="specimen-status positive">阳性</span>
+            <span class="specimen-resist">多重耐药</span>
+          </div>
+          <div class="bacteria-sub">
+            <span class="bacteria-latin">S. aureus</span>
+            <span class="specimen-warn">MRSA</span>
+          </div>
+          <div class="specimen-summary">
+            <span class="summary-text">药敏 6种 · 2敏 4耐</span>
+            <span class="specimen-arrow">›</span>
+          </div>
+          <div class="drug-table">
+            <div class="drug-row">
+              <span class="drug-name">苯唑西林</span>
+              <span class="drug-mic">≥8</span>
+              <span class="drug-result resistant">耐药</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">红霉素</span>
+              <span class="drug-mic">≥8</span>
+              <span class="drug-result resistant">耐药</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">克林霉素</span>
+              <span class="drug-mic">≥4</span>
+              <span class="drug-result resistant">耐药</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">环丙沙星</span>
+              <span class="drug-mic">≥8</span>
+              <span class="drug-result resistant">耐药</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">万古霉素</span>
+              <span class="drug-mic">≤1</span>
+              <span class="drug-result sensitive">敏感</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">利奈唑胺</span>
+              <span class="drug-mic">≤2</span>
+              <span class="drug-result sensitive">敏感</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ③ 尿液：无致病菌生长（无药敏数据） -->
+        <div class="specimen-card">
+          <div class="specimen-bacteria">
+            <span class="bacteria-name">无致病菌生长</span>
+            <span class="specimen-status negative">阴性</span>
+          </div>
+          <div class="bacteria-sub">
+            <span class="bacteria-latin">48h培养阴性</span>
+          </div>
+          <div class="specimen-summary">
+            <span class="summary-text">未执行药敏</span>
+          </div>
+        </div>
+
+        <!-- ④ 伤口分泌物：大肠埃希菌 -->
+        <div class="specimen-card" data-drugs>
+          <div class="specimen-bacteria">
+            <span class="bacteria-name">大肠埃希菌</span>
+            <span class="specimen-status positive">阳性</span>
+          </div>
+          <div class="bacteria-sub">
+            <span class="bacteria-latin">E. coli</span>
+          </div>
+          <div class="specimen-summary">
+            <span class="summary-text">药敏 5种 · 全部敏感</span>
+            <span class="specimen-arrow">›</span>
+          </div>
+          <div class="drug-table">
+            <div class="drug-row">
+              <span class="drug-name">氨苄西林</span>
+              <span class="drug-mic">≤2</span>
+              <span class="drug-result sensitive">敏感</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">头孢唑林</span>
+              <span class="drug-mic">≤4</span>
+              <span class="drug-result sensitive">敏感</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">头孢曲松</span>
+              <span class="drug-mic">≤1</span>
+              <span class="drug-result sensitive">敏感</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">庆大霉素</span>
+              <span class="drug-mic">≤2</span>
+              <span class="drug-result sensitive">敏感</span>
+            </div>
+            <div class="drug-row">
+              <span class="drug-name">呋喃妥因</span>
+              <span class="drug-mic">≤16</span>
+              <span class="drug-result sensitive">敏感</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ===== AI入口卡片 ===== -->
       <div class="ai-entry" onclick="window.location.href='./检验报告AI分析.html'">
         <span class="ai-entry-icon">AI</span>
@@ -246,5 +405,34 @@
 
       <div class="bottom-spacer"></div>
     </div>
+
+    <script>
+      // 按检验类别切换结果视图：
+      // 临床微生物学检查（?cat=micro）→ 标本/细菌/药敏视图，其余 → 指标明细视图（原有内容）
+      (function () {
+        var cat = '';
+        var m = window.location.search.match(/[?&]cat=([^&]+)/);
+        if (m) cat = decodeURIComponent(m[1]);
+
+        var resultDefault = document.getElementById('resultDefault');
+        var resultMicro = document.getElementById('resultMicro');
+
+        if (cat === 'micro' && resultDefault && resultMicro) {
+          resultDefault.style.display = 'none';
+          resultMicro.style.display = '';
+          // 头部信息同步为微生物检验
+          document.querySelector('.text_9-1').textContent = '一般细菌培养及药敏（住院）';
+          document.querySelector('.text_13').textContent = '检验科·微生物室';
+          document.querySelector('.text_15').textContent = '2026-08-31 09:30:30';
+        }
+
+        // 点击细菌结果卡片 → 展开/收起药敏结果
+        document.querySelectorAll('.specimen-card[data-drugs]').forEach(function (card) {
+          card.addEventListener('click', function () {
+            card.classList.toggle('expanded');
+          });
+        });
+      })();
+    </script>
   </body>
 </html>
