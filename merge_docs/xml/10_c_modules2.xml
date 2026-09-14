@@ -1,0 +1,55 @@
+<h3>4.7.4 个人管理</h3>
+<p>个人管理模块包括家庭成员管理、我的健康档案、我的健康监测、隐私权限设置。</p>
+<table>
+<colgroup><col width="160"/><col width="660"/></colgroup>
+<thead><tr><th><p>模块名</p></th><th><p>功能</p></th></tr></thead>
+<tbody>
+<tr><td><p>家庭成员管理</p></td><td><p>用户可添加家庭成员，添加之后可查看对应家庭成员的健康档案。</p></td></tr>
+<tr><td><p>我的健康档案</p></td><td><p>展示当前用户的健康档案基本信息。</p></td></tr>
+<tr><td><p>我的健康监测</p></td><td><p>展示当前用户近期血压血糖心率测量信息。</p></td></tr>
+<tr><td><p>隐私权限管理</p></td><td><p>允许用户对个人健康档案进行隐私管理，配置各业务模块是否对三方展示，包括医域边界（屏蔽指定医疗机构）、隐私保险箱（按模块屏蔽诊疗业务数据）、调阅安全锁（调阅档案需密码验证）、访问即时通（档案被调阅时实时短信通知）等。</p></td></tr>
+<tr><td><p>健康摘要</p></td><td><p>基于个人健康档案，AI自动生成居民健康综合分析报告，包括主要健康问题、异常检查指标、潜在疾病风险与健康建议。</p></td></tr>
+</tbody>
+</table>
+<p><b>家庭成员切换流程图</b></p>
+<img path="@./c_media/media/image13.png"/>
+<p><b>家庭成员切换时序图</b></p>
+<img path="@./c_media/media/image14.png"/>
+<p><b>隐私权限管理流程图</b></p>
+<img path="@./c_media/media/image15.png"/>
+<p><b>隐私权限管理时序图</b></p>
+<img path="@./c_media/media/image16.png"/>
+<p><b>隐私保险箱流程图</b></p>
+<img path="@./c_media/media/image17.png"/>
+<h3>4.7.5 用户管理</h3>
+<p>用户管理模块包括用户登录注册、密码重置等功能。</p>
+<table>
+<colgroup><col width="160"/><col width="660"/></colgroup>
+<thead><tr><th><p>模块名</p></th><th><p>功能</p></th></tr></thead>
+<tbody>
+<tr><td><p>登录注册</p></td><td><p>登录验证包括短信认证、实名认证等功能。</p></td></tr>
+<tr><td><p>密码重置</p></td><td><p>重置密码和忘记密码等功能。</p></td></tr>
+</tbody>
+</table>
+<p><b>用户登录流程</b></p>
+<img path="@./c_media/media/image18.jpeg"/>
+<img path="@./c_media/media/image19.png"/>
+<p><b>用户注册</b></p>
+<img path="@./c_media/media/image20.jpeg"/>
+<p><b>实名认证</b></p>
+<img path="@./c_media/media/image21.jpeg"/>
+<p><b>修改密码</b></p>
+<img path="@./c_media/media/image22.jpeg"/>
+<h3>4.7.6 扫码功能</h3>
+<h4>4.7.6.1 档案分享</h4>
+<p>用户选定特定的档案生成相关的分享二维码，其他人用微信扫这个二维码即可查看相应档案信息。</p>
+<p><b>流程图</b></p>
+<img path="@./c_media/media/image23.png"/>
+<p><b>时序图</b></p>
+<img path="@./c_media/media/image24.png"/>
+<h4>4.7.6.2 扫码确认</h4>
+<p>医生查看患者档案时生成二维码，手机微信扫码确认。</p>
+<p><b>流程图</b></p>
+<img path="@./c_media/media/image25.png"/>
+<p><b>时序图</b></p>
+<img path="@./c_media/media/image26.png"/>

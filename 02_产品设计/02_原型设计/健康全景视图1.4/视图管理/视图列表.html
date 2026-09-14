@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>概况视图配置 - 全景配置</title>
-<link rel="stylesheet" href="框架.css">
+<link rel="stylesheet" href="../框架.css">
 <style>
   /* ===== 概况视图配置页面特有样式（设计变量与公共样式见 框架.css） ===== */
 
@@ -21,39 +21,18 @@
   /* 页面标题（本页覆盖：右侧按钮定宽） */
   .page-head .right .btn{width:60px;padding:0;min-width:60px}
 
+  /* 蓝色线框按钮（导入 / 导出） */
+  .btn-primary-outline{background:var(--bg-white);color:var(--primary);border-color:var(--primary);padding:0 16px}
+  .btn-primary-outline:hover{background:var(--primary-bg);border-color:var(--primary-hover);color:var(--primary-hover)}
+  .btn-primary-outline:active{background:var(--primary-light)}
+
   /* 筛选区 */
   .filter-bar{padding:11px 12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid #E8E8E8;flex-shrink:0}
   .filter-bar .filter-actions .btn{width:60px;padding:0;min-width:60px}
   .filter-bar .lbl{font-size:var(--font-size-body);color:var(--text-secondary);flex-shrink:0}
   .search-input{flex:0 0 240px}
-  .select{height:32px;border:1px solid var(--color-neutral-300);border-radius:var(--r-sm);padding:0 10px;font-size:var(--font-size-body);color:var(--text-primary);background:var(--bg-white);outline:none;transition:all var(--transition-fast);min-width:120px;cursor:pointer}
-  .select:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(0,122,255,0.15)}
   .filter-bar .spacer{flex:1}
   .filter-bar .filter-actions{display:flex;gap:8px;align-items:center}
-
-  /* 下拉多选 */
-  .multi-select{position:relative;flex:0 0 260px}
-  .ms-trigger{height:32px;border:1px solid var(--color-neutral-300);border-radius:var(--r-sm);padding:0 12px;background:var(--bg-white);display:flex;align-items:center;gap:8px;cursor:pointer;transition:all var(--transition-fast);user-select:none}
-  .ms-trigger:hover{border-color:var(--primary)}
-  .multi-select.open .ms-trigger{border-color:var(--primary);box-shadow:0 0 0 2px rgba(0,122,255,0.15)}
-  .ms-text{flex:1;font-size:var(--font-size-body);color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:32px}
-  .ms-text.placeholder{color:var(--text-placeholder)}
-  .ms-text.has-value{color:var(--text-primary)}
-  .ms-badge{font-size:var(--font-size-caption);color:var(--primary);background:var(--primary-light);padding:1px 6px;border-radius:2px;line-height:1.4;display:none;font-weight:var(--font-weight-medium)}
-  .ms-badge.show{display:inline-block}
-  .ms-arrow{width:12px;height:12px;stroke:var(--text-tertiary);fill:none;stroke-width:1.5;transition:transform var(--transition-fast);flex-shrink:0}
-  .multi-select.open .ms-arrow{transform:rotate(180deg)}
-  .ms-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg-white);border:1px solid var(--primary-border);border-radius:var(--r-sm);box-shadow:var(--shadow-md);max-height:280px;overflow-y:auto;z-index:var(--z-dropdown);display:none;padding:4px 0}
-  .multi-select.open .ms-dropdown{display:block}
-  .ms-option{display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:var(--font-size-body);color:var(--text-primary);transition:background var(--transition-fast);user-select:none}
-  .ms-option:hover{background:var(--primary-bg)}
-  .ms-option input[type="checkbox"]{width:14px;height:14px;accent-color:var(--primary);cursor:pointer;flex-shrink:0}
-  .ms-option span{flex:1;line-height:1.4}
-  .ms-toolbar{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid var(--primary-border);margin-bottom:4px;background:var(--bg-white);position:sticky;top:0;z-index:1}
-  .ms-toolbar a{font-size:var(--font-size-caption);color:var(--primary);cursor:pointer;user-select:none}
-  .ms-toolbar a:hover{text-decoration:underline}
-  .ms-toolbar .ms-clear{color:var(--text-tertiary)}
-  .ms-toolbar .ms-clear:hover{color:var(--danger)}
 
   /* 数据表格（基础样式见 框架.css，本页仅保留覆盖） */
   .table-card{background:var(--bg-white);border:1px solid var(--primary-border);overflow:hidden;margin:12px}
@@ -82,19 +61,6 @@
   .pg-page-size{height:24px;border:0.75px solid var(--color-neutral-300);border-radius:2px;padding:0 6px;font-size:var(--font-size-caption);color:var(--text-secondary);background:var(--bg-white);outline:none;cursor:pointer}
   .pg-page-size:focus{border-color:var(--primary)}
 
-  /* 标签 */
-  .tag{font-size:12px;padding:1px 6px;border-radius:2px;font-weight:var(--font-weight-medium);display:inline-block;line-height:18px;margin-right:4px;margin-bottom:2px;border:0.75px solid transparent}
-  .tag.blue{background:var(--primary-light);color:var(--primary);border-color:var(--primary-border)}
-  .tag.green{background:var(--success-bg);color:#389E0D;border-color:#b7eb8f}
-  .tag.orange{background:#FAEEDA;color:#854F0B;border-color:#FFD591}
-  .tag.red{background:#FFECEC;color:var(--danger);border-color:#FFA39E}
-  .tag.purple{background:#F0F0FF;color:#531DAB;border-color:#D3ADF7}
-  .tag.cyan{background:#E0F7F7;color:#0E8A8A;border-color:#87E8DE}
-  .tag.pink{background:#FCE8F1;color:#C0306E;border-color:#FFADD2}
-  .tag.gray{background:var(--color-neutral-100);color:var(--text-tertiary);border-color:var(--color-neutral-300)}
-  .tag-more{font-size:var(--font-size-caption);color:var(--text-tertiary);cursor:pointer;padding:0 4px}
-  .tag-more:hover{color:var(--primary)}
-
   /* 空状态样式已提取至 框架.css */
 
   /* 弹窗 */
@@ -112,7 +78,7 @@
   .field>.field-label{flex-shrink:0;width:80px;font-size:14px;color:var(--text-secondary);font-weight:var(--font-weight-regular);text-align:right;margin-bottom:0;line-height:32px}
   .field>.field-label .req{color:var(--danger);margin-right:2px}
   .field .hint{font-size:12px;color:var(--text-tertiary);margin-top:4px}
-  .field .input,.field .textarea,.field .switch,.field .crowd-picker{flex:1;min-width:0}
+  .field .input,.field .textarea,.field .switch{flex:1;min-width:0}
   .field.field-textarea{align-items:flex-start}
   .field.field-textarea>.field-label{line-height:1.5;padding-top:6px}
   .input,.textarea{width:100%;border:1px solid var(--color-neutral-300);border-radius:var(--r-sm);padding:0 12px;font-size:14px;color:var(--text-primary);background:var(--bg-white);outline:none;transition:all var(--transition-fast)}
@@ -120,36 +86,6 @@
   .input::placeholder,.textarea::placeholder{color:var(--text-placeholder)}
   .textarea{min-height:72px;padding:8px 12px;resize:vertical;font-family:inherit;line-height:1.75}
   .input:focus,.textarea:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(0,122,255,0.15)}
-  .field-row{display:flex;gap:12px}
-  .field-row .field{flex:1}
-  .ms-picker{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1px solid var(--color-neutral-300);border-radius:var(--r-sm);background:var(--bg-white);min-height:40px;max-height:120px;overflow-y:auto}
-  .ms-picker .picker-tag{font-size:12px;padding:3px 10px;border:1px solid var(--color-neutral-300);border-radius:var(--r-pill);color:var(--text-secondary);cursor:pointer;transition:all var(--transition-fast);user-select:none}
-  .ms-picker .picker-tag:hover{border-color:var(--primary);color:var(--primary)}
-  .ms-picker .picker-tag.active{background:var(--primary);border-color:var(--primary);color:#fff}
-  .ms-picker .empty{font-size:12px;color:var(--text-tertiary);align-self:center}
-
-  /* 弹框 - 适用人群：+ 添加人群 按钮 + 已选 tag 列表 */
-  .crowd-picker{position:relative;display:flex;align-items:flex-start;flex-wrap:wrap;gap:8px;min-height:32px;padding:2px 0}
-  .btn-add-crowd{height:28px;padding:0 12px;border:1px dashed var(--color-neutral-300);border-radius:var(--r-sm);background:var(--bg-white);color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all var(--transition-fast);display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;flex-shrink:0;line-height:1}
-  .btn-add-crowd:hover{border-color:var(--primary);border-style:solid;color:var(--primary);background:var(--primary-bg)}
-  .crowd-picker.open .btn-add-crowd{border-color:var(--primary);color:var(--primary);background:var(--primary-bg)}
-  .crowd-selected{display:flex;flex-wrap:wrap;gap:6px;flex:1;align-items:center;min-width:0}
-  .crowd-tag{display:inline-flex;align-items:center;gap:2px;height:24px;padding:0 2px 0 8px;background:var(--primary-light);color:var(--primary);border:1px solid var(--primary-border);border-radius:2px;font-size:13px;line-height:1;user-select:none}
-  .crowd-tag .x{cursor:pointer;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;line-height:1;border-radius:50%;color:var(--primary);opacity:.6;transition:all var(--transition-fast);font-weight:400}
-  .crowd-tag .x:hover{opacity:1;background:rgba(0,122,255,0.12)}
-  .crowd-picker .crowd-empty{font-size:12px;color:var(--text-tertiary);padding:4px 0}
-  .crowd-dropdown{position:fixed;min-width:220px;max-width:320px;background:var(--bg-white);border:1px solid var(--primary-border);border-radius:var(--r-sm);box-shadow:var(--shadow-md);z-index:9999;display:none;padding:4px 0;max-height:260px;overflow-y:auto}
-  .crowd-picker.open .crowd-dropdown{display:block}
-  .crowd-toolbar{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid var(--primary-border);margin-bottom:4px;background:var(--bg-white);position:sticky;top:0;z-index:1}
-  .crowd-toolbar a{font-size:12px;color:var(--primary);cursor:pointer;user-select:none}
-  .crowd-toolbar a:hover{text-decoration:underline}
-  .crowd-toolbar .clear{color:var(--text-tertiary)}
-  .crowd-toolbar .clear:hover{color:var(--danger)}
-  .crowd-option{display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font-size:14px;color:var(--text-primary);transition:background var(--transition-fast);user-select:none}
-  .crowd-option:hover{background:var(--primary-bg)}
-  .crowd-option input[type="checkbox"]{width:14px;height:14px;accent-color:var(--primary);cursor:pointer;flex-shrink:0}
-  .crowd-option span{flex:1;line-height:1.4}
-
   /* 开关样式已提取至 框架.css */
 
   .confirm-modal{width:440px}
@@ -179,14 +115,17 @@
     <div class="content">
       <div class="content-card">
 
-      <!-- 页面标题 + 右上 删除 / 新增 — 脱敏规则风格 -->
+      <!-- 页面标题 + 右上 删除 / 导入 / 导出 / 新增 — 脱敏规则风格 -->
       <div class="page-head">
         <h1>概况视图配置</h1>
         <div class="right">
           <button class="btn btn-danger-outline" id="btnDelete" onclick="batchDelete()" disabled>删除</button>
+          <button class="btn btn-primary-outline" onclick="document.getElementById('importFile').click()">导入</button>
+          <button class="btn btn-primary-outline" onclick="exportViews()">导出</button>
           <button class="btn btn-primary" onclick="openCreate()">新增</button>
         </div>
       </div>
+      <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="importViews(this)">
 
       <!-- 筛选区 — 脱敏规则风格 -->
       <div class="filter-bar">
@@ -194,27 +133,6 @@
         <div class="search-input">
           <input type="text" id="searchName" placeholder="请输入视图名称" oninput="renderTable()">
         </div>
-        <span class="lbl">适用人群</span>
-        <div class="multi-select" id="tagSelect">
-          <div class="ms-trigger" onclick="toggleTagDropdown(event)">
-            <span class="ms-text placeholder" id="tagPlaceholder">请选择适用人群（可多选）</span>
-            <span class="ms-badge" id="tagBadge">0</span>
-            <svg class="ms-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-          </div>
-          <div class="ms-dropdown" id="tagDropdown" onclick="event.stopPropagation()">
-            <div class="ms-toolbar">
-              <a onclick="selectAllTags()">全选</a>
-              <a class="ms-clear" onclick="clearAllTags()">清空</a>
-            </div>
-            <div id="tagOptions"></div>
-          </div>
-        </div>
-        <span class="lbl">状态</span>
-        <select class="select" id="filterStatus" onchange="renderTable()">
-          <option value="">全部</option>
-          <option value="on">已启用</option>
-          <option value="off">已停用</option>
-        </select>
         <div class="spacer"></div>
         <div class="filter-actions">
           <button class="btn btn-default" onclick="resetFilter()">重置</button>
@@ -230,7 +148,6 @@
               <th class="center" style="width:40px"><input type="checkbox" id="checkAll" onchange="toggleCheckAll(this.checked)"></th>
               <th class="center" style="width:60px">序号</th>
               <th>视图名称</th>
-              <th>适用人群</th>
               <th>更新人</th>
               <th>更新时间</th>
               <th class="center">状态</th>
@@ -272,20 +189,7 @@
       <div class="field">
         <label class="field-label">状态：</label>
         <label class="switch"><input type="checkbox" id="fEnabled"><span class="track"></span></label>
-      </div>
-      <div class="field">
-        <label class="field-label"><span class="req">*</span>适用人群：</label>
-        <div class="crowd-picker" id="fCrowdPicker">
-          <button type="button" class="btn-add-crowd" onclick="toggleCrowdDropdown(event)">+ 添加人群</button>
-          <div class="crowd-selected" id="fCrowdSelected"></div>
-          <div class="crowd-dropdown" id="fCrowdDropdown" onclick="event.stopPropagation()">
-            <div class="crowd-toolbar">
-              <a onclick="selectAllCrowd()">全选</a>
-              <a class="clear" onclick="clearCrowd()">清空</a>
-            </div>
-            <div class="crowd-options" id="fCrowdOptions"></div>
-          </div>
-        </div>
+        <span class="hint" style="margin:0 0 0 12px">同一时间仅允许启用一个视图，启用后其余视图将自动停用</span>
       </div>
       <div class="field field-textarea">
         <label class="field-label">备注：</label>
@@ -315,26 +219,16 @@
 </div>
 
 <!-- ===== 统一框架：顶部导航栏 + 左侧菜单栏（菜单配置见 框架.js） ===== -->
-<script src="框架.js" data-page="view-list"></script>
+<script src="../框架.js" data-page="view-list"></script>
 
 <script>
-const TAG_DEFS = [
-  {key:'高血压', color:'blue'},{key:'糖尿病', color:'purple'},{key:'冠心病', color:'orange'},
-  {key:'脑卒中', color:'red'},{key:'孕产妇', color:'pink'},{key:'0-6儿童', color:'cyan'},
-  {key:'65岁以上老人', color:'green'},{key:'残疾人', color:'gray'},{key:'低保户', color:'orange'},
-  {key:'结核病', color:'red'}
-];
-const tagColor = k => (TAG_DEFS.find(t=>t.key===k)||{}).color || 'gray';
-let filterTags = [];
-let editingCrowd = [];
-
 let views = [
-  { id:1, name:'概况视图', enabled:true, tags:[], updatedBy:'admin', updatedAt:'2026-07-28 09:30:00' },
-  { id:2, name:'老年人健康视图', enabled:true, tags:['65岁以上老人'], updatedBy:'张江', updatedAt:'2026-07-26 14:20:00' },
-  { id:3, name:'孕产妇管理视图', enabled:true, tags:['孕产妇'], updatedBy:'李娜', updatedAt:'2026-07-25 10:15:00' },
-  { id:4, name:'儿童保健视图', enabled:false, tags:['0-6儿童'], updatedBy:'王芳', updatedAt:'2026-07-20 16:45:00' },
-  { id:5, name:'慢病综合管理视图', enabled:true, tags:['高血压','糖尿病'], updatedBy:'刘毅', updatedAt:'2026-07-22 11:00:00' },
-  { id:6, name:'结核病管理视图', enabled:false, tags:['结核病'], updatedBy:'陈晨', updatedAt:'2026-07-18 09:00:00' }
+  { id:1, name:'概况视图', enabled:true, updatedBy:'admin', updatedAt:'2026-07-28 09:30:00' },
+  { id:2, name:'老年人健康视图', enabled:false, updatedBy:'张江', updatedAt:'2026-07-26 14:20:00' },
+  { id:3, name:'孕产妇管理视图', enabled:false, updatedBy:'李娜', updatedAt:'2026-07-25 10:15:00' },
+  { id:4, name:'儿童保健视图', enabled:false, updatedBy:'王芳', updatedAt:'2026-07-20 16:45:00' },
+  { id:5, name:'慢病综合管理视图', enabled:false, updatedBy:'刘毅', updatedAt:'2026-07-22 11:00:00' },
+  { id:6, name:'结核病管理视图', enabled:false, updatedBy:'陈晨', updatedAt:'2026-07-18 09:00:00' }
 ];
 let nextViewId = 7;
 let editingId = null;
@@ -346,113 +240,6 @@ let selectedIds = new Set();
 
 /* 公共函数（toggleMenu / navigate / toast / escapeHtml 已提取至 框架.js） */
 
-// 点击外部关闭多选
-document.addEventListener('click', e=>{
-  const ms = document.getElementById('tagSelect');
-  if(ms && !ms.contains(e.target)) ms.classList.remove('open');
-});
-
-function renderTagOptions(){
-  const el = document.getElementById('tagOptions');
-  el.innerHTML = TAG_DEFS.map(t=>
-    `<label class="ms-option">
-      <input type="checkbox" value="${t.key}" ${filterTags.includes(t.key)?'checked':''} onchange="onFilterTagChange()">
-      <span>${t.key}</span>
-    </label>`
-  ).join('');
-}
-function onFilterTagChange(){
-  filterTags = Array.from(document.querySelectorAll('#tagOptions input:checked')).map(i=>i.value);
-  updateTagTrigger();
-  renderTable();
-}
-function selectAllTags(){
-  document.querySelectorAll('#tagOptions input').forEach(i=>i.checked=true);
-  onFilterTagChange();
-}
-function clearAllTags(){
-  document.querySelectorAll('#tagOptions input').forEach(i=>i.checked=false);
-  onFilterTagChange();
-}
-function toggleTagDropdown(e){
-  if(e) e.stopPropagation();
-  document.getElementById('tagSelect').classList.toggle('open');
-}
-function updateTagTrigger(){
-  const placeholder = document.getElementById('tagPlaceholder');
-  const badge = document.getElementById('tagBadge');
-  if(filterTags.length === 0){
-    placeholder.textContent = '请选择适用人群（可多选）';
-    placeholder.className = 'ms-text placeholder';
-    badge.classList.remove('show');
-  } else {
-    placeholder.textContent = filterTags.join('、');
-    placeholder.className = 'ms-text has-value';
-    badge.textContent = filterTags.length;
-    badge.classList.add('show');
-  }
-}
-
-function renderCrowdPicker(){
-  // 已选标签
-  const sel = document.getElementById('fCrowdSelected');
-  if(editingCrowd.length === 0){
-    sel.innerHTML = '';
-  } else {
-    sel.innerHTML = editingCrowd.map(k=>
-      `<span class="crowd-tag">${k}<span class="x" onclick="removeCrowd('${k}')" title="移除">×</span></span>`
-    ).join('');
-  }
-  // 下拉选项
-  const opt = document.getElementById('fCrowdOptions');
-  opt.innerHTML = TAG_DEFS.map(t=>
-    `<label class="crowd-option">
-      <input type="checkbox" value="${t.key}" ${editingCrowd.includes(t.key)?'checked':''} onchange="toggleCrowd('${t.key}',this.checked)">
-      <span>${t.key}</span>
-    </label>`
-  ).join('');
-}
-function toggleCrowd(k, checked){
-  const i = editingCrowd.indexOf(k);
-  if(checked && i<0) editingCrowd.push(k);
-  else if(!checked && i>=0) editingCrowd.splice(i,1);
-  // 同步刷新下拉 checkbox 与已选区
-  renderCrowdPicker();
-}
-function removeCrowd(k){
-  editingCrowd = editingCrowd.filter(x=>x!==k);
-  renderCrowdPicker();
-}
-function selectAllCrowd(){
-  editingCrowd = TAG_DEFS.map(t=>t.key);
-  renderCrowdPicker();
-}
-function clearCrowd(){
-  editingCrowd = [];
-  renderCrowdPicker();
-}
-function toggleCrowdDropdown(e){
-  if(e) e.stopPropagation();
-  var picker = document.getElementById('fCrowdPicker');
-  var dropdown = document.getElementById('fCrowdDropdown');
-  var isOpen = picker.classList.contains('open');
-  if (isOpen) {
-    picker.classList.remove('open');
-    return;
-  }
-  // 定位下拉框：相对于触发按钮
-  var btn = picker.querySelector('.btn-add-crowd');
-  var rect = btn.getBoundingClientRect();
-  dropdown.style.top = (rect.bottom + 4) + 'px';
-  dropdown.style.left = rect.left + 'px';
-  picker.classList.add('open');
-}
-// 点击外部关闭人群下拉
-document.addEventListener('click', e=>{
-  const cp = document.getElementById('fCrowdPicker');
-  if(cp && !cp.contains(e.target)) cp.classList.remove('open');
-});
-
 function statusInfo(v){
   if(!v.enabled) return {dot:'off', text:'已停用'};
   return {dot:'on', text:'已启用'};
@@ -460,12 +247,8 @@ function statusInfo(v){
 
 function filteredList(){
   const name = document.getElementById('searchName').value.trim().toLowerCase();
-  const status = document.getElementById('filterStatus').value;
   return views.filter(v=>{
     if(name && !v.name.toLowerCase().includes(name)) return false;
-    if(status==='on' && !v.enabled) return false;
-    if(status==='off' && v.enabled) return false;
-    if(filterTags.length && !filterTags.some(t=>(v.tags||[]).includes(t))) return false;
     return true;
   });
 }
@@ -480,7 +263,7 @@ function renderTable(){
   document.getElementById('totalCount').textContent = total;
   const tbody = document.getElementById('viewTbody');
   if(!pageList.length){
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="8"><div class="ico">📭</div>没有匹配的视图<br><span style="font-size:var(--font-size-caption)">调整筛选条件或新增视图</span></td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="7"><div class="ico">📭</div>没有匹配的视图<br><span style="font-size:var(--font-size-caption)">调整筛选条件或新增视图</span></td></tr>`;
     renderPagination(total, totalPages);
     updateCheckAll();
     return;
@@ -488,23 +271,19 @@ function renderTable(){
   tbody.innerHTML = pageList.map((v,i)=>{
     const st = statusInfo(v);
     const seq = start + i + 1;
-    const tagsHtml = (v.tags&&v.tags.length)
-      ? v.tags.slice(0,3).map(t=>`<span class="tag ${tagColor(t)}">${t}</span>`).join('') + (v.tags.length>3?`<span class="tag-more" title="${v.tags.slice(3).join('、')}">+${v.tags.length-3}</span>`:'')
-      : `<span style="font-size:var(--font-size-caption);color:var(--text-tertiary)">全部用户</span>`;
     const checked = selectedIds.has(v.id) ? 'checked' : '';
     return `
       <tr>
         <td class="center"><input type="checkbox" data-id="${v.id}" ${checked} onchange="onRowCheck(this)"></td>
         <td class="center">${seq}</td>
         <td class="col-name"><span class="nm">${escapeHtml(v.name)}</span></td>
-        <td>${tagsHtml}</td>
         <td>${escapeHtml(v.updatedBy)}</td>
         <td style="white-space:nowrap;color:var(--text-secondary);font-size:var(--font-size-caption)">${v.updatedAt}</td>
         <td class="center"><div class="status-cell"><span class="status-dot ${st.dot}"></span><span class="status-text">${st.text}</span></div></td>
         <td class="col-act">
           <a class="btn-link" onclick="openConfig(${v.id})">配置</a>
           ${v.id !== 1 ? `<a class="btn-link" onclick="openEdit(${v.id})">编辑</a>
-          <a class="btn-link danger" onclick="openDel(${v.id})">删除</a>` : ''}
+          <a class="btn-link danger" onclick="openDel(${v.id})">删除</a>` : `<a class="btn-link" onclick="openEdit(${v.id})">编辑</a>`}
         </td>
       </tr>`;
   }).join('');
@@ -574,10 +353,6 @@ function changePageSize(){
 
 function resetFilter(){
   document.getElementById('searchName').value = '';
-  document.getElementById('filterStatus').value = '';
-  document.querySelectorAll('#tagOptions input').forEach(i=>i.checked=false);
-  filterTags = [];
-  updateTagTrigger();
   currentPage = 1;
   renderTable();
 }
@@ -588,9 +363,6 @@ function openCreate(){
   document.getElementById('fName').value = '';
   document.getElementById('fEnabled').checked = false;
   document.getElementById('fDesc').value = '';
-  editingCrowd = [];
-  renderCrowdPicker();
-  document.getElementById('fCrowdPicker').classList.remove('open');
   document.getElementById('editModal').classList.add('show');
   setTimeout(()=>document.getElementById('fName').focus(),50);
 }
@@ -598,8 +370,8 @@ function openConfig(id){
   const v = views.find(x=>x.id===id);
   if(!v) return;
   const url = id === 1
-    ? `resident-view-config-v3.html?viewId=${id}&name=${encodeURIComponent(v.name)}`
-    : `resident-view-config-v2.html?viewId=${id}&name=${encodeURIComponent(v.name)}`;
+    ? `概况视图默认配置.html?viewId=${id}&name=${encodeURIComponent(v.name)}`
+    : `概况视图自定义配置.html?viewId=${id}&name=${encodeURIComponent(v.name)}`;
   window.location.href = url;
 }
 function openEdit(id){
@@ -610,28 +382,29 @@ function openEdit(id){
   document.getElementById('fName').value = v.name;
   document.getElementById('fEnabled').checked = v.enabled;
   document.getElementById('fDesc').value = v.desc || '';
-  editingCrowd = [...(v.tags||[])];
-  renderCrowdPicker();
-  document.getElementById('fCrowdPicker').classList.remove('open');
   document.getElementById('editModal').classList.add('show');
 }
 function closeEdit(){
   document.getElementById('editModal').classList.remove('show');
-  document.getElementById('fCrowdPicker').classList.remove('open');
 }
 function saveView(){
   const name = document.getElementById('fName').value.trim();
   if(!name){ toast('请填写视图名称','warning'); document.getElementById('fName').focus(); return; }
-  if(editingCrowd.length === 0){ toast('请至少选择一个人群','warning'); return; }
   const enabled = document.getElementById('fEnabled').checked;
   const desc = document.getElementById('fDesc').value.trim();
+  const savedId = editingId || nextViewId;
   if(editingId){
     const v = views.find(x=>x.id===editingId);
-    Object.assign(v, {name,enabled,tags:[...editingCrowd],desc,updatedBy:'admin',updatedAt:now()});
-    toast(`视图「${name}」已更新`,'success');
+    Object.assign(v, {name,enabled,desc,updatedBy:'admin',updatedAt:now()});
   } else {
-    views.push({id:nextViewId++,name,enabled,tags:[...editingCrowd],desc,updatedBy:'admin',updatedAt:now()});
-    toast(`视图「${name}」已创建`,'success');
+    views.push({id:nextViewId++,name,enabled,desc,updatedBy:'admin',updatedAt:now()});
+  }
+  // 同一时间仅允许启用一个视图：启用当前视图时，其余视图自动停用
+  if(enabled){
+    views.forEach(v=>{ if(v.id!==savedId) v.enabled=false; });
+    toast(`视图「${name}」已启用，其余视图已自动停用`,'success');
+  } else {
+    toast(editingId ? `视图「${name}」已更新` : `视图「${name}」已创建`,'success');
   }
   closeEdit();
   renderTable();
@@ -669,6 +442,65 @@ function batchDelete(){
   document.getElementById('delModal').classList.add('show');
 }
 
+/* ===== 导入 / 导出 ===== */
+function exportViews(){
+  const data = {
+    type: '概况视图配置',
+    version: '1.0',
+    exportedAt: now(),
+    views: views.map(v=>({ name:v.name, enabled:v.enabled, desc:v.desc || '' }))
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '概况视图配置_' + now().replace(/[-: ]/g,'') + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('已导出 ' + views.length + ' 个视图配置','success');
+}
+function importViews(input){
+  const file = input.files && input.files[0];
+  if(!file){ input.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = function(){
+    try{
+      const data = JSON.parse(reader.result);
+      const list = Array.isArray(data) ? data : (data && Array.isArray(data.views) ? data.views : null);
+      if(!list || !list.length) throw new Error('bad format');
+      let added = 0, updated = 0;
+      list.forEach(function(item){
+        const name = String(item && item.name || '').trim();
+        if(!name) return;
+        const exist = views.find(v=>v.name === name);
+        if(exist){
+          exist.enabled = !!item.enabled;
+          exist.desc = item.desc || '';
+          exist.updatedBy = 'admin';
+          exist.updatedAt = now();
+          updated++;
+        } else {
+          views.push({ id:nextViewId++, name:name, enabled:!!item.enabled, desc:item.desc||'', updatedBy:'admin', updatedAt:now() });
+          added++;
+        }
+      });
+      if(!added && !updated){ toast('导入的文件中没有可识别的视图配置','warning'); return; }
+      // 仅允许启用一个视图：导入后如存在多个启用，仅保留第一个启用的视图
+      const firstEnabled = views.findIndex(v=>v.enabled);
+      views.forEach(function(v,i){ if(v.enabled && i!==firstEnabled) v.enabled=false; });
+      currentPage = 1;
+      renderTable();
+      toast('导入完成：新增 ' + added + ' 个、更新 ' + updated + ' 个视图','success');
+    }catch(err){
+      toast('导入失败：文件格式不正确，请选择本页导出的 JSON 文件','error');
+    }
+    input.value = '';
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
 function now(){
   const d = new Date();
   const pad = x=>String(x).padStart(2,'0');
@@ -676,10 +508,9 @@ function now(){
 }
 
 document.addEventListener('keydown', e=>{
-  if(e.key==='Escape'){ closeEdit(); closeDel(); document.getElementById('tagSelect').classList.remove('open'); const cp=document.getElementById('fCrowdPicker'); if(cp) cp.classList.remove('open'); }
+  if(e.key==='Escape'){ closeEdit(); closeDel(); }
 });
 
-renderTagOptions();
 renderTable();
 </script>
 </body>

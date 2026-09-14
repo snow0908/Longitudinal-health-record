@@ -176,7 +176,6 @@ input { outline: none; font-family: inherit; }
 .rec-col { font-size: 13px; color: #595959; flex-shrink: 0; }
 .rec-col.date { width: 180px; }
 .rec-col.org { width: 220px; }
-.rec-col.doc { width: 80px; }
 
 .grp { border-bottom: 1px solid #F0F0F0; }
 .grp:last-child { border-bottom: none; }
@@ -195,7 +194,6 @@ input { outline: none; font-family: inherit; }
 .bd-table-hd .th.name { flex: 1; min-width: 0; padding-left: 28px; }
 .bd-table-hd .th.date { width: 180px; flex-shrink: 0; }
 .bd-table-hd .th.org  { width: 220px; flex-shrink: 0; }
-.bd-table-hd .th.doc  { width: 80px;  flex-shrink: 0; }
 
 /* 就诊时间 - Label 样式 */
 .time-label { display: inline-flex; align-items: center; padding: 3px 10px; background: #fff; border: 1px solid #E6E8EB; border-radius: 4px; font-size: 12px; line-height: 18px; color: #4A5266; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -208,7 +206,7 @@ input { outline: none; font-family: inherit; }
 .mod-total.dim b { color: #BFBFBF; }
 
 /* 工具栏筛选控件 */
-.tb-label { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; background: #E6F4FF; color: #2378F5; border-radius: 14px; font-size: 12px; line-height: 28px; }
+.tb-label-plain { display: inline-flex; align-items: center; height: 28px; font-size: 13px; color: #595959; }
 .tb-date { display: inline-flex; align-items: center; height: 28px; padding: 0 6px 0 10px; border: 1px solid #D9D9D9; border-radius: 4px; font-size: 13px; color: #595959; background: #fff; cursor: pointer; gap: 4px; }
 .tb-date input { border: 0; outline: none; font-family: inherit; font-size: 13px; color: #262626; background: transparent; padding: 0; width: 90px; }
 .tb-date .cal-ico { width: 14px; height: 14px; color: #8c8c8c; }
@@ -656,6 +654,7 @@ function renderModules(group) {
   var html = '';
   DATA[group].forEach(function (mod, idx) {
     var total = totalCount(mod);
+    var timeText = group === 'health' ? '服务时间' : '就诊时间';
     var icon = SVG_DOC.split('ICON').join(mod.iconColor);
     var num = (idx + 1) < 10 ? '0' + (idx + 1) : '' + (idx + 1);
     html += '<div class="mod-card" id="card-' + group + '-' + mod.id + '">';
@@ -673,7 +672,7 @@ function renderModules(group) {
     html += '</div></div>';
     html += '<div class="mod-bd">';
     html += '<div class="bd-toolbar">';
-    html += '<span class="tb-label">就诊时间</span>';
+    html += '<span class="tb-label-plain">' + timeText + '</span>';
     html += '<span class="tb-date"><input type="date" id="dt-start-' + group + '-' + mod.id + '" onchange="filterByDate(\'' + group + '\',\'' + mod.id + '\')"/></span>';
     html += '<span class="tb-date"><input type="date" id="dt-end-' + group + '-' + mod.id + '" onchange="filterByDate(\'' + group + '\',\'' + mod.id + '\')"/></span>';
     html += '<div class="bd-search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#BFBFBF" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#BFBFBF" stroke-width="2" stroke-linecap="round"/></svg>';
@@ -686,9 +685,8 @@ function renderModules(group) {
     html += '</div>';
     html += '<div class="bd-table-hd">';
     html += '<span class="th name">内容名称</span>';
-    html += '<span class="th date">就诊时间</span>';
+    html += '<span class="th date">' + timeText + '</span>';
     html += '<span class="th org">医疗机构</span>';
-    html += '<span class="th doc">医生</span>';
     html += '</div>';
     html += '<div id="recs-' + group + '-' + mod.id + '">';
     (mod.records || []).forEach(function (r) {
@@ -734,7 +732,6 @@ function recRow(group, modId, r, org, type, isChild) {
   var time = r.time || deriveTime(r.id);
   html += '<span class="rec-col date"><span class="time-label">' + r.date + '<span class="sep">' + (r.time ? ' · ' : ' ') + '</span>' + time + '</span></span>';
   html += '<span class="rec-col org">' + org + '</span>';
-  html += '<span class="rec-col doc">' + r.doctor + '</span>';
   html += '</div>';
   return html;
 }

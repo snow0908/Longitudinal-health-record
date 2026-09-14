@@ -1,0 +1,26 @@
+<h2>4.8 模块类图</h2>
+<img path="@./c_media/media/image27.png"/>
+<h2>4.9 接口设计</h2>
+<p>本系统中所涉及到的接口，主要是第三方的访问平台时的总入口，当请求通过总入口进入平台系统后，根据请求参数，对请求鉴权、转发等最终到达目标服务。</p>
+<h3>4.9.1 三方微信小程序集成档案浏览器登录接口</h3>
+<table>
+<colgroup><col width="120"/><col width="700"/></colgroup>
+<thead><tr><th><p>项目</p></th><th><p>说明</p></th></tr></thead>
+<tbody>
+<tr><td><p>功能说明</p></td><td><p>三方微信小程序集成档案浏览器登录接口</p></td></tr>
+<tr><td><p>访问格式</p></td><td><p>http://xxx.xxx.xxx.xxx:port/hcr/#/wx/tripartiteLogin</p></td></tr>
+<tr><td><p>请求方式</p></td><td><p>post</p></td></tr>
+<tr><td><p>访问示例1</p></td><td><p>http://192.168.124.164:6130/hcr/#/wx/tripartiteLogin</p></td></tr>
+</tbody>
+</table>
+<p>参数说明：</p>
+<table>
+<colgroup><col width="150"/><col width="160"/><col width="120"/><col width="100"/><col width="290"/></colgroup>
+<thead><tr><th><p>参数</p></th><th><p>参数名称</p></th><th><p>数据类型</p></th><th><p>约束</p></th><th><p>说明</p></th></tr></thead>
+<tbody>
+<tr><td><p>js_code</p></td><td><p>小程序登录代码</p></td><td><p>String</p></td><td><p>必填</p></td><td><p></p></td></tr>
+<tr><td><p>phone_num</p></td><td><p>手机号</p></td><td><p>String</p></td><td><p>必填</p></td><td><p></p></td></tr>
+<tr><td><p>identity_num</p></td><td><p>身份证号</p></td><td><p>String</p></td><td><p>必填</p></td><td><p></p></td></tr>
+<tr><td><p>user_name</p></td><td><p>姓名</p></td><td><p>String</p></td><td><p>必填</p></td><td><p></p></td></tr>
+</tbody>
+</table>

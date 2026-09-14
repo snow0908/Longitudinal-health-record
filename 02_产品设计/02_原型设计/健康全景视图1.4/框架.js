@@ -41,7 +41,7 @@
         { key: 'template',  label: '模板管理' },
         { key: 'scene',     label: '场景配置',     url: '场景配置.html' },
         { key: 'module',    label: '模块配置' },
-        { key: 'view-list', label: '概况视图配置', url: 'resident-view-list.html' }
+        { key: 'view-list', label: '概况视图配置', url: '视图管理/视图列表.html' }
       ] },
     { type: 'divider' },
     { type: 'group', key: 'system', label: '系统管理',
@@ -57,6 +57,9 @@
   /* ================= 页面参数 ================= */
   var scriptTag = document.currentScript || document.querySelector('script[src$="框架.js"]') || {};
   var pageKey = scriptTag.getAttribute('data-page') || '';
+  // 框架所在目录：菜单 url 统一以此为基准解析，支持子文件夹内的页面（如 视图管理/）
+  var frameSrc = scriptTag.getAttribute('src') || '';
+  var FRAME_DIR = (frameSrc.match(/^(.*\/)?框架\.js$/) || ['', ''])[1] || '';
   var sysName = scriptTag.getAttribute('data-sysname') || '健康医疗应用中心';
   var orgName = scriptTag.getAttribute('data-org') || '温江区第一人民医院';
 
@@ -147,7 +150,7 @@
     if (!item) return;
     if (item.url) {
       if (item.key === pageKey) return; // 当前页
-      window.location.href = item.url;
+      window.location.href = FRAME_DIR + item.url;
     } else {
       toast('已切换到：' + item.label, 'info');
     }

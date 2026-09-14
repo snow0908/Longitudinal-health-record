@@ -1,0 +1,94 @@
+{
+  "manifest_version": "v1",
+  "format": "ndjson",
+  "base_token": "MCtxbl7WBaOERLsdoDVcunignwg",
+  "table_id": "tblKn3YzhLawvVZB",
+  "rev": 6,
+  "timezone": "Asia/Shanghai",
+  "query_context": {
+    "field_scope": "view_visible_fields",
+    "record_scope": "view_filtered_records"
+  },
+  "requested_limit": 200,
+  "records_count": 36,
+  "page_count": 1,
+  "has_more": false,
+  "record_file": "D:\\AI_Project\\Longitudinal-health-record\\tblKn3YzhLawvVZB_20260908_151523_792.ndjson",
+  "record_file_size_bytes": 12872,
+  "manifest_file": "D:\\AI_Project\\Longitudinal-health-record\\tblKn3YzhLawvVZB_20260908_151523_792.manifest.json",
+  "columns": {
+    "record_id": {
+      "physical_type": "string",
+      "stats": {
+        "max_length": 14
+      },
+      "example": "recvuBQ2jOa3ce"
+    },
+    "一级功能": {
+      "field_id": "fldDHmG8Bu",
+      "field_type": "text",
+      "physical_type": "string|null",
+      "stats": {
+        "null_count": 0,
+        "max_length": 6
+      },
+      "example": "全景视图"
+    },
+    "二级功能": {
+      "field_id": "fldOAy932H",
+      "field_type": "text",
+      "physical_type": "string|null",
+      "stats": {
+        "null_count": 4,
+        "max_length": 9
+      },
+      "example": "/"
+    },
+    "任务名称": {
+      "field_id": "fldY6IzD5a",
+      "field_type": "text",
+      "physical_type": "string|null",
+      "stats": {
+        "null_count": 0,
+        "max_length": 14
+      },
+      "example": "脱敏配置"
+    },
+    "任务类型": {
+      "field_id": "fldKy1nEx9",
+      "field_type": "select",
+      "physical_type": "array<string>",
+      "stats": {
+        "empty_count": 7,
+        "max_length": 1,
+        "avg_length": 0.8055555555555556
+      },
+      "example": [
+        "前端任务"
+      ]
+    },
+    "分类": {
+      "field_id": "fldWzMteXN",
+      "field_type": "select",
+      "physical_type": "array<string>",
+      "stats": {
+        "empty_count": 0,
+        "max_length": 1,
+        "avg_length": 1
+      },
+      "example": [
+        "其他"
+      ]
+    },
+    "功能描述": {
+      "field_id": "fldN6TqpOu",
+      "field_type": "text",
+      "physical_type": "string|null",
+      "stats": {
+        "null_count": 0,
+        "max_length": 253
+      },
+      "example": "优化，支持多角色一键配置"
+    }
+  }
+}

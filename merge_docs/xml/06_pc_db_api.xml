@@ -1,0 +1,71 @@
+<h2>3.6 数据库设计</h2>
+<h3>3.6.1 数据表存储方案</h3>
+<img path="@./pc_media/media/image26.png" caption="健康医疗数据来源与存储方式图"/>
+<h3>3.6.2 数据库标准</h3>
+<p>将临床数据库分为临床主题库和临床配置库。详情参照内网195环境医疗数据中心系统中临床中心标准。</p>
+<p>数据特殊要求：就诊事件表中的疾病诊断标准采用ICD10-V1.0标准，增加一个标准诊断编码字段。</p>
+<h3>3.6.3 数据表设计</h3>
+<p>调阅统计表</p>
+<table>
+<colgroup><col width="180"/><col width="220"/><col width="220"/><col width="200"/></colgroup>
+<thead><tr><th><p>字段名</p></th><th><p>数据元名称</p></th><th><p>数据类型及格式</p></th><th><p>长度精度</p></th></tr></thead>
+<tbody>
+<tr><td><p>ID</p></td><td><p>主键ID</p></td><td><p>NVARCHAR</p></td><td><p>20</p></td></tr>
+<tr><td><p>CYLJGDM</p></td><td><p>医疗机构代码</p></td><td><p>NVARCHAR</p></td><td><p>30</p></td></tr>
+<tr><td><p>CDQDM</p></td><td><p>医疗机构所属区代码</p></td><td><p>NVARCHAR</p></td><td><p>20</p></td></tr>
+<tr><td><p>CCDBM</p></td><td><p>菜单编码</p></td><td><p>NVARCHAR</p></td><td><p>20</p></td></tr>
+<tr><td><p>CCDMC</p></td><td><p>菜单名称</p></td><td><p>NVARCHAR</p></td><td><p>50</p></td></tr>
+<tr><td><p>IDYCS</p></td><td><p>调阅次数</p></td><td><p>INT</p></td><td><p></p></td></tr>
+<tr><td><p>DTJRQ</p></td><td><p>统计日期</p></td><td><p>DATE</p></td><td><p></p></td></tr>
+</tbody>
+</table>
+<h3>3.6.4 库表ER图</h3>
+<img path="@./pc_media/media/image27.png"/>
+<h2>3.7 接口设计</h2>
+<h3>3.7.1 患者360患者概况视图调用</h3>
+<table>
+<colgroup><col width="120"/><col width="700"/></colgroup>
+<thead><tr><th><p>项目</p></th><th><p>说明</p></th></tr></thead>
+<tbody>
+<tr><td><p>功能说明</p></td><td><p>根据获取到的Token和相关患者基本信息进行浏览器访问</p></td></tr>
+<tr><td><p>访问格式</p></td><td><p>http://xxx.xxx.xxx.xxx:port/hdc-cdr/#/thePatientList/PatientIndex?patientNumber=?&amp;orgId=?&amp;chzxm=?&amp;czjhm=?&amp;from=?&amp;a=?&amp;c=?&amp;i=?</p></td></tr>
+<tr><td><p>访问示例1（患者ID+机构ID）</p></td><td><p>http://192.168.104.132/hdc-cdr/#/thePatientList/PatientIndex?patientNumber=1001348646&amp;orgId=57063390-X&amp;from=yx&amp;a=sanfang&amp;i=&amp;c=iwVoDc4HNYLuSe3dyui5lSfIKTchtTpIlNapKvPfuP4zNNznLyrnxIRyuwqQ8v4pljGEFbYprjtmF9JboQuiQQrM22Sd7lt15T7lQ/nwruYl9BXXZJO9+Vhar30PsyIrGzTN/C+J6CtOwVTTYtUJwx6+y17qFddpGpAWgQ+Vnr8fvYBfCz8HBZN/xQdihooqNankDunjmuF+02Ck4Kataj4/3lX4ibSH6ewdSmL9HzQ=</p></td></tr>
+</tbody>
+</table>
+<p>参数说明：</p>
+<table>
+<colgroup><col width="150"/><col width="140"/><col width="110"/><col width="80"/><col width="340"/></colgroup>
+<thead><tr><th><p>编码</p></th><th><p>名称</p></th><th><p>数据类型</p></th><th><p>约束</p></th><th><p>说明</p></th></tr></thead>
+<tbody>
+<tr><td><p>patientNumber</p></td><td><p>患者ID</p></td><td><p>String</p></td><td><p></p></td><td><p>见备注</p></td></tr>
+<tr><td><p>orgId</p></td><td><p>机构id</p></td><td><p>String</p></td><td><p></p></td><td><p>集成平台提供，主数据中机构信息查看。</p></td></tr>
+<tr><td><p>a</p></td><td><p>用户名</p></td><td><p>String</p></td><td><p>R</p></td><td><p>三方系统用户名(登录账号)</p></td></tr>
+<tr><td><p>c</p></td><td><p>授权码</p></td><td><p>String</p></td><td><p>R</p></td><td><p>网关设置的授权码，网关中三方授权管理查看。若授权码最后一个字符是"="，则替换成"%3D"。集成平台提供。</p></td></tr>
+<tr><td><p>i</p></td><td><p>三方用户标识</p></td><td><p>String</p></td><td><p></p></td><td><p>固定值1</p></td></tr>
+<tr><td><p>from</p></td><td><p>来源</p></td><td><p>String</p></td><td><p>R</p></td><td><p>固定值:yx</p></td></tr>
+</tbody>
+</table>
+<h3>3.7.2 患者360就诊视图调用</h3>
+<table>
+<colgroup><col width="120"/><col width="700"/></colgroup>
+<thead><tr><th><p>项目</p></th><th><p>说明</p></th></tr></thead>
+<tbody>
+<tr><td><p>功能说明</p></td><td><p>根据获取到的Token和相关患者基本信息进行浏览器访问</p></td></tr>
+<tr><td><p>访问格式</p></td><td><p>http://xxx.xxx.xxx.xxx:port/hdc-cdr/#/thePatientList/sequenceDiagram?patientNumber=?&amp;orgId=?&amp;chzxm=?&amp;czjhm=?&amp;cbrh=?&amp;from=?&amp;a=?&amp;c=?&amp;i=?</p></td></tr>
+<tr><td><p>访问示例1（患者ID+机构ID）</p></td><td><p>http://192.168.104.132/hdc-cdr/#/thePatientList/sequenceDiagram?patientNumber=1001348646&amp;orgId=57063390-X&amp;cbrh=000001&amp;from=yx&amp;a=sanfang&amp;i=&amp;c=iwVoDc4HNYLuSe3dyui5lSfIKTchtTpIlNapKvPfuP4zNNznLyrnxIRyuwqQ8v4pljGEFbYprjtmF9JboQuiQQrM22Sd7lt15T7lQ/nwruYl9BXXZJO9+Vhar30PsyIrGzTN/C+J6CtOwVTTYtUJwx6+y17qFddpGpAWgQ+Vnr8fvYBfCz8HBZN/xQdihooqNankDunjmuF+02Ck4Kataj4/3lX4ibSH6ewdSmL9HzQ=</p></td></tr>
+</tbody>
+</table>
+<p>参数说明：</p>
+<table>
+<colgroup><col width="150"/><col width="160"/><col width="110"/><col width="80"/><col width="320"/></colgroup>
+<thead><tr><th><p>编码</p></th><th><p>名称</p></th><th><p>数据类型</p></th><th><p>约束</p></th><th><p>说明</p></th></tr></thead>
+<tbody>
+<tr><td><p>patientNumber</p></td><td><p>患者ID</p></td><td><p>String</p></td><td><p></p></td><td><p>见备注</p></td></tr>
+<tr><td><p>orgId</p></td><td><p>机构id</p></td><td><p>String</p></td><td><p></p></td><td><p>集成平台提供，主数据中机构信息查看。</p></td></tr>
+<tr><td><p>cbrh</p></td><td><p>病人号（住院号/门诊号）</p></td><td><p>String</p></td><td><p>R</p></td><td><p></p></td></tr>
+<tr><td><p>a</p></td><td><p>用户名</p></td><td><p>String</p></td><td><p>R</p></td><td><p>三方系统用户名</p></td></tr>
+<tr><td><p>c</p></td><td><p>授权码</p></td><td><p>String</p></td><td><p>R</p></td><td><p>网关设置的授权码，网关中三方授权管理查看。若授权码最后一个字符是"="，则替换成"%3D"。集成平台提供。</p></td></tr>
+<tr><td><p>i</p></td><td><p>三方用户标识</p></td><td><p>String</p></td><td><p></p></td><td><p>固定值1</p></td></tr>
+<tr><td><p>from</p></td><td><p>来源</p></td><td><p>String</p></td><td><p>R</p></td><td><p>固定值:yx</p></td></tr>
+</tbody>
+</table>
